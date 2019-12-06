@@ -1,1 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
+:host {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    font-size: 14px;
+    color: #333;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+* {
+margin: 0;
+padding: 0;
+}
+.app-root {
+  display: grid;
+  grid-template-areas:
+    'nav'
+    'home';
+  grid-template-columns: 1fr;
+  grid-template-rows: auto 1fr;
+}
+.app-home {
+  display: grid;
+  grid-area: home;
+  grid-gap: 0.5em;
+  grid-template-areas: 'slider slider slider slider'
+  'delivery about new contact'
+  'header header header header'
+  'products products products products'
+  'featured featured featured featured'
+  'aboutus aboutus aboutus aboutus';
+  grid-auto-columns: 1fr;
+  grid-auto-rows: 1fr;
+  grid-gap: 0.3em;
+}

@@ -1,0 +1,14 @@
+app-navbar {
+  position: relative;
+  z-index: 100;
+
+  display: grid;
+  grid-area: nav;
+  // grid-gap: 1em;
+  grid-template-areas: '. logo contact shopping . '
+  'navbar navbar navbar navbar navbar';
+  grid-template-columns: 1fr 4fr auto minmax(auto, 3fr) 1fr;
+  grid-template-rows: 2fr 1fr;
+
+  background: white;
+}
