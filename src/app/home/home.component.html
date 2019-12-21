@@ -1,1 +1,15 @@
-<p>home works!</p>
+<div class="grid-container fluid">
+  <div class="grid-x banner grid-margin-x align-center-middle">
+    <div class="cell">
+      <h2 class="text-uppercase text-center ">Everyday Radios & Accessories</h2>
+    </div>
+  </div>
+  <div
+    class="grid-x align-middle
+   content"
+  >
+    <div class="cell small-12 medium-6 large-4" *ngFor="let radio of radios">
+      <img [src]="radio.src" alt="radio.alt" class="radius" />
+    </div>
+  </div>
+</div>

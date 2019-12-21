@@ -1,53 +1,75 @@
-<div id="logo">
-  <div class="logo">
-    <a [routerLink]="['/']"
-       routerLinkActive="active">
-      <p>*logo will be here*</p>
+<!-- This demo uses float grid but you can use flex grid too -->
+<div class="top-bar grid-x grid-padding-x top-nav align-top">
+  <div id="logo" class="cell auto">
+    <a [routerLink]="['/']" routerLinkActive="active" class="text-hide  ">
+      <img src="../../assets/logo.png" alt="cqcqcqdx-logo" />
+      CQCQCQDX
     </a>
   </div>
-  <div class="link">
-    <a href="mailto:myradioworld@gmail.com">myradioworld@gmail.com</a>
+  <div class="cell show-for-large large-2"></div>
+  <div class="cell shrink">
+    <div id="link" class="cell large-shrink show-for-large">
+      <a href="mailto:myradiogear@gmail.com">myradiogear@gmail.com</a>
+    </div>
+    <div id="response" class="cell large-shrink show-for-large"><b>Response in 2 hours</b></div>
   </div>
-  <div class="response"><b>Response in 2 hours</b></div>
-</div>
-<div id="contact">
-  <div class="number"><b>Phone number: 089-9822017</b></div>
-  <div class="weekdays">
-    Monday - Friday: 9:00am - 5:00pm
+  <div id="contact" class="cell show-for-large large-auto">
+    <div class="number cell "><b>089 982 2017</b></div>
+    <div class="weekdays cell">
+      Monday - Friday: 9:00am - 5:00pm
+    </div>
+    <div class="weekends cell">
+      Saturday: 9:30am - 4:00pm
+    </div>
   </div>
+  <!-- <div class="cell auto"></div> -->
 
-  <div class="weekends">
-    Saturday: 9:30am - 4:00pm
-  </div>
-
-</div>
-<div id="shopping">
-  <div></div>
-  <div class="basket">My Basket: {{"€0.00"}}</div>
-  <div class="currency">Currency:{{"EUR"}} </div>
-  <div class="wishlist">{{"♥"}}&nbsp;<b>Wishlist</b></div>
-  <div class="cart">
-    <p>cart</p>
+  <div id="shopping" class="cell small-4 medium-shrink">
+    <div class="basket">My Basket: {{ '€0.00' }}</div>
+    <div class="currency">Currency:{{ 'EUR' }}</div>
+    <div class="wishlist">{{ '♥' }}&nbsp;<b>Wishlist</b></div>
+    <div class="cart">
+      <p>cart</p>
+    </div>
   </div>
 </div>
-<div id="navbar">
-  <div class="links">
-    <a [routerLink]="['/shop-now']"
-       routerLinkActive="active">Shop Now</a>
-    <a [routerLink]="['/used-equipment']"
-       routerLinkActive="active">Used Equipment</a>
-    <a [routerLink]="['/shop-by-manufacturer']"
-       routerLinkActive="active">Shop By Manufacturer</a>
-    <a [routerLink]="['/new-in']"
-       routerLinkActive="active">New In</a>
-    <a [routerLink]="['/part-ex']"
-       routerLinkActive="active">Part Ex</a>
-    <a [routerLink]="['/register']"
-       routerLinkActive="active">Register</a>
-    <a [routerLink]="['/login']"
-       routerLinkActive="active">Login</a>
-    <a [routerLink]="['/contact']"
-       routerLinkActive="active">Contact</a>
+<div class="title-bar grid-x" data-responsive-toggle="nav-animated-menu" data-hide-for="large">
+  <div class="cell small-12" data-toggle>
+    <button class="menu-icon" type="button"></button>
+    <div class="title-bar-title">Menu</div>
   </div>
-
+</div>
+<div
+  class="top-bar grid-x align-center-middle"
+  id="nav-animated-menu"
+  data-animate="hinge-in-from-top hinge-out-from-top"
+>
+  <div class="routes cell small-12">
+    <ul class="dropdown menu grid-x align-center-middle text-center" data-dropdown-menu>
+      <li class="cell small-12 large-auto ">
+        <a [routerLink]="['/shop-now']" routerLinkActive="active">Shop Now</a>
+      </li>
+      <li class="cell small-12 large-auto ">
+        <a [routerLink]="['/used-equipment']" routerLinkActive="active">Used Equipment</a>
+      </li>
+      <li class="cell small-12 large-auto">
+        <a [routerLink]="['/shop-by-manufacturer']" routerLinkActive="active">Shop By Manufacturer</a>
+      </li>
+      <li class="cell small-12 large-auto">
+        <a [routerLink]="['/new-in']" routerLinkActive="active">New In</a>
+      </li>
+      <li class="cell small-12 large-auto">
+        <a [routerLink]="['/part-ex']" routerLinkActive="active">Part Ex</a>
+      </li>
+      <li class="cell small-12 large-auto">
+        <a [routerLink]="['/register']" routerLinkActive="active">Register</a>
+      </li>
+      <li class="cell small-12 large-auto">
+        <a [routerLink]="['/login']" routerLinkActive="active">Login</a>
+      </li>
+      <li class="cell small-12 large-auto">
+        <a [routerLink]="['/contact']" routerLinkActive="active">Contact</a>
+      </li>
+    </ul>
+  </div>
 </div>

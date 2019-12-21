@@ -1,14 +1,9 @@
-app-navbar {
-  position: relative;
-  z-index: 100;
+@import '../../node_modules/foundation-sites/scss/foundation.scss';
+@include foundation-prototype-classes;
+footer {
+  height: 100px;
 
-  display: grid;
-  grid-area: nav;
-  // grid-gap: 1em;
-  grid-template-areas: '. logo contact shopping . '
-  'navbar navbar navbar navbar navbar';
-  grid-template-columns: 1fr 4fr auto minmax(auto, 3fr) 1fr;
-  grid-template-rows: 2fr 1fr;
+  color: white;
 
-  background: white;
+  background: #0a0a0a;
 }
