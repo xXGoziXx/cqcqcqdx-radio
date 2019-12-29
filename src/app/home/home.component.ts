@@ -8,16 +8,16 @@ import { Component, OnInit, HostBinding, Host } from '@angular/core';
 export class HomeComponent implements OnInit {
   radios = [
     {
-      src: '../../assets/radio1.png',
-      alt: 'radio1'
+      alt: 'radio1',
+      src: '../../assets/img/home/radio1.png'
     },
     {
-      src: '../../assets/radio2.png',
-      alt: 'radio2'
+      alt: 'radio2',
+      src: '../../assets/img/home/radio2.png'
     },
     {
-      src: '../../assets/radio3.png',
-      alt: 'radio3'
+      alt: 'radio3',
+      src: '../../assets/img/home/radio3.png'
     }
   ];
   constructor() {}

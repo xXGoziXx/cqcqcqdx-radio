@@ -16,6 +16,7 @@ import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { ContactComponent } from './contact/contact.component';
 import { ShopNowComponent } from './shop-now/shop-now.component';
+import { UsedCategoryComponent } from './used-equipment/used-category/used-category.component';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { ShopNowComponent } from './shop-now/shop-now.component';
     RegisterComponent,
     LoginComponent,
     ContactComponent,
-    ShopNowComponent
+    ShopNowComponent,
+    UsedCategoryComponent
   ],
   imports: [
     BrowserModule,

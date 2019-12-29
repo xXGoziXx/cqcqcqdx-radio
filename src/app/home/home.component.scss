@@ -14,12 +14,15 @@
     }
   }
   .content {
-    margin: 20px 4vw;
+    margin: 20px 0;
     .cell {
-      margin: 20px 0;
-      img {
-        width: 100%;
-        height: auto;
+      .card-section {
+        display: grid;
+        img {
+          width: auto;
+          height: 200px;
+          margin: 0 auto;
+        }
       }
     }
   }

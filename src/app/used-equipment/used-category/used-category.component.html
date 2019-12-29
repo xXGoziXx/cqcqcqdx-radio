@@ -1,17 +1,18 @@
 <div class="grid-container fluid">
   <ul class="breadcrumbs">
-    <li><a [routerLink]="['/']" routerLinkActive="router-link-active">Home</a></li>
-    <li><span class="show-for-sr">Current: </span> Used Equipment</li>
+    <li><a [routerLink]="['/']" routerLinkActive="active">Home</a></li>
+    <li><a [routerLink]="['/used-equipment']" routerLinkActive="active">Used Equipment</a></li>
+    <li><span class="show-for-sr">Current: </span> {{ category.banner }}</li>
   </ul>
   <div class="grid-x banner shadow grid-margin-x align-center-middle">
     <div class="cell">
-      <h2 class="text-uppercase text-center ">Used Ham Radio Equipment</h2>
+      <h2 class="text-uppercase text-center ">{{ category.banner }}</h2>
     </div>
   </div>
   <div class="grid-x grid-margin-y grid-margin-x small-up-1 medium-up-4 large-up-6 align-stretch-spaced content">
     <div class="cell" *ngFor="let category of categories">
       <!-- image has padding -->
-      <a [routerLink]="['/used-equipment', link(category.text)]" routerLinkActive="active">
+      <a [routerLink]="['/used-equipment', category]" routerLinkActive="active">
         <div class="grid-y card height-100 radius bordered shadow align-center">
           <div class="cell small-auto width-100 card-section">
             <img [src]="category.src" [alt]="category.alt" />
