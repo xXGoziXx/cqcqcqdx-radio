@@ -1,1 +1,123 @@
-<p>contact works!</p>
+<div class="grid-container fluid">
+  <nav aria-label="You are here:" class="breadcrumb-container" role="navigation">
+    <ul class="breadcrumbs">
+      <li>
+        <a [routerLink]="['/home']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+      </li>
+      <li>
+        <a
+          [routerLink]="['/contact']"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="disabled"
+        >
+          <span class="show-for-sr">Current: </span> Contact Us
+        </a>
+      </li>
+    </ul>
+  </nav>
+  <div class="grid-x banner shadow grid-margin-x align-center-middle">
+    <div class="cell">
+      <h2 class="text-uppercase text-center ">Contact Us</h2>
+    </div>
+  </div>
+
+  <div class="grid-x grid-margin-x">
+    <div class="cell small-12 large-6 small-order-4 large-order-1">
+      <div class="responsive-embed">
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2387.50309763337!2d-6.598601384053083!3d53.24468319002218!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x4867782e20412867%3A0x12a4bc234f91dcf4!2s10%20Gaelic%20View%2C%20Newtown%2C%20Kill%2C%20Co.%20Kildare%2C%20W91%20W8Y6!5e0!3m2!1sen!2sie!4v1577680372236!5m2!1sen!2sie"
+          width="600"
+          height="450"
+          frameborder="0"
+          allowfullscreen
+        ></iframe>
+      </div>
+    </div>
+    <div class="cell small-12 large-6 small-order-1 large-order-2">
+      <div class="grid-x">
+        <div class="cell small-12" id="about-us">
+          <h2 class="text-uppercase">
+            <span class="height-100">About Us</span>
+          </h2>
+        </div>
+        <div class="cell small-12">
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam malesuada auctor lectus non aliquet. Mauris
+            blandit, eros sed facilisis feugiat, lacus arcu finibus massa, nec feugiat dolor dolor eget dui. Morbi
+            gravida nisl id interdum mattis. Nullam quis lacinia metus. In porta, metus quis blandit auctor, odio sem
+            elementum lacus, nec imperdiet velit metus id felis. Donec aliquet lorem vitae fringilla posuere. In non
+            tortor sollicitudin, mattis turpis non, tristique lorem. Curabitur ac scelerisque urna, a laoreet lectus.
+            Praesent ac tincidunt erat. Morbi dignissim, metus in dictum euismod, sem erat placerat urna, at pretium
+            sapien ipsum et libero. Praesent molestie magna ac euismod consectetur. Donec sit amet velit in nunc feugiat
+            egestas. Vestibulum dapibus iaculis leo, sit amet consequat arcu. Pellentesque habitant morbi tristique
+            senectus et netus et malesuada fames ac turpis egestas. Nunc vitae laoreet orci.
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="cell small-12 large-6 small-order-2 large-order-3">
+      <div class="grid-y">
+        <div class="cell">
+          <h5 class="font-bold">
+            Get in Touch
+          </h5>
+          <p>
+            10 Gaelic View, Newtown, Kill,<br />
+            Co. Kildare, W91 W8Y6 <br />
+            <b>Telephone:</b> 089 982 2017<br />
+            <!-- <b>Fax:</b> 01922 417829<br /> -->
+            <b>Email:</b> myradiogear@gmail.com<br />
+            <!-- <b>Skype:</b> radioworld_uk<br /> -->
+          </p>
+        </div>
+        <div class="cell">
+          <h5 class="font-bold">
+            Returns & Deliveries:
+          </h5>
+          <p>
+            <b>Telephone:</b> 089 982 2017<br />
+            <!-- <b>Fax:</b> 01922 417829 -->
+          </p>
+        </div>
+      </div>
+    </div>
+    <div class="cell small-12 large-6 small-order-3 large-order-4">
+      <form [formGroup]="form" (ngSubmit)="onSubmit()">
+        <div class="grid-container">
+          <div class="grid-x grid-padding-x">
+            <div class="small-12 cell">
+              <label>
+                <input type="text" placeholder="First Name..." formControlName="name" />
+              </label>
+            </div>
+            <div class="small-6 cell">
+              <label>
+                <input type="email" placeholder="Email Address..." formControlName="email" />
+              </label>
+            </div>
+            <div class="small-6 cell">
+              <label>
+                <input type="text" placeholder="Telephone..." formControlName="telephone" />
+              </label>
+            </div>
+            <div class="small-12 cell">
+              <label>
+                <textarea placeholder="Message..." formControlName="message"></textarea>
+              </label>
+            </div>
+            <div class="small-12 cell text-right">
+              <button
+                class="button primary shadow bordered radius text-uppercase"
+                type="submit"
+                [disabled]="form.invalid"
+              >
+                Submit
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

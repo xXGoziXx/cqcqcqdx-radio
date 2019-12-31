@@ -21,7 +21,7 @@
         justify-self: center;
 
         width: auto;
-        height: 100px;
+        height: rem-calc(100px);
       }
     }
   }
@@ -33,16 +33,17 @@
   background-color: #f5f5f5;
   .menu-icon::after {
     background-color: #000;
-    box-shadow: 0 7px 0 #000, 0 14px 0 #000;
+    box-shadow: 0 rem-calc(7px) 0 #000, 0 rem-calc(14px) 0 #000;
   }
   .title-bar-title {
     color: #000;
+    font-weight: 500;
   }
   &:hover {
     cursor: pointer;
     .menu-icon::after {
       background-color: #00a5cb;
-      box-shadow: 0 7px 0 #00a5cb, 0 14px 0 #00a5cb;
+      box-shadow: 0 rem-calc(7px) 0 #00a5cb, 0 rem-calc(14px) 0 #00a5cb;
     }
     .title-bar-title {
       color: #00a5cb;
@@ -72,22 +73,23 @@
         height: 100%;
 
         color: #000;
+        font-weight: 500;
 
-        border-top: solid 2px transparent;
+        border-top: solid rem-calc(2px) transparent;
       }
       &:hover {
         a {
           color: #000;
 
           background-color: white;
-          border-top: solid 2px #00a5cb;
+          border-top: solid rem-calc(2px) #00a5cb;
         }
       }
       a.active {
         color: #000;
 
         background-color: white;
-        border-top: solid 2px #00a5cb;
+        border-top: solid rem-calc(2px) #00a5cb;
       }
     }
   }

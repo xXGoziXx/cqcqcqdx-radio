@@ -14,64 +14,62 @@ import { ShopNowComponent } from './shop-now/shop-now.component';
 const routes: Routes = [
   {
     path: 'home',
-    component: HomeComponent,
-    data: { title: 'Home' }
+    redirectTo: '/'
   },
   {
     path: 'shop-now',
     component: ShopNowComponent,
-    data: { title: 'shop-now' }
+    data: { breadcrumb: 'Shop Now' }
   },
   {
     path: 'used-equipment',
     component: UsedEquipmentComponent,
-    data: { title: 'Used Equipment' }
+    data: { breadcrumb: 'Used Equipment' }
   },
   {
     path: 'used-equipment/:category',
     component: UsedCategoryComponent,
-    data: { title: 'Used Category' }
+    data: { breadcrumb: 'Used Category' }
   },
   {
     path: 'shop-by-manufacturer',
     component: ShopByManufacturerComponent,
-    data: { title: 'Shop By Manufacturer' }
+    data: { breadcrumb: 'Shop By Manufacturer' }
   },
   {
     path: 'new-in',
     component: NewInComponent,
-    data: { title: 'New In' }
+    data: { breadcrumb: 'New In' }
   },
   {
     path: 'part-ex',
     component: PartExComponent,
-    data: { title: 'Part Ex' }
+    data: { breadcrumb: 'Part Ex' }
   },
   {
     path: 'register',
     component: RegisterComponent,
-    data: { title: 'Register' }
+    data: { breadcrumb: 'Register' }
   },
   {
     path: 'login',
     component: LoginComponent,
-    data: { title: 'Login' }
+    data: { breadcrumb: 'Login' }
   },
   {
     path: 'contact',
     component: ContactComponent,
-    data: { title: 'Contact' }
+    data: { breadcrumb: 'Contact Us' }
   },
   {
     path: '',
     component: HomeComponent,
-    data: { title: 'Homepage' }
+    data: { breadcrumb: 'Home' }
   },
   {
     path: '**',
     redirectTo: '/',
-    pathMatch: 'full',
-    data: { title: 'Homepage' }
+    pathMatch: 'full'
   }
 ];
 

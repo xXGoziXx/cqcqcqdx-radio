@@ -1,9 +1,25 @@
 <div class="grid-container fluid">
-  <ul class="breadcrumbs">
-    <li><a [routerLink]="['/']" routerLinkActive="active">Home</a></li>
-    <li><a [routerLink]="['/used-equipment']" routerLinkActive="active">Used Equipment</a></li>
-    <li><span class="show-for-sr">Current: </span> {{ category.banner }}</li>
-  </ul>
+  <nav aria-label="You are here:" class="breadcrumb-container" role="navigation">
+    <ul class="breadcrumbs">
+      <li>
+        <a [routerLink]="['/home']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+      </li>
+      <li>
+        <a [routerLink]="['/used-equipment']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+          >Used Equipment</a
+        >
+      </li>
+      <li>
+        <a
+          [routerLink]="['/used-equipment', category.route]"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          class="disabled"
+          ><span class="show-for-sr">Current: </span> {{ category.banner }}
+        </a>
+      </li>
+    </ul>
+  </nav>
   <div class="grid-x banner shadow grid-margin-x align-center-middle">
     <div class="cell">
       <h2 class="text-uppercase text-center ">{{ category.banner }}</h2>
