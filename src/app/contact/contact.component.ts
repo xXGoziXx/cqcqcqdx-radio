@@ -1,6 +1,18 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SecurityContext } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/firestore';
+
+interface Message {
+  name: string;
+  telephone: string;
+  email: string;
+  message: string;
+  date: Date;
+  html: string;
+}
+
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
@@ -8,7 +20,7 @@ import { AngularFirestore } from '@angular/fire/firestore';
 })
 export class ContactComponent implements OnInit {
   form: FormGroup;
-  constructor(private fb: FormBuilder, private afs: AngularFirestore) {
+  constructor(private fb: FormBuilder, private afs: AngularFirestore, private sanitizer: DomSanitizer) {
     this.createForm();
   }
   createForm() {
@@ -20,15 +32,24 @@ export class ContactComponent implements OnInit {
     });
   }
   onSubmit() {
-    const { name, email, message } = this.form.value;
-    const date = Date();
+    const { name, email, telephone, message } = this.form.value;
+    const date = new Date();
     const html = `
-      <div>From: ${name}</div>
-      <div>Email: <a href="mailto:${email}">${email}</a></div>
-      <div>Date: ${date}</div>
-      <div>Message: ${message}</div>
+      <div>${this.sanitizer.sanitize(SecurityContext.HTML, message.replace(/(?:\r\n|\r|\n)/g, '<br>'))}
+      </div>
+      <br>
+      <hr>
+      <div>
+        <p>
+          Message from: ${name} <a href="mailto:${email}">&lt;${email}&gt;</a>
+          <br>
+          Sent on: ${date}
+          <br>
+          Phone: <a href="tel:${telephone}">${telephone}</a>
+        </p>
+      </div>
     `;
-    const formRequest = { name, email, message, date, html };
+    const formRequest = { name, email, telephone, message, date, html };
     this.afs.collection('messages').add(formRequest);
     this.form.reset();
   }
