@@ -1,21 +1,21 @@
-<div class="grid-container fluid">
-  <nav aria-label="You are here:" class="breadcrumb-container" role="navigation">
-    <ul class="breadcrumbs">
-      <li>
-        <a [routerLink]="['/home']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
-      </li>
-      <li>
-        <a
-          [routerLink]="['/contact']"
-          routerLinkActive="active"
-          [routerLinkActiveOptions]="{ exact: true }"
-          class="disabled"
-        >
-          <span class="show-for-sr">Current: </span> Contact Us
-        </a>
-      </li>
-    </ul>
-  </nav>
+<nav aria-label="You are here:" class="breadcrumb-container" role="navigation">
+  <ul class="breadcrumbs">
+    <li>
+      <a [routerLink]="['/home']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+    </li>
+    <li>
+      <a
+        [routerLink]="['/contact']"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="disabled"
+      >
+        <span class="show-for-sr">Current: </span> Contact Us
+      </a>
+    </li>
+  </ul>
+</nav>
+<div class="grid-container">
   <div class="grid-x banner shadow grid-margin-x align-center-middle">
     <div class="cell">
       <h2 class="text-uppercase text-center ">Contact Us</h2>
@@ -87,23 +87,27 @@
         <div class="grid-container">
           <div class="grid-x grid-padding-x">
             <div class="small-12 cell">
-              <label>
-                <input type="text" placeholder="First Name..." formControlName="name" />
+              <label
+                >First Name:
+                <input type="text" placeholder="First Name..." formControlName="name" required />
               </label>
             </div>
             <div class="small-6 cell">
-              <label>
-                <input type="email" placeholder="Email Address..." formControlName="email" />
+              <label
+                >Email Address:
+                <input type="email" placeholder="Email Address..." formControlName="email" required />
               </label>
             </div>
             <div class="small-6 cell">
-              <label>
-                <input type="text" placeholder="Telephone..." formControlName="telephone" />
+              <label
+                >Telephone:
+                <input type="tel" placeholder="Telephone..." formControlName="telephone" required />
               </label>
             </div>
             <div class="small-12 cell">
-              <label>
-                <textarea placeholder="Message..." formControlName="message"></textarea>
+              <label
+                >Message:
+                <textarea placeholder="Message..." formControlName="message" required></textarea>
               </label>
             </div>
             <div class="small-12 cell text-right">

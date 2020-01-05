@@ -1,1 +1,134 @@
-<p>register works!</p>
+<nav aria-label="You are here:" class="breadcrumb-container" role="navigation">
+  <ul class="breadcrumbs">
+    <li>
+      <a [routerLink]="['/home']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+    </li>
+    <li>
+      <a
+        [routerLink]="['/register']"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        class="disabled"
+      >
+        <span class="show-for-sr">Current: </span> Account Create
+      </a>
+    </li>
+  </ul>
+</nav>
+<div class="grid-container">
+  <div class="grid-x banner shadow grid-margin-x align-center-middle">
+    <div class="cell">
+      <h2 class="text-uppercase text-center">Account Create</h2>
+    </div>
+  </div>
+  <div class="grid-x grid-padding-x grid-margin-x align-center-middle">
+    <div class="cell small-12 large-10 form-container margin-top-1 margin-bottom-1">
+      <h5 class="text-uppercase font-bolder margin-top-1">
+        You can create your account by filling out the form below:
+      </h5>
+      <form class="margin-top-1" [formGroup]="form" (ngSubmit)="this.authService.signUp(this.form.value)">
+        <div class="grid-container fluid">
+          <div class="grid-x grid-margin-x">
+            <div class="small-12 medium-6 cell">
+              <label
+                >First Name:
+                <input type="text" placeholder="First Name..." formControlName="firstName" required autocomplete="on" />
+              </label>
+            </div>
+            <div class="small-12 medium-6 cell">
+              <label
+                >Last Name:
+                <input type="text" placeholder="Last Name..." formControlName="lastName" required autocomplete="on" />
+              </label>
+            </div>
+            <div class="small-12 cell">
+              <label
+                >Email Address:
+                <input type="email" placeholder="Email Address..." formControlName="email" required autocomplete="on" />
+              </label>
+            </div>
+            <div class="small-12 cell">
+              <label
+                >Password:
+                <input
+                  type="password"
+                  placeholder="Password..."
+                  formControlName="password"
+                  required
+                  autocomplete="on"
+                />
+              </label>
+            </div>
+            <div class="small-12 cell">
+              <label
+                >Telephone No:
+                <input
+                  type="tel"
+                  placeholder="Telephone No..."
+                  formControlName="telephone"
+                  required
+                  autocomplete="on"
+                />
+              </label>
+            </div>
+            <div class="small-12 cell">
+              <label
+                >1st Line Address:
+                <input
+                  type="text"
+                  placeholder="1st Line Address..."
+                  formControlName="address1"
+                  required
+                  autocomplete="on"
+                />
+              </label>
+            </div>
+            <div class="small-12 cell">
+              <label
+                >2nd Line Address:
+                <input type="text" placeholder="2nd Line Address..." formControlName="address2" autocomplete="on" />
+              </label>
+            </div>
+            <div class="small-12 cell">
+              <label
+                >3rd Line Address:
+                <input type="text" placeholder="3rd Line Address..." formControlName="address3" autocomplete="on" />
+              </label>
+            </div>
+            <div class="small-12 cell">
+              <label
+                >Town/City:
+                <input type="text" placeholder="Town/City..." formControlName="townCity" required autocomplete="on" />
+              </label>
+            </div>
+            <div class="small-12 cell">
+              <label
+                >Postcode:
+                <input type="text" placeholder="Postcode..." formControlName="postcode" required autocomplete="on" />
+              </label>
+            </div>
+            <div class="small-12 cell">
+              <label
+                >Country:
+                <select formControlName="country" required>
+                  <option [value]="country.abbr" *ngFor="let country of authService.countryList">{{
+                    country.name
+                  }}</option>
+                </select>
+              </label>
+            </div>
+            <div class="small-12 cell margin-bottom-1">
+              <button
+                class="button primary shadow bordered radius text-uppercase"
+                type="submit"
+                [disabled]="form.invalid"
+              >
+                Register
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

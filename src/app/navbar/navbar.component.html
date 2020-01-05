@@ -70,8 +70,17 @@
         <a [routerLink]="['/register']" routerLinkActive="active">Register</a>
       </li>
       <li class="cell small-12 large-auto">
-        <a [routerLink]="['/login']" routerLinkActive="active">Login</a>
+        <a *ngIf="authService.user$ | async; then authenticated; else guest"></a>
+        <ng-template #guest>
+          <a [routerLink]="['/login']" routerLinkActive="active">Login</a>
+        </ng-template>
+        <ng-template #authenticated>
+          <a type="button" (click)="this.authService.signOut()">
+            Log Out
+          </a>
+        </ng-template>
       </li>
+
       <li class="cell small-12 large-auto">
         <a [routerLink]="['/contact']" routerLinkActive="active">Contact</a>
       </li>

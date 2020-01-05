@@ -3,16 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/firestore';
-
-interface Message {
-  name: string;
-  telephone: string;
-  email: string;
-  message: string;
-  date: Date;
-  html: string;
-}
-
+import { Message } from '../interfaces/message';
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
@@ -49,7 +40,7 @@ export class ContactComponent implements OnInit {
         </p>
       </div>
     `;
-    const formRequest = { name, email, telephone, message, date, html };
+    const formRequest: Message = { name, email, telephone, message, date, html };
     this.afs.collection('messages').add(formRequest);
     this.form.reset();
   }

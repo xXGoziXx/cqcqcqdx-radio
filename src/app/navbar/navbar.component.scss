@@ -1,5 +1,6 @@
 @import '../../../node_modules/foundation-sites/scss/foundation.scss';
 @include foundation-prototype-classes;
+$accent: #f56356;
 .top-nav.top-bar {
   padding: .5em;
 
@@ -42,11 +43,11 @@
   &:hover {
     cursor: pointer;
     .menu-icon::after {
-      background-color: #00a5cb;
-      box-shadow: 0 rem-calc(7px) 0 #00a5cb, 0 rem-calc(14px) 0 #00a5cb;
+      background-color: $accent;
+      box-shadow: 0 rem-calc(7px) 0 $accent, 0 rem-calc(14px) 0 $accent;
     }
     .title-bar-title {
-      color: #00a5cb;
+      color: $accent;
     }
   }
 }
@@ -82,14 +83,14 @@
           color: #000;
 
           background-color: white;
-          border-top: solid rem-calc(2px) #00a5cb;
+          border-top: solid rem-calc(2px) $accent;
         }
       }
       a.active {
         color: #000;
 
         background-color: white;
-        border-top: solid rem-calc(2px) #00a5cb;
+        border-top: solid rem-calc(2px) $accent;
       }
     }
   }
