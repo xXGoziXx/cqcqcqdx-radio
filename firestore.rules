@@ -2,10 +2,19 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     match /{document=**} {
-      allow read, write: if request.auth.uid != null;
+      allow read, write: if false;
     }
     match /messages/{document} {
-    	allow write: if true
+    	allow write: if true;
+      allow read, update, delete: if false;
+    }
+    match /users/{userId} {
+      allow read : if true;
+      allow write, update, delete: if request.auth.uid == userId || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin == true;
+    }
+    match /users/adminList {
+      allow read: if request.auth.uid != null;
+      allow write, update, delete: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin == true;
     }
   }
 }

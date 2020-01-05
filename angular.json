@@ -27,8 +27,9 @@
             "styles": ["src/styles.scss"],
             "scripts": [
               "node_modules/jquery/dist/jquery.min.js",
+              "node_modules/motion-ui/motion-ui.js",
               "node_modules/foundation-sites/dist/js/foundation.min.js",
-              "node_modules/motion-ui/dist/motion-ui.min.js"
+              "node_modules/slick-carousel/slick/slick.min.js"
             ]
           },
           "configurations": {

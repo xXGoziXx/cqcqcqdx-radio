@@ -28,8 +28,8 @@
     "firebase": "^7.5.0",
     "foundation-sites": "^6.6.0",
     "jquery": "^3.4.1",
-    "motion-ui": "^2.0.3",
     "rxjs": "~6.4.0",
+    "slick-carousel": "^1.8.1",
     "tslib": "^1.10.0",
     "zone.js": "~0.9.1"
   },
@@ -49,6 +49,7 @@
     "karma-coverage-istanbul-reporter": "~2.0.1",
     "karma-jasmine": "~2.0.1",
     "karma-jasmine-html-reporter": "^1.4.0",
+    "motion-ui": "^2.0.3",
     "prettier": "^1.19.1",
     "protractor": "~5.4.0",
     "ts-node": "~7.0.0",
