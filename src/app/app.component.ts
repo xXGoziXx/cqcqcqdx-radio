@@ -14,7 +14,6 @@ export class AppComponent implements OnInit {
     autoplaySpeed: 5000,
     cssEase: 'ease-in-out'
   };
-  currentSlide = 0;
   onActivate(event) {
     $(() => {
       console.log('hello');
@@ -30,7 +29,6 @@ export class AppComponent implements OnInit {
         carousel.slick('slickGoTo', $(event.target).attr('data-slide'));
       });
       $('.slick-carousel').on('beforeChange', function(event, slick, currentSlide, nextSlide) {
-        this.currentSlide = currentSlide;
         $('[data-slide=' + currentSlide + ']').removeClass('is-active');
         $('[data-slide=' + nextSlide + ']').addClass('is-active');
       });

@@ -1,0 +1,6 @@
+.current-sr {
+  visibility: hidden;
+  &.is-active {
+    visibility: visible;
+  }
+}

@@ -28,7 +28,7 @@
             [attr.data-slide]="index"
           >
             <span class="show-for-sr">{{ radio.alt }}</span>
-            <span *ngIf="index == currentSlide" class="show-for-sr" data-slide-active-label>Current Slide</span>
+            <span class="show-for-sr current-sr" data-slide-active-label [attr.data-slide]="index">Current Slide</span>
           </button>
         </nav>
       </div>
