@@ -16,10 +16,12 @@
     <div id="link" class="cell large-shrink show-for-large">
       <a href="mailto:myradiogear@gmail.com">myradiogear@gmail.com</a>
     </div>
-    <div id="response" class="cell large-shrink show-for-large"><b>Response in 2 hours</b></div>
+    <div id="response" class="cell large-shrink show-for-large"><b>Response in 24 hours</b></div>
   </div>
   <div id="contact" class="cell show-for-large large-auto">
-    <div class="number cell "><b>089 982 2017</b></div>
+    <div class="number cell ">
+      <b><a href="tel:089 982 2017">089 982 2017</a></b>
+    </div>
     <div class="weekdays cell">
       Monday - Friday: 9:00am - 5:00pm
     </div>
@@ -38,52 +40,109 @@
     </div>
   </div>
 </div>
-<div class="title-bar grid-x" data-responsive-toggle="nav-animated-menu" data-hide-for="large">
-  <div class="cell small-12" data-toggle>
-    <button class="menu-icon" type="button"></button>
-    <div class="title-bar-title">Menu</div>
-  </div>
-</div>
-<div
-  class="top-bar grid-x align-center-middle"
-  id="nav-animated-menu"
-  data-animate="hinge-in-from-top hinge-out-from-top"
->
-  <div class="routes cell small-12">
-    <ul class="dropdown menu grid-x align-center-middle text-center" data-dropdown-menu>
-      <li class="cell small-12 large-auto ">
-        <a [routerLink]="['/shop-now']" routerLinkActive="active">Shop Now</a>
-      </li>
-      <li class="cell small-12 large-auto ">
-        <a [routerLink]="['/used-equipment']" routerLinkActive="active">Used Equipment</a>
-      </li>
-      <li class="cell small-12 large-auto">
-        <a [routerLink]="['/shop-by-manufacturer']" routerLinkActive="active">Shop By Manufacturer</a>
-      </li>
-      <li class="cell small-12 large-auto">
-        <a [routerLink]="['/new-in']" routerLinkActive="active">New In</a>
-      </li>
-      <li class="cell small-12 large-auto">
-        <a [routerLink]="['/part-ex']" routerLinkActive="active">Part Ex</a>
-      </li>
-      <li class="cell small-12 large-auto">
-        <a [routerLink]="['/register']" routerLinkActive="active">Register</a>
-      </li>
-      <li class="cell small-12 large-auto">
-        <a *ngIf="authService.user$ | async; then authenticated; else guest"></a>
-        <ng-template #guest>
-          <a [routerLink]="['/login']" routerLinkActive="active">Login</a>
-        </ng-template>
-        <ng-template #authenticated>
-          <a type="button" (click)="this.authService.signOut()">
-            Log Out
-          </a>
-        </ng-template>
-      </li>
-
-      <li class="cell small-12 large-auto">
-        <a [routerLink]="['/contact']" routerLinkActive="active">Contact</a>
+<!-- Vertical navbar for smaller devices  -->
+<div class="title-bar grid-x hide-for-large">
+  <div class="vertical-routes cell small-12">
+    <ul id="accordion" class="vertical menu accordion-menu" data-responsive-menu="accordion" data-accordion-menu>
+      <li>
+        <a type="button">
+          <button class="menu-icon" type="button"></button>
+          <div class="title-bar-title">Menu</div>
+        </a>
+        <ul class="vertical menu">
+          <ng-container *ngTemplateOutlet="menu"></ng-container>
+        </ul>
       </li>
     </ul>
   </div>
 </div>
+
+<!-- Horizontal navbar for larger devices -->
+<div class="top-bar grid-x align-center-middle show-for-large">
+  <div class="horizontal-routes cell">
+    <ul class="menu grid-x align-center-middle text-center dropdown menu" data-dropdown-menu>
+      <ng-container *ngTemplateOutlet="menu"></ng-container>
+    </ul>
+  </div>
+</div>
+
+<!-- Menu Routes -->
+<ng-template #menu>
+  <li class="cell small-12 large-auto ">
+    <a [routerLink]="['/shop-now']" routerLinkActive="active"><span>Shop Now</span></a>
+    <ul id="dropdown" class="simple-float dropdown menu show-for-large">
+      <li *ngFor="let brandNewCategory of brandNewCategories" class="align-stretch">
+        <a
+          [routerLink]="['/used-equipment', categoryService.linkUsed(brandNewCategory.text)]"
+          routerLinkActive="active"
+          class="height-100 align-center-middle"
+          ><span>
+            {{ brandNewCategory.alt.toLowerCase() }}
+          </span>
+        </a>
+      </li>
+    </ul>
+  </li>
+  <li class="cell small-12 large-auto ">
+    <a [routerLink]="['/used-equipment']" routerLinkActive="active"><span>Used Equipment</span></a>
+    <ul id="dropdown" class="simple-float dropdown menu show-for-large">
+      <li *ngFor="let usedCategory of usedCategories" class="align-stretch">
+        <a
+          [routerLink]="['/used-equipment', categoryService.linkUsed(usedCategory.text)]"
+          routerLinkActive="active"
+          class="height-100 align-center-middle"
+          ><span>
+            {{ usedCategory.alt.toLowerCase() }}
+          </span>
+        </a>
+      </li>
+    </ul>
+  </li>
+  <li class="cell small-12 large-auto">
+    <a [routerLink]="['/shop-by-manufacturer']" routerLinkActive="active"><span>Shop By Manufacturer</span></a>
+    <ul id="dropdown" class="simple-float dropdown menu show-for-large">
+      <li *ngFor="let manufacturerCategory of manufacturerCategories" class="align-stretch">
+        <a
+          [routerLink]="['/used-equipment', categoryService.linkUsed(manufacturerCategory.text)]"
+          routerLinkActive="active"
+          class="height-100 align-center-middle"
+          ><span>
+            {{ manufacturerCategory.alt.toLowerCase() }}
+          </span>
+        </a>
+      </li>
+    </ul>
+  </li>
+  <li class="cell small-12 large-auto">
+    <a [routerLink]="['/new-in']" routerLinkActive="active"><span>New In</span></a>
+  </li>
+  <li class="cell small-12 large-auto">
+    <a [routerLink]="['/part-ex']" routerLinkActive="active"><span>Part Ex</span></a>
+  </li>
+  <li class="cell small-12 large-auto">
+    <a routerLinkActive="active" *ngIf="authService.user$ | async; then profile; else register">Register</a>
+    <ng-template #profile>
+      <a [routerLink]="['/profile']" routerLinkActive="active"><span>Profile</span></a>
+    </ng-template>
+    <ng-template #register>
+      <a routerLinkActive="active" [routerLink]="['/register']">
+        <span>Register</span>
+      </a>
+    </ng-template>
+  </li>
+  <li class="cell small-12 large-auto">
+    <a *ngIf="authService.user$ | async; then authenticated; else guest"></a>
+    <ng-template #guest>
+      <a [routerLink]="['/login']" routerLinkActive="active"><span>Login</span></a>
+    </ng-template>
+    <ng-template #authenticated>
+      <a type="button" (click)="this.authService.signOut()">
+        <span>Log Out</span>
+      </a>
+    </ng-template>
+  </li>
+
+  <li class="cell small-12 large-auto">
+    <a [routerLink]="['/contact']" routerLinkActive="active"><span>Contact</span></a>
+  </li>
+</ng-template>

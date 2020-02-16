@@ -10,11 +10,13 @@ export class UsedCategoryComponent implements OnInit {
     route: '',
     banner: ''
   };
+
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit() {
     this.route.paramMap.subscribe(params => {
       // console.log(params.get('category'));
+      // 'category' is the variable name from 'app-routing'
       this.category.route = params.get('category');
       this.category.banner = params.get('category').replace(/-/g, ' ');
     });

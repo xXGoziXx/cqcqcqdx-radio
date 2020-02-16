@@ -23,12 +23,7 @@
   "unitless-zero": true,
   "vendor-prefix-align": true,
   "sort-order": [
-    [
-      "$variable",
-      "$include",
-      "$extend",
-      "$import"
-    ],
+    ["$variable", "$include", "$extend", "$import"],
     [
       "position",
       "top",
@@ -195,12 +190,7 @@
       "vertical-align",
       "white-space"
     ],
-    [
-      "list-style",
-      "list-style-image",
-      "list-style-position",
-      "list-style-type"
-    ],
+    ["list-style", "list-style-image", "list-style-position", "list-style-type"],
     [
       "-webkit-appearance",
       "-moz-appearance",
@@ -305,17 +295,7 @@
       "-webkit-transition-timing-function",
       "transition-timing-function"
     ],
-    [
-      "will-change",
-      "cursor",
-      "opacity",
-      "-webkit-filter",
-      "-moz-filter",
-      "filter",
-      "visibility",
-      "-ms-zoom",
-      "zoom"
-    ],
+    ["will-change", "cursor", "opacity", "-webkit-filter", "-moz-filter", "filter", "visibility", "-ms-zoom", "zoom"],
     [
       "marks",
       "page-break",

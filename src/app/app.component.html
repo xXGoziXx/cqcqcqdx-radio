@@ -1,5 +1,22 @@
 <app-navbar></app-navbar>
 <main>
+  <nav aria-label="You are here:" class="breadcrumb-container" role="navigation" *ngIf="breadcrumbs[0] != ''">
+    <ul class="breadcrumbs">
+      <li>
+        <a [routerLink]="['/home']" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+      </li>
+      <li *ngFor="let breadcrumb of breadcrumbs; index as currIndex; last as isLast">
+        <a
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          [ngClass]="{ disabled: isLast }"
+          [routerLink]="['/' + currBreadcrumb(currIndex)]"
+        >
+          <span class="show-for-sr" *ngIf="isLast">Current: </span> {{ replace(breadcrumb, '-', ' ') }}
+        </a>
+      </li>
+    </ul>
+  </nav>
   <router-outlet (activate)="onActivate($event)"></router-outlet>
 </main>
 <footer>

@@ -109,6 +109,19 @@ html, body {
     font-weight: 900;
   }
 }
+.dropdown.menu {
+  > li.is-dropdown-submenu-parent > a {
+    &::after {
+      border-color: black transparent transparent;
+    }
+    &:hover::after {
+      border-color: $accent transparent transparent;
+    }
+  }
+  .is-dropdown-submenu {
+    border: none;
+  }
+}
 nav.breadcrumb-container {
   position: relative;
 

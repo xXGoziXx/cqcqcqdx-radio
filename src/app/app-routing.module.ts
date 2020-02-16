@@ -8,6 +8,7 @@ import { NewInComponent } from './new-in/new-in.component';
 import { PartExComponent } from './part-ex/part-ex.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
+import { ProfileComponent } from './profile/profile.component';
 import { ContactComponent } from './contact/contact.component';
 import { ShopNowComponent } from './shop-now/shop-now.component';
 
@@ -55,6 +56,11 @@ const routes: Routes = [
     path: 'login',
     component: LoginComponent,
     data: { breadcrumb: 'Login' }
+  },
+  {
+    path: 'profile',
+    component: ProfileComponent,
+    data: { breadcrumb: 'Profile' }
   },
   {
     path: 'contact',
