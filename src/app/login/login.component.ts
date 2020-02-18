@@ -4,7 +4,7 @@ import { AuthService } from '../services/auth.service';
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { User } from '../interfaces/user';
+import { User } from '../interfaces/User';
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',

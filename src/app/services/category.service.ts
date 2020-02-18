@@ -146,6 +146,7 @@ export const used = [
     text: `USED VIRTUAL RADARS`
   }
 ];
+
 export const brandNew = [
   {
     alt: 'accessories',

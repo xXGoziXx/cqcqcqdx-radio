@@ -7,7 +7,7 @@ import { EventEmitter, Injectable, Output } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
-import { User } from '../interfaces/user';
+import { User } from '../interfaces/User';
 
 @Injectable({
   providedIn: 'root'
@@ -376,22 +376,22 @@ export class AuthService {
                 .sendEmailVerification()
                 .then(() => {
                   console.log('Email verification sent');
+                  const newUser: User = {
+                    address: {
+                      address_lines: [address1, address2, address3],
+                      country,
+                      postcode,
+                      townCity
+                    },
+                    admin: false,
+                    email,
+                    firstName,
+                    lastName,
+                    telephone
+                  };
                   this.afs
                     .doc<User>(`users/${userObj.user.uid}`)
-                    .set(
-                      {
-                        admin: false,
-                        email,
-                        firstName,
-                        lastName,
-                        telephone,
-                        address: [address1, address2, address3],
-                        townCity,
-                        postcode,
-                        country
-                      },
-                      { merge: true }
-                    )
+                    .set(newUser, { merge: true })
                     .then(() => {
                       this.signOut();
                       this.router.navigate(['/login']);
