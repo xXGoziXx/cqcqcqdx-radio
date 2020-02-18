@@ -6,10 +6,10 @@
       CQCQCQDX
     </a>
     <br />
-    <b class="logotype hide-for-large"> CQCQCQDX </b>
+    <a [routerLink]="['/']" routerLinkActive="active"><b class="logotype hide-for-large"> CQCQCQDX</b></a>
   </div>
   <div class="cell auto show-for-large">
-    <b class="logotype"> CQCQCQDX </b>
+    <a [routerLink]="['/']" routerLinkActive="active"><b class="logotype"> CQCQCQDX </b></a>
   </div>
   <div class="cell show-for-large large-2"></div>
   <div class="cell shrink">
@@ -120,9 +120,9 @@
     <a [routerLink]="['/part-ex']" routerLinkActive="active"><span>Part Ex</span></a>
   </li>
   <li class="cell small-12 large-auto">
-    <a routerLinkActive="active" *ngIf="authService.user$ | async; then profile; else register">Register</a>
-    <ng-template #profile>
-      <a [routerLink]="['/profile']" routerLinkActive="active"><span>Profile</span></a>
+    <a routerLinkActive="active" *ngIf="authService.user$ | async; then account; else register">Register</a>
+    <ng-template #account>
+      <a [routerLink]="['/account']" routerLinkActive="active"><span>My Account</span></a>
     </ng-template>
     <ng-template #register>
       <a routerLinkActive="active" [routerLink]="['/register']">
@@ -136,13 +136,13 @@
       <a [routerLink]="['/login']" routerLinkActive="active"><span>Login</span></a>
     </ng-template>
     <ng-template #authenticated>
-      <a type="button" (click)="this.authService.signOut()">
+      <a (click)="this.authService.signOut()">
         <span>Log Out</span>
       </a>
     </ng-template>
   </li>
 
   <li class="cell small-12 large-auto">
-    <a [routerLink]="['/contact']" routerLinkActive="active"><span>Contact</span></a>
+    <a [routerLink]="['/contact-us']" routerLinkActive="active"><span>Contact</span></a>
   </li>
 </ng-template>

@@ -25,6 +25,7 @@ $accent: #f56356;
   }
 }
 .logotype {
+  color: black;
   font-size: 5vw;
 }
 // for vertical navbar
@@ -37,6 +38,7 @@ $accent: #f56356;
     place-items: center;
     > li {
       place-self: stretch;
+      // menu for small to medium screens
       > a {
         color: #000;
 
@@ -65,6 +67,9 @@ $accent: #f56356;
         }
         &.active, &:hover.active {
           font-weight: 500;
+        }
+        &::after {
+          border-color: black transparent transparent;
         }
       }
       // dropdown / accordion
@@ -108,6 +113,9 @@ $accent: #f56356;
 
               border-top: .125rem solid #e4e4e4;
               border-bottom: .125rem solid transparent;
+            }
+            &::after {
+              border-color: transparent transparent transparent;
             }
           }
         }
