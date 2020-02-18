@@ -1,0 +1,39 @@
+<div class="grid-container">
+  <div class="grid-x banner shadow grid-margin-x align-center-middle">
+    <div class="cell">
+      <h2 class="text-uppercase text-center ">Account Home</h2>
+    </div>
+  </div>
+  <div class="grid-y">
+    <div class="cell small-12">
+      <p>
+        Your current orders are shown below.
+      </p>
+    </div>
+    <div class="cell small-12">
+      <p>To <a [routerLink]="['/account/edit']">edit your account details please click here.</a></p>
+    </div>
+    <div class="cell small-10 table-scroll">
+      <table class="shadow">
+        <thead>
+          <tr class="shadow">
+            <th class="text-uppercase">Order ID</th>
+            <th class="text-uppercase">Order Date</th>
+            <th class="text-uppercase">Delivery Address</th>
+            <th class="text-uppercase">Total</th>
+            <th class="text-uppercase">Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let order of orders$ | async">
+            <td>{{ order.order_id }}</td>
+            <td>{{ order.order_date }}</td>
+            <td>{{ order.delivery_address }}</td>
+            <td>{{ order.total }}</td>
+            <td>{{ order.status }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

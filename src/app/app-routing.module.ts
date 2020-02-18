@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { AuthGuard } from './services/auth.guard';
 import { HomeComponent } from './home/home.component';
 import { UsedEquipmentComponent } from './used-equipment/used-equipment.component';
 import { UsedCategoryComponent } from './used-equipment/used-category/used-category.component';
@@ -8,10 +9,10 @@ import { NewInComponent } from './new-in/new-in.component';
 import { PartExComponent } from './part-ex/part-ex.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
-import { ProfileComponent } from './profile/profile.component';
+import { AccountComponent } from './account/account.component';
 import { ContactComponent } from './contact/contact.component';
 import { ShopNowComponent } from './shop-now/shop-now.component';
-
+import { EditComponent } from './account/edit/edit.component';
 const routes: Routes = [
   {
     path: 'home',
@@ -58,12 +59,18 @@ const routes: Routes = [
     data: { breadcrumb: 'Login' }
   },
   {
-    path: 'profile',
-    component: ProfileComponent,
-    data: { breadcrumb: 'Profile' }
+    path: 'account',
+    component: AccountComponent,
+    data: { breadcrumb: 'Account' },
+    canActivate: [AuthGuard]
   },
   {
-    path: 'contact',
+    path: 'account/edit',
+    component: EditComponent,
+    data: { breadcrumb: 'Edit' }
+  },
+  {
+    path: 'contact-us',
     component: ContactComponent,
     data: { breadcrumb: 'Contact Us' }
   },

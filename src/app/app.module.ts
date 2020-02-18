@@ -22,7 +22,8 @@ import { LoginComponent } from './login/login.component';
 import { ContactComponent } from './contact/contact.component';
 import { ShopNowComponent } from './shop-now/shop-now.component';
 import { UsedCategoryComponent } from './used-equipment/used-category/used-category.component';
-import { ProfileComponent } from './profile/profile.component';
+import { AccountComponent } from './account/account.component';
+import { EditComponent } from './account/edit/edit.component';
 
 @NgModule({
   declarations: [
@@ -39,7 +40,8 @@ import { ProfileComponent } from './profile/profile.component';
     ContactComponent,
     ShopNowComponent,
     UsedCategoryComponent,
-    ProfileComponent
+    AccountComponent,
+    EditComponent
   ],
   imports: [
     AppRoutingModule,
