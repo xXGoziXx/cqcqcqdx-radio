@@ -67,7 +67,8 @@ const routes: Routes = [
   {
     path: 'account/edit',
     component: EditComponent,
-    data: { breadcrumb: 'Edit' }
+    data: { breadcrumb: 'Edit' },
+    canActivate: [AuthGuard]
   },
   {
     path: 'contact-us',

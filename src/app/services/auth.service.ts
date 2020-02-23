@@ -416,4 +416,43 @@ export class AuthService {
       });
     // console.log('Signed Up!');
   }
+  updateAccount({
+    email,
+    firstName,
+    lastName,
+    password,
+    telephone,
+    address1,
+    address2,
+    address3,
+    townCity,
+    postcode,
+    country
+  }) {
+    const updatedDetails: User = {
+      address: {
+        address_lines: [address1, address2, address3],
+        country,
+        postcode,
+        townCity
+      },
+      admin: this.currentUserDoc.admin,
+      email,
+      firstName,
+      lastName,
+      telephone
+    };
+    this.afs
+      .doc<User>(`users/${this.authUser.uid}`)
+      .set(updatedDetails, { merge: true })
+      .then(() => {
+        $('.callout.success').show();
+        console.log('I think it worked!');
+      })
+      .catch(err => {
+        $('.callout.alert').show();
+        $('span.error').html(err);
+        console.error(err);
+      });
+  }
 }

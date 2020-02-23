@@ -27,8 +27,8 @@
         <tbody>
           <tr *ngFor="let order of orders$ | async">
             <td>{{ order.order_id }}</td>
-            <td>{{ order.order_date }}</td>
-            <td>{{ order.delivery_address }}</td>
+            <td>{{ order.order_date.toMillis() | date: 'yyyy/MM/dd h:mm:ss a' }}</td>
+            <td>{{ this.objectFlattener(order.delivery_address) }}</td>
             <td>{{ order.total }}</td>
             <td>{{ order.status }}</td>
           </tr>

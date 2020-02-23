@@ -11,11 +11,40 @@ import { AngularFirestoreCollection, AngularFirestore } from '@angular/fire/fire
 export class AccountComponent implements OnInit {
   usersOrderCollection: AngularFirestoreCollection<Order>;
   orders$: Observable<Order[]>;
+  objectFlattener = (values: object) => {
+    let result = '';
+    let counter = 3;
+    const valuesTracker = { ...values };
+    while (Object.keys(valuesTracker).length) {
+      // console.log('Values: ', valuesTracker);
+      Object.keys(valuesTracker).forEach(prop => {
+        const value = valuesTracker[prop];
+        if (value instanceof Object && value.constructor === Object) {
+          result += this.objectFlattener(value) + ', ';
+        } else if (Array.isArray(value)) {
+          for (const item of value) {
+            if ((item instanceof Object && item.constructor === Object) || Array.isArray(item)) {
+              result += this.objectFlattener(item) + ', ';
+            } else {
+              result += item + ', ';
+            }
+          }
+        } else {
+          result += value + ', ';
+        }
+        delete valuesTracker[prop];
+      });
+      counter--;
+    }
+    // console.log('Result: ', result);
+    // console.log('Values: ', valuesTracker);
+    // remove excess commas
+    return result.replace(/(^\s*,\s*)*(\s+,)*(\s*,\s*$)*/g, '');
+  };
+  constructor(public authService: AuthService, private afs: AngularFirestore) {}
 
-  constructor(public authService: AuthService, private afs: AngularFirestore) {
-    this.usersOrderCollection = authService.userRef.collection<Order>('orders');
+  ngOnInit(): void {
+    this.usersOrderCollection = this.authService.userRef.collection<Order>('orders');
     this.orders$ = this.usersOrderCollection.valueChanges();
   }
-
-  ngOnInit(): void {}
 }

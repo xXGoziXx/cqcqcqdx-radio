@@ -1,1 +1,147 @@
-<p>edit works!</p>
+<div class="grid-container">
+  <div class="grid-x banner shadow grid-margin-x align-center-middle">
+    <div class="cell">
+      <h2 class="text-uppercase text-center">Account Details</h2>
+    </div>
+  </div>
+  <div class="grid-x grid-padding-x grid-margin-x align-center-middle">
+    <div class="cell small-12 large-10 form-container margin-top-1 margin-bottom-1">
+      <h5 class="text-uppercase font-bolder margin-top-1">
+        You can create your account by filling out the form below:
+      </h5>
+      <form class="margin-top-1" [formGroup]="form" (ngSubmit)="this.authService.updateAccount(this.form.value)">
+        <div class="grid-container fluid">
+          <div class="grid-x grid-margin-x">
+            <div class="small-12 medium-6 cell">
+              <label
+                >First Name:
+                <input
+                  type="text"
+                  placeholder="First Name..."
+                  formControlName="firstName"
+                  required
+                  autocomplete="off"
+                />
+              </label>
+            </div>
+            <div class="small-12 medium-6 cell">
+              <label
+                >Last Name:
+                <input type="text" placeholder="Last Name..." formControlName="lastName" required autocomplete="off" />
+              </label>
+            </div>
+            <div class="small-12 cell">
+              <label
+                >Email Address:
+                <input
+                  type="email"
+                  placeholder="Email Address..."
+                  formControlName="email"
+                  required
+                  autocomplete="off"
+                />
+              </label>
+            </div>
+            <div class="small-12 cell">
+              <label
+                >Password:
+                <input
+                  type="password"
+                  aria-describedby="passwordHelpText"
+                  placeholder="Password..."
+                  formControlName="password"
+                  autocomplete="off"
+                />
+              </label>
+              <p class="help-text" id="passwordHelpText">(leave blank to keep the same)</p>
+            </div>
+            <div class="small-12 cell">
+              <label
+                >Telephone No:
+                <input
+                  type="tel"
+                  placeholder="Telephone No..."
+                  formControlName="telephone"
+                  required
+                  autocomplete="off"
+                />
+              </label>
+            </div>
+            <div class="small-12 cell">
+              <label
+                >1st Line Address:
+                <input
+                  type="text"
+                  placeholder="1st Line Address..."
+                  formControlName="address1"
+                  required
+                  autocomplete="off"
+                />
+              </label>
+            </div>
+            <div class="small-12 cell">
+              <label
+                >2nd Line Address:
+                <input type="text" placeholder="2nd Line Address..." formControlName="address2" autocomplete="off" />
+              </label>
+            </div>
+            <div class="small-12 cell">
+              <label
+                >3rd Line Address:
+                <input type="text" placeholder="3rd Line Address..." formControlName="address3" autocomplete="off" />
+              </label>
+            </div>
+            <div class="small-12 cell">
+              <label
+                >Town/City:
+                <input type="text" placeholder="Town/City..." formControlName="townCity" required autocomplete="off" />
+              </label>
+            </div>
+            <div class="small-12 cell">
+              <label
+                >Postcode:
+                <input type="text" placeholder="Postcode..." formControlName="postcode" required autocomplete="off" />
+              </label>
+            </div>
+            <div class="small-12 cell">
+              <label
+                >Country:
+                <select formControlName="country" required>
+                  <option [value]="country.abbr" *ngFor="let country of authService.countryList">{{
+                    country.name
+                  }}</option>
+                </select>
+              </label>
+            </div>
+            <div class="small-12 cell margin-bottom-1">
+              <button
+                class="button primary shadow bordered radius text-uppercase"
+                type="submit"
+                [disabled]="form.invalid"
+              >
+                Update your Account
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+<div class="callout success" data-closable>
+  <h5>Success!</h5>
+  <p>Your account details have been successfully updated.</p>
+  <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
+<div class="callout alert" data-closable>
+  <h5>Alert!</h5>
+  <p>
+    An error occurred when trying to update your account details. <br />Please Try Again Later! <br />Error Code:
+    <span class="error"></span>
+  </p>
+  <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+    <span aria-hidden="true">&times;</span>
+  </button>
+</div>
