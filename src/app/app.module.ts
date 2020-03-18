@@ -24,6 +24,7 @@ import { ShopNowComponent } from './shop-now/shop-now.component';
 import { UsedCategoryComponent } from './used-equipment/used-category/used-category.component';
 import { AccountComponent } from './account/account.component';
 import { EditComponent } from './account/edit/edit.component';
+import { ProductComponent } from './product/product.component';
 
 @NgModule({
   declarations: [
@@ -41,7 +42,8 @@ import { EditComponent } from './account/edit/edit.component';
     ShopNowComponent,
     UsedCategoryComponent,
     AccountComponent,
-    EditComponent
+    EditComponent,
+    ProductComponent
   ],
   imports: [
     AppRoutingModule,

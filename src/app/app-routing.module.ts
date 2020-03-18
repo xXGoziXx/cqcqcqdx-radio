@@ -13,10 +13,22 @@ import { AccountComponent } from './account/account.component';
 import { ContactComponent } from './contact/contact.component';
 import { ShopNowComponent } from './shop-now/shop-now.component';
 import { EditComponent } from './account/edit/edit.component';
+import { ProductComponent } from './product/product.component';
+
 const routes: Routes = [
   {
     path: 'home',
     redirectTo: '/'
+  },
+  {
+    path: 'product',
+    component: ProductComponent,
+    data: { breadcrumb: 'All Products' }
+  },
+  {
+    path: 'product/:id',
+    component: ProductComponent,
+    data: { breadcrumb: 'Product' }
   },
   {
     path: 'shop-now',

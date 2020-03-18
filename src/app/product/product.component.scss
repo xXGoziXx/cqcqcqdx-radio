@@ -1,0 +1,13 @@
+.current-sr {
+  visibility: hidden;
+  &.is-active {
+    visibility: visible;
+  }
+}
+.orbit-controls > button {
+  background-color: rgba(0, 0, 0, 1);
+}
+.orbit-controls > button {
+  -webkit-filter: invert(0%);
+          filter: invert(0%);
+}

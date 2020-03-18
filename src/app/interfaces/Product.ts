@@ -13,4 +13,5 @@ export interface Product {
   rating: Array<Rating>;
   stock: number;
   used: boolean;
+  category: string;
 }

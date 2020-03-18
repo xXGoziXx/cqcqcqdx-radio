@@ -14,7 +14,7 @@
       <p>To <a [routerLink]="['/account/edit']">edit your account details please click here.</a></p>
     </div>
     <div class="cell small-10 table-scroll">
-      <table class="shadow">
+      <table class="shadow unstriped">
         <thead>
           <tr class="shadow">
             <th class="text-uppercase">Order ID</th>
@@ -22,16 +22,48 @@
             <th class="text-uppercase">Delivery Address</th>
             <th class="text-uppercase">Total</th>
             <th class="text-uppercase">Status</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let order of orders$ | async">
-            <td>{{ order.order_id }}</td>
-            <td>{{ order.order_date.toMillis() | date: 'yyyy/MM/dd h:mm:ss a' }}</td>
-            <td>{{ this.objectFlattener(order.delivery_address) }}</td>
-            <td>{{ order.total }}</td>
-            <td>{{ order.status }}</td>
-          </tr>
+          <ng-container *ngFor="let order of orders$ | async">
+            <tr>
+              <td>{{ order.order_id }}</td>
+              <td>{{ order.order_date.toMillis() | date: 'yyyy/MM/dd h:mm:ss a' }}</td>
+              <td>{{ this.objectFlattener(order.delivery_address) }}</td>
+              <td>€{{ order.total }}</td>
+              <td>{{ order.status }}</td>
+              <td class="text-center">
+                <button
+                  class="button text-center margin-bottom-0 primary"
+                  (click)="showOrder(order.product_ids, order.order_id)"
+                  type="button"
+                >
+                  <!-- Screen readers will see "close" -->
+                  <span class="show-for-sr">Close</span>
+                  <!-- Visual users will see the X, but not the "Close" text -->
+                  <span aria-hidden="true"><i class="fi fi-shopping-cart"></i></span>
+                </button>
+              </td>
+            </tr>
+            <!-- Show ordered Products <mat-list-item>item</mat-list-item> -->
+            <ng-container *ngIf="currOrderId === order.order_id">
+              <tr *ngFor="let products of products$" [class]="'order-' + order.order_id">
+                <td colspan="2" class="width-25">
+                  <ng-container *ngFor="let product of products | async">
+                    <img [src]="product.images[0]" [alt]="product.name" />
+                  </ng-container>
+                </td>
+                <td colspan="4">
+                  <ng-container *ngFor="let product of products | async">
+                    <p><span class="font-bold">Name:</span> {{ product.name | titlecase }}</p>
+                    <p><span class="font-bold">Brand:</span> {{ product.manufacturer | titlecase }}</p>
+                    <p><span class="font-bold">Price:</span> {{ product.price | currency: 'EUR' }}</p>
+                  </ng-container>
+                </td>
+              </tr>
+            </ng-container>
+          </ng-container>
         </tbody>
       </table>
     </div>

@@ -25,13 +25,17 @@ export class AppComponent implements OnInit {
         return i <= currIndex;
       })
       .join('/');
+
   replace = (word: string, searchValue: RegExp | string, replaceValue: string) =>
-    word.replace(new RegExp(searchValue, 'g'), replaceValue);
+    unescape(word.replace(new RegExp(searchValue, 'g'), replaceValue));
 
   constructor(router: Router) {
     router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((res: NavigationEnd) => {
       this.breadcrumbs = res.urlAfterRedirects.split('/');
       this.breadcrumbs.shift();
+      if (this.breadcrumbs[0] === 'product') {
+        console.log('breadcrumb found');
+      }
     });
   }
   onActivate(_: any) {

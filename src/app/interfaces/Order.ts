@@ -4,7 +4,8 @@ export interface Order {
   delivery_address: Address;
   order_date: Timestamp;
   order_id: string;
-  product_id: string;
+  product_ids: Array<string>;
   total: number;
-  status: string;
+  status: Status;
 }
+export type Status = 'Pending' | 'Delivered';

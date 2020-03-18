@@ -4,4 +4,24 @@
       <h2 class="text-uppercase text-center ">{{ category.banner }}</h2>
     </div>
   </div>
+  <div class="grid-x grid-margin-y grid-margin-x small-up-1 medium-up-3 large-up-5 align-stretch-spaced content">
+    <div class="cell" *ngFor="let product of products$ | async">
+      <!-- image has padding -->
+      <a [routerLink]="['/product', product.id]" routerLinkActive="active">
+        <div class="grid-y card height-100 radius bordered shadow align-center">
+          <div class="cell small-auto width-100 card-section">
+            <img [src]="product.images[0]" [alt]="product.name" />
+          </div>
+          <div class="cell small-shrink width-100 card-section text ">
+            <span class="fi-wrapper align-self-stretch align-center">
+              <i class="fi fi-shopping-bag align-self-middle"></i>
+            </span>
+
+            <p class="text-uppercase text-center align-self-middle font-bold">{{ product.name }}</p>
+            <p class="text-uppercase text-center align-self-middle font-bold ">€{{ product.price }}</p>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
 </div>

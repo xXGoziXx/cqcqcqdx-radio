@@ -447,7 +447,6 @@ export class AuthService {
       .set(updatedDetails, { merge: true })
       .then(() => {
         $('.callout.success').show();
-        console.log('I think it worked!');
       })
       .catch(err => {
         $('.callout.alert').show();

@@ -1,0 +1,120 @@
+<div class="grid-container">
+  <div class="grid-x banner shadow grid-margin-x align-center-middle" *ngIf="!isProductId">
+    <div class="cell">
+      <h2 class="text-uppercase text-center " #allTitle>All Products</h2>
+    </div>
+  </div>
+  <div class="grid-x grid-padding-x" *ngIf="isProductId; else allBody">
+    <ng-container *ngFor="let product of products$ | async">
+      <div class="cell small-6">
+        <div class="grid-x grid-margin-y grid-margin-x align-center-middle content">
+          <div class="cell small-12">
+            <img [src]="product.images[0]" [alt]="product.name" />
+          </div>
+          <div class="cell small-12">
+            <div id="radio-orbit" class="orbit" role="region" aria-label="Radio Equipment" data-orbit>
+              <div class="orbit-wrapper">
+                <div class="orbit-controls">
+                  <button class="orbit-previous"><span class="show-for-sr">Previous Slide</span>&#9664;&#xFE0E;</button>
+                  <button class="orbit-next"><span class="show-for-sr">Next Slide</span>&#9654;&#xFE0E;</button>
+                </div>
+                <div class="slick-carousel height-25"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cell small-6">
+        <div class="grid-x">
+          <div class="cell small-12">
+            <h2 class="font-bolder text-accent text-uppercase margin-bottom-0">
+              {{ product.manufacturer }}
+            </h2>
+          </div>
+          <div class="cell small-12">
+            <h2 class="font-bolder text-uppercase margin-bottom-2">
+              {{ product.name }}
+            </h2>
+          </div>
+          <br />
+          <div class="cell small-12">
+            <h3 class="font-bold text-accent text-uppercase">{{ product.price | currency: 'EUR' }}</h3>
+          </div>
+          <div class="cell small-12 margin-top-3">
+            <div class="grid-x align-right align-middle">
+              <div class="shrink cell">
+                <label for="quantity-label" class="font-bold">QUANTITY &nbsp;</label>
+              </div>
+              <div class="shrink cell">
+                <input
+                  type="number"
+                  class="margin-bottom-0"
+                  id="quantity-label"
+                  [value]="quantity"
+                  [(ngModel)]="quantity"
+                />
+              </div>
+            </div>
+          </div>
+          <div class="cell small-12 margin-top-1">
+            <div class="button-group align-right align-middle">
+              <button
+                class="button primary font-bold"
+                (click)="productService.addItemToCart(product, quantity)"
+                [disabled]="quantity < 1"
+              >
+                ADD TO CART
+              </button>
+              <button
+                class="button primary font-bold"
+                (click)="productService.removeItemFromCart(product)"
+                [disabled]="this.productService.cart.length === 0"
+              >
+                REMOVE FROM CART
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cell small-12 margin-vertical-1">
+        <p class="h3 font-bold text-white black padding-left-1 text-uppercase margin-bottom-1">
+          Description
+        </p>
+        <p>{{ product.description }}</p>
+      </div>
+      <div class="cell small-12 margin-vertical-1">
+        <p class="h3 font-bold text-white black padding-left-1 text-uppercase margin-bottom-1">
+          Reviews
+        </p>
+        <div *ngFor="let rating of product.rating">
+          <p class="clearfix align-middle margin-bottom-0">
+            <span class="h4 font-bold float-left margin-bottom-0">{{ rating.name }}</span>
+            <span class="h6 float-right margin-bottom-0">{{ rating.date.seconds * 1000 | date: 'short' }}</span>
+          </p>
+          <span><i class="fi fi-star text-accent" *ngFor="let item of arrNum(rating.stars)">&nbsp;</i></span>
+          <p>{{ rating.review }}</p>
+          <hr />
+        </div>
+      </div>
+    </ng-container>
+  </div>
+
+  <ng-template #allBody>
+    <!-- All the products go here -->
+    <div class="grid-x grid-margin-y grid-margin-x small-up-1 medium-up-3 large-up-5 align-stretch-spaced content ">
+      <div class="cell" *ngFor="let product of products$ | async">
+        <!-- image has padding -->
+        <a [routerLink]="['/product', product.id]" routerLinkActive="active">
+          <div class="grid-y card height-100 radius bordered shadow align-center">
+            <div class="cell small-auto width-100 card-section">
+              <img [src]="product.images[0]" [alt]="product.name" />
+            </div>
+            <div class="cell small-shrink width-100 card-section text">
+              <p class="text-uppercase text-center align-self-middle font-bold">{{ product.name }}</p>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </ng-template>
+</div>
