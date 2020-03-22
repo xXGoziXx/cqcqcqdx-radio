@@ -62,7 +62,7 @@
                       </button>
                     </td>
                   </tr>
-                  <!-- Show ordered Products <mat-list-item>item</mat-list-item> -->
+                  <!-- Show ordered Products  -->
                   <ng-container *ngIf="currOrderId === order.order_id">
                     <tr *ngFor="let products of products$" [class]="'order-' + order.order_id">
                       <td colspan="2" class="width-25">
@@ -166,7 +166,7 @@
                     <label
                       >Category:
                       <select formControlName="category" required autocomplete="off">
-                        <option *ngFor="let category of categories" [value]="category.text">
+                        <option *ngFor="let category of categories" [value]="category.text | lowercase">
                           {{ category.text | titlecase }}
                         </option>
                       </select>
@@ -184,9 +184,13 @@
                     </label>
                   </div>
                   <div class="small-12 cell">
-                    <label for="imgUpload" class="button text-uppercase">Image</label>
+                    <label for="imgUpload" class="button text-uppercase"
+                      >Upload an Image
+
+                      <i class="fi fi-photo"></i>
+                    </label>
                     <input id="imgUpload" type="file" formControlName="image" class="show-for-sr" />
-                    <div
+                    <!-- <div
                       class="progress"
                       role="progressbar"
                       tabindex="0"
@@ -199,7 +203,7 @@
                       <span class="progress-meter" style="width: 25%">
                         <span class="progress-meter-text">25%</span>
                       </span>
-                    </div>
+                    </div> -->
                   </div>
 
                   <div class="small-12 cell margin-bottom-1">
@@ -231,8 +235,43 @@
                   <div class="small-12 cell">
                     <label
                       >Name:
-                      <input type="text" placeholder="Manufacturer Name..." formControlName="name" required autocomplete="off" />
+                      <input
+                        type="text"
+                        placeholder="Manufacturer Name..."
+                        formControlName="name"
+                        required
+                        autocomplete="off"
+                      />
                     </label>
+                  </div>
+                  <div class="small-12 cell">
+                    <label for="imgUpload" class="button text-uppercase"
+                      >Upload an Image <i class="fi fi-photo"></i
+                    ></label>
+                    <input id="imgUpload" type="file" formControlName="image" class="show-for-sr" />
+                    <!-- <div
+                      class="progress"
+                      role="progressbar"
+                      tabindex="0"
+                      aria-valuenow="25"
+                      aria-valuemin="0"
+                      aria-valuetext="25 percent"
+                      aria-valuemax="100"
+                      id="imageProgress"
+                    >
+                      <span class="progress-meter" style="width: 25%">
+                        <span class="progress-meter-text">25%</span>
+                      </span>
+                    </div> -->
+                  </div>
+                  <div class="small-12 cell margin-bottom-1">
+                    <button
+                      class="button primary shadow bordered radius text-uppercase"
+                      type="submit"
+                      [disabled]="manufacturerForm.invalid"
+                    >
+                      Add Manufacturer
+                    </button>
                   </div>
                 </div>
               </div>

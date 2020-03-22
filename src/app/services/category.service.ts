@@ -1,13 +1,30 @@
 import { Injectable } from '@angular/core';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
+import { Manufacturer } from '../interfaces/Manufacturer';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CategoryService {
+  manufacturersRef: AngularFirestoreCollection<Manufacturer>;
   linkUsed(text) {
     return text.replace(/\s/g, '-').toLowerCase();
   }
-  constructor() {}
+  // manufacturers stored in firestore
+  // dbManufacturers = []
+
+  constructor(private afs: AngularFirestore) {
+    this.manufacturersRef = this.afs.collection<Manufacturer>('manufacturers');
+    this.manufacturersRef.valueChanges().subscribe(docs => {
+      console.log(docs);
+      manufacturers = docs
+        .filter(doc => !(Object.keys(doc).length === 0 && doc.constructor === Object))
+        .map(doc => {
+          console.log('doc', doc);
+          return { alt: doc.name.toLowerCase(), src: doc.image[0], text: doc.name };
+        });
+    });
+  }
 }
 export const used = [
   {
@@ -151,13 +168,7 @@ export const brandNew = [
   {
     alt: 'accessories',
     src: '../../assets/img/used-equipment/accessories.jpg',
-    text: `USED ACCESSORIES FOR AMATEUR RADIO`
+    text: `ACCESSORIES FOR AMATEUR RADIO`
   }
 ];
-export const manufacturers = [
-  {
-    alt: 'accessories',
-    src: '../../assets/img/used-equipment/accessories.jpg',
-    text: `USED ACCESSORIES FOR AMATEUR RADIO`
-  }
-];
+export let manufacturers = [];

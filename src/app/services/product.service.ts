@@ -5,6 +5,8 @@ import { Manufacturer } from 'src/app/interfaces/Manufacturer';
 import { Observable, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { Cart } from '../interfaces/Cart';
+import firebase from 'firebase/app';
+import 'firebase/database'; // If using Firebase database
 
 @Injectable({
   providedIn: 'root'
@@ -24,17 +26,38 @@ export class ProductService {
   object = Object.keys;
   productsRef = this.afs.collection<Product>('products');
   manufacturersRef = this.afs.collection<Manufacturer>('manufacturers');
+  productCounter: number;
+
   addProduct = productForm => {
     console.log(productForm);
-    // return this.productsRef.doc().set({
-    // ...productForm
-    // });
+    return this.afs
+      .doc('users/adminList')
+      .valueChanges()
+      .subscribe(doc => {
+        console.log(doc);
+        this.productCounter = (doc as any).productCounter;
+        console.log('pc', this.productCounter);
+        this.productsRef
+          .add({
+            ...productForm,
+            date_added: firebase.firestore.FieldValue.serverTimestamp(),
+            id: this.productCounter,
+            used: productForm.condition === 'New' ? false : true
+          })
+          .then(() => {
+            this.afs.doc('users/adminList').update({ productCounter: this.productCounter++ });
+          });
+      });
   };
   addManufacturer = manufacturerForm => {
-    console.log(manufacturerForm);
-    // return this.manufacturersRef.doc().set({
-    // ...manufacturerForm
-    // });
+    console.log({
+      ...manufacturerForm,
+      image: ['']
+    });
+    return this.manufacturersRef.add({
+      ...manufacturerForm,
+      image: ['']
+    });
   };
   removeItemFromCart = (product: Cart) => {
     const productID = this.cart.map(x => x.id).indexOf(product.id);
