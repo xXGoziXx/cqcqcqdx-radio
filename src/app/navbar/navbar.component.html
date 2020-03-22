@@ -22,8 +22,8 @@
     <div class="number cell ">
       <b><a href="tel:089 982 2017">089 982 2017</a></b>
     </div>
-    <div class="weekdays cell">Monday - Friday: <br class="hide-for-large" />9:00am - 5:00pm</div>
-    <div class="weekends cell">Saturday: <br class="hide-for-large" />9:30am - 4:00pm</div>
+    <div class="weekdays cell">Monday - Friday: <br class="show-for-medium" />9:00am - 5:00pm</div>
+    <div class="weekends cell">Saturday: <br class="show-for-medium-only" />9:30am - 4:00pm</div>
   </div>
   <!-- <div class="cell auto"></div> -->
 
@@ -197,7 +197,7 @@
                   <span class="show-for-sr">Close</span>
                   <!-- Visual users will see the X, but not the "Close" text -->
                   <span aria-hidden="true">
-                    <i class="fi fi-trash"></i>
+                    <i class="fi fi-minus"></i>
                   </span>
                 </button>
               </td>
@@ -208,11 +208,13 @@
     </ng-template>
   </div>
   <div *ngIf="this.productService.cart.length !== 0" class="modal-footer ">
-    <div class="col "><b>Total:</b> €{{ this.productService.checkoutCart.transactions[0].amount.total }}</div>
+    <div class="col text-center">
+      <b>Total:</b> {{ this.productService.checkoutCart.transactions[0].amount.total | currency: 'EUR' }}
+    </div>
     <br />
     <div class="col ">
       <div class="center">
-        <div class="container" id="modalCheckout"></div>
+        <div class="container text-center" id="basketCheckout"></div>
       </div>
     </div>
   </div>

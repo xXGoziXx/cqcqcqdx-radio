@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { Observable } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
@@ -33,6 +33,7 @@ export class ProductComponent implements OnInit {
       .map((val, i) => i);
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private afs: AngularFirestore,
 
     public productService: ProductService
@@ -48,6 +49,7 @@ export class ProductComponent implements OnInit {
       // console.log(params.get('category'));
       // 'category' is the variable name from 'app-routing'
       this.id = parseInt(params.get('id'), 10);
+      console.log(params.get('id'));
       this.isProductId = !Number.isNaN(this.id);
       this.isProductId ? console.log(true, this.id) : console.log(false, this.id);
       if (this.isProductId) {
@@ -65,7 +67,7 @@ export class ProductComponent implements OnInit {
                 'slickAdd',
                 `<div>
                 <figure class="orbit-figure">
-                <img class="orbit-image" src="${image.toString()}" alt="${product.name}" />
+                <img class="orbit-image" src="${image}" alt="${product.name}" />
                 </figure>
                 </div>`
               );
@@ -73,6 +75,8 @@ export class ProductComponent implements OnInit {
           });
           // productsSub.unsubscribe();
         });
+      } else if (this.id) {
+        this.router.navigate(['/product']);
       } else {
         // there should be all of them
         this.products$ = this.afs.collection<Product>('products').valueChanges();

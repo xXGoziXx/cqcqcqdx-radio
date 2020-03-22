@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { Product } from 'src/app/interfaces/Product';
+import { Manufacturer } from 'src/app/interfaces/Manufacturer';
 import { Observable, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { Cart } from '../interfaces/Cart';
@@ -21,9 +22,23 @@ export class ProductService {
   };
   cart: Cart[] = [];
   object = Object.keys;
-  removeItemFromCart(product: Cart) {
+  productsRef = this.afs.collection<Product>('products');
+  manufacturersRef = this.afs.collection<Manufacturer>('manufacturers');
+  addProduct = productForm => {
+    console.log(productForm);
+    // return this.productsRef.doc().set({
+    // ...productForm
+    // });
+  };
+  addManufacturer = manufacturerForm => {
+    console.log(manufacturerForm);
+    // return this.manufacturersRef.doc().set({
+    // ...manufacturerForm
+    // });
+  };
+  removeItemFromCart = (product: Cart) => {
     const productID = this.cart.map(x => x.id).indexOf(product.id);
-    console.log('RIFC product: ', product);
+    console.log('RIFC Product: ', product);
     if (this.cart[productID]) {
       console.log('No. of products: ', this.cart[productID].quantity);
       // Removes item from shopping cart if it's only there once
@@ -33,10 +48,14 @@ export class ProductService {
       } else {
         this.cart[productID].quantity--;
       }
+      this.checkoutCart.transactions[0].amount.total = this.cart
+        .map(item => item.quantity * item.price)
+        .reduce((total, price) => total + price, 0.0)
+        .toString();
     }
     console.log('Cart(after removal): ', this.cart);
-  }
-  addItemToCart(product, quantity) {
+  };
+  addItemToCart = (product, quantity) => {
     const productID = this.cart.map(x => x.id).indexOf(product.id);
     console.log('Cart(before): ', this.cart);
     if (productID !== -1) {
@@ -56,6 +75,6 @@ export class ProductService {
     console.log('Cart(after): ', this.cart);
     console.log('product Key: ', product.id);
     console.log('Checkout Cart: ', JSON.stringify(this.checkoutCart));
-  }
+  };
   constructor(private afs: AngularFirestore) {}
 }

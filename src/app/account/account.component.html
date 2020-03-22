@@ -1,71 +1,317 @@
-<div class="grid-container">
+<div class="grid-container fluid">
   <div class="grid-x banner shadow grid-margin-x align-center-middle">
     <div class="cell">
       <h2 class="text-uppercase text-center ">Account Home</h2>
     </div>
   </div>
-  <div class="grid-y">
-    <div class="cell small-12">
-      <p>
-        Your current orders are shown below.
-      </p>
-    </div>
+  <div class="grid-x grid-margin-x">
     <div class="cell small-12">
       <p>To <a [routerLink]="['/account/edit']">edit your account details please click here.</a></p>
     </div>
-    <div class="cell small-10 table-scroll">
-      <table class="shadow unstriped">
-        <thead>
-          <tr class="shadow">
-            <th class="text-uppercase">Order ID</th>
-            <th class="text-uppercase">Order Date</th>
-            <th class="text-uppercase">Delivery Address</th>
-            <th class="text-uppercase">Total</th>
-            <th class="text-uppercase">Status</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          <ng-container *ngFor="let order of orders$ | async">
-            <tr>
-              <td>{{ order.order_id }}</td>
-              <td>{{ order.order_date.toMillis() | date: 'yyyy/MM/dd h:mm:ss a' }}</td>
-              <td>{{ this.objectFlattener(order.delivery_address) }}</td>
-              <td>€{{ order.total }}</td>
-              <td>{{ order.status }}</td>
-              <td class="text-center">
-                <button
-                  class="button text-center margin-bottom-0 primary"
-                  (click)="showOrder(order.product_ids, order.order_id)"
-                  type="button"
-                >
-                  <!-- Screen readers will see "close" -->
-                  <span class="show-for-sr">Close</span>
-                  <!-- Visual users will see the X, but not the "Close" text -->
-                  <span aria-hidden="true"><i class="fi fi-shopping-cart"></i></span>
-                </button>
-              </td>
-            </tr>
-            <!-- Show ordered Products <mat-list-item>item</mat-list-item> -->
-            <ng-container *ngIf="currOrderId === order.order_id">
-              <tr *ngFor="let products of products$" [class]="'order-' + order.order_id">
-                <td colspan="2" class="width-25">
-                  <ng-container *ngFor="let product of products | async">
-                    <img [src]="product.images[0]" [alt]="product.name" />
+    <div class="cell medium-3" *ngIf="authService.currentUserDoc.admin">
+      <ul class="vertical tabs" data-tabs id="account-tabs">
+        <li
+          *ngFor="let tabPanel of tabPanels; let isFirst = first"
+          class="tabs-title"
+          [ngClass]="{ 'is-active': isFirst }"
+        >
+          <a href="#{{ tabPanel.id }}" aria-selected="true">{{ tabPanel.name }}</a>
+        </li>
+      </ul>
+    </div>
+    <div
+      class="cell"
+      [ngClass]="{
+        cell: true,
+        'medium-9': authService.currentUserDoc.admin,
+        'medium-12': !authService.currentUserDoc.admin
+      }"
+    >
+      <div [ngClass]="{ 'tabs-content': authService.currentUserDoc.admin }" data-tabs-content="account-tabs">
+        <div class="grid-y tabs-panel is-active" id="myOrders">
+          <div class="cell small-10 table-scroll">
+            <table class="shadow unstriped">
+              <thead>
+                <tr class="shadow">
+                  <th class="text-uppercase">Order ID</th>
+                  <th class="text-uppercase">Order Date</th>
+                  <th class="text-uppercase">Delivery Address</th>
+                  <th class="text-uppercase">Total</th>
+                  <th class="text-uppercase">Status</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let order of orders$ | async">
+                  <tr>
+                    <td>{{ order.order_id }}</td>
+                    <td>{{ order.order_date.toMillis() | date: 'yyyy/MM/dd h:mm:ss a' }}</td>
+                    <td>{{ this.objectFlattener(order.delivery_address) }}</td>
+                    <td>{{ order.total | currency: 'EUR' }}</td>
+                    <td>{{ order.status }}</td>
+                    <td class="text-center">
+                      <button
+                        class="button text-center margin-bottom-0 primary"
+                        (click)="showOrder(order.product_ids, order.order_id)"
+                        type="button"
+                      >
+                        <!-- Screen readers will see "close" -->
+                        <span class="show-for-sr">Close</span>
+                        <!-- Visual users will see the X, but not the "Close" text -->
+                        <span aria-hidden="true"><i class="fi fi-shopping-cart"></i></span>
+                      </button>
+                    </td>
+                  </tr>
+                  <!-- Show ordered Products <mat-list-item>item</mat-list-item> -->
+                  <ng-container *ngIf="currOrderId === order.order_id">
+                    <tr *ngFor="let products of products$" [class]="'order-' + order.order_id">
+                      <td colspan="2" class="width-25">
+                        <ng-container *ngFor="let product of products | async">
+                          <img [src]="product.images[0]" [alt]="product.name" />
+                        </ng-container>
+                      </td>
+                      <td colspan="3">
+                        <ng-container *ngFor="let product of products | async">
+                          <p><span class="font-bold">Name:</span> {{ product.name | titlecase }}</p>
+                          <p><span class="font-bold">Brand:</span> {{ product.manufacturer | titlecase }}</p>
+                          <p><span class="font-bold">Price:</span> {{ product.price | currency: 'EUR' }}</p>
+                        </ng-container>
+                      </td>
+                      <td class="text-center" colspan="1">
+                        <ng-container *ngFor="let product of products | async">
+                          <a
+                            [routerLink]="['/product', product.id]"
+                            class="button text-center margin-bottom-0 hollow"
+                            (click)="showOrder(order.product_ids, order.order_id)"
+                            type="button"
+                          >
+                            <!-- Screen readers will see "close" -->
+                            <span class="show-for-sr">Close</span>
+                            <!-- Visual users will see the X, but not the "Close" text -->
+                            <span aria-hidden="true" class="font-bold"><i class="fi fi-eye"></i></span> </a
+                        ></ng-container>
+                      </td>
+                    </tr>
                   </ng-container>
-                </td>
-                <td colspan="4">
-                  <ng-container *ngFor="let product of products | async">
-                    <p><span class="font-bold">Name:</span> {{ product.name | titlecase }}</p>
-                    <p><span class="font-bold">Brand:</span> {{ product.manufacturer | titlecase }}</p>
-                    <p><span class="font-bold">Price:</span> {{ product.price | currency: 'EUR' }}</p>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="grid-y tabs-panel" id="addProduct">
+          <div class="cell small-12 large-10 form-container margin-top-1 margin-bottom-1">
+            <h5 class="text-uppercase font-bolder margin-top-1">
+              You can add a product by filling out the form below:
+            </h5>
+            <form
+              class="margin-top-1"
+              [formGroup]="productForm"
+              (ngSubmit)="productService.addProduct(productForm.value)"
+            >
+              <div class="grid-container fluid">
+                <div class="grid-x grid-margin-x">
+                  <div class="small-12 cell">
+                    <label
+                      >Name:
+                      <input type="text" placeholder="Name..." formControlName="name" required autocomplete="off" />
+                    </label>
+                  </div>
+                  <div class="small-12 cell">
+                    <label
+                      >Manufacturer:
+                      <select formControlName="manufacturer" required autocomplete="off">
+                        <option *ngFor="let manufacturer of this.manufacturers" [value]="manufacturer.text">
+                          {{ manufacturer.text | titlecase }}
+                        </option>
+                      </select>
+                    </label>
+                  </div>
+
+                  <div class="small-12 medium-6 cell">
+                    <label>Price: </label>
+                    <div class="input-group">
+                      <span class="input-group-label">&euro;</span>
+                      <input
+                        class="input-group-field"
+                        type="number"
+                        min="0.00"
+                        value="0.00"
+                        step=".01"
+                        formControlName="price"
+                        required
+                        autocomplete="off"
+                      />
+                    </div>
+                  </div>
+                  <div class="small-12 medium-6 cell">
+                    <label
+                      >Stock:
+                      <input type="number" min="1" value="1" formControlName="stock" required autocomplete="off" />
+                    </label>
+                  </div>
+                  <div class="small-12 cell">
+                    <label
+                      >Condition:
+                      <select formControlName="condition" required autocomplete="off">
+                        <option value="New">New</option>
+                        <option value="Renewed">Renewed</option>
+                        <option value="Used - Open Box">Used - Open Box</option>
+                        <option value="Used - Very Good">Used - Very Good</option>
+                        <option value="Used - Good">Used - Good</option>
+                        <option value="Used - Acceptable">Used - Acceptable</option>
+                      </select>
+                    </label>
+                  </div>
+                  <div class="small-12 cell">
+                    <label
+                      >Category:
+                      <select formControlName="category" required autocomplete="off">
+                        <option *ngFor="let category of categories" [value]="category.text">
+                          {{ category.text | titlecase }}
+                        </option>
+                      </select>
+                    </label>
+                  </div>
+                  <div class="small-12 cell">
+                    <label
+                      >Description:
+                      <textarea
+                        placeholder="Description..."
+                        formControlName="description"
+                        autocomplete="off"
+                        required
+                      ></textarea>
+                    </label>
+                  </div>
+                  <div class="small-12 cell">
+                    <label for="imgUpload" class="button text-uppercase">Image</label>
+                    <input id="imgUpload" type="file" formControlName="image" class="show-for-sr" />
+                    <div
+                      class="progress"
+                      role="progressbar"
+                      tabindex="0"
+                      aria-valuenow="25"
+                      aria-valuemin="0"
+                      aria-valuetext="25 percent"
+                      aria-valuemax="100"
+                      id="imageProgress"
+                    >
+                      <span class="progress-meter" style="width: 25%">
+                        <span class="progress-meter-text">25%</span>
+                      </span>
+                    </div>
+                  </div>
+
+                  <div class="small-12 cell margin-bottom-1">
+                    <button
+                      class="button primary shadow bordered radius text-uppercase"
+                      type="submit"
+                      [disabled]="productForm.invalid"
+                    >
+                      Add Product
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="grid-y tabs-panel" id="addManufacturer">
+          <div class="cell small-12 large-10 form-container margin-top-1 margin-bottom-1">
+            <h5 class="text-uppercase font-bolder margin-top-1">
+              You can add a manufacturer by filling out the form below
+            </h5>
+            <form
+              [formGroup]="manufacturerForm"
+              (ngSubmit)="productService.addManufacturer(manufacturerForm.value)"
+              class="margin-top-1"
+            >
+              <div class="grid-container fluid">
+                <div class="grid-x grid-margin-x">
+                  <div class="small-12 cell">
+                    <label
+                      >Name:
+                      <input type="text" placeholder="Manufacturer Name..." formControlName="name" required autocomplete="off" />
+                    </label>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <div class="grid-y tabs-panel" id="viewAllOrders">
+          <div class="cell small-10 table-scroll">
+            <table class="shadow unstriped">
+              <thead>
+                <tr class="shadow">
+                  <th class="text-uppercase">Order ID</th>
+                  <th class="text-uppercase">Order Date</th>
+                  <th class="text-uppercase">Delivery Address</th>
+                  <th class="text-uppercase">Total</th>
+                  <th class="text-uppercase">Status</th>
+                  <th></th>
+                </tr>
+              </thead>
+              <tbody>
+                <ng-container *ngFor="let allOrders$ of allOrders">
+                  <ng-container *ngFor="let allOrder of allOrders$ | async">
+                    <tr>
+                      <td>{{ allOrder.order_id }}</td>
+                      <td>{{ allOrder.order_date.toMillis() | date: 'yyyy/MM/dd h:mm:ss a' }}</td>
+                      <td>{{ this.objectFlattener(allOrder.delivery_address) }}</td>
+                      <td>{{ allOrder.total | currency: 'EUR' }}</td>
+                      <td>{{ allOrder.status }}</td>
+                      <td class="text-center">
+                        <button
+                          class="button text-center margin-bottom-0 primary"
+                          (click)="showOrder(allOrder.product_ids, allOrder.order_id)"
+                          type="button"
+                        >
+                          <!-- Screen readers will see "close" -->
+                          <span class="show-for-sr">Close</span>
+                          <!-- Visual users will see the X, but not the "Close" text -->
+                          <span aria-hidden="true"><i class="fi fi-shopping-cart"></i></span>
+                        </button>
+                      </td>
+                    </tr>
+                    <!-- Show ordered Products <mat-list-item>item</mat-list-item> -->
+                    <ng-container *ngIf="currOrderId === allOrder.order_id">
+                      <tr *ngFor="let products of products$" [class]="'allOrder-' + allOrder.order_id">
+                        <td colspan="2" class="width-25">
+                          <ng-container *ngFor="let product of products | async">
+                            <img [src]="product.images[0]" [alt]="product.name" />
+                          </ng-container>
+                        </td>
+                        <td colspan="3">
+                          <ng-container *ngFor="let product of products | async">
+                            <p><span class="font-bold">Name:</span> {{ product.name | titlecase }}</p>
+                            <p><span class="font-bold">Brand:</span> {{ product.manufacturer | titlecase }}</p>
+                            <p><span class="font-bold">Price:</span> {{ product.price | currency: 'EUR' }}</p>
+                          </ng-container>
+                        </td>
+                        <td class="text-center" colspan="1">
+                          <ng-container *ngFor="let product of products | async">
+                            <a
+                              [routerLink]="['/product', product.id]"
+                              class="button text-center margin-bottom-0 hollow"
+                              (click)="showOrder(allOrder.product_ids, allOrder.order_id)"
+                              type="button"
+                            >
+                              <!-- Screen readers will see "close" -->
+                              <span class="show-for-sr">Close</span>
+                              <!-- Visual users will see the X, but not the "Close" text -->
+                              <span aria-hidden="true" class="font-bold"><i class="fi fi-eye"></i></span> </a
+                          ></ng-container>
+                        </td>
+                      </tr>
+                    </ng-container>
                   </ng-container>
-                </td>
-              </tr>
-            </ng-container>
-          </ng-container>
-        </tbody>
-      </table>
+                </ng-container>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 </div>

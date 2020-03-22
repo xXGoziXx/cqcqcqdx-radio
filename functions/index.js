@@ -28,12 +28,24 @@ const oauth2Client = new OAuth2(
 oauth2Client.setCredentials({
   refresh_token: refresh_token
 });
+const emails = email.split(',');
 const accessToken = oauth2Client.getAccessToken();
 const mailTransport = nodemailer.createTransport({
   service: 'gmail',
   auth: {
     type: 'OAuth2',
-    user: email,
+    user: emails[0],
+    clientId: id,
+    clientSecret: secret,
+    refreshToken: refresh_token,
+    accessToken: accessToken
+  }
+});
+const mailTransport2 = nodemailer.createTransport({
+  service: 'gmail',
+  auth: {
+    type: 'OAuth2',
+    user: emails[1],
     clientId: id,
     clientSecret: secret,
     refreshToken: refresh_token,
@@ -56,16 +68,17 @@ exports.sendContactMessage = functions.firestore.document('messages/{pushKey}').
     subject: `Message from "${val.name}"`,
     html: val.html
   };
-  return mailTransport
-    .sendMail(mailOptions)
-    .then(() => {
-      mailOptions = {
-        to: val.email,
-        from: `"CQCQCQDX Radio" <${email}>`,
-        sender: `"CQCQCQDX Radio" <${email}>`,
-        replyTo: `"CQCQCQDX Radio" <${email}>`,
-        subject: `Message from "CQCQCQDX Radio"`,
-        html: `<div>
+  return () => {
+    mailTransport
+      .sendMail(mailOptions)
+      .then(() => {
+        mailOptions = {
+          to: val.email,
+          from: `"CQCQCQDX Radio" <${email}>`,
+          sender: `"CQCQCQDX Radio" <${email}>`,
+          replyTo: `"CQCQCQDX Radio" <${email}>`,
+          subject: `Message from "CQCQCQDX Radio"`,
+          html: `<div>
             <div>
               <p>Hi ${val.name},<br>
                 <br>
@@ -87,10 +100,49 @@ exports.sendContactMessage = functions.firestore.document('messages/{pushKey}').
               </p>
             </div>
           </div>`
-      };
-      return mailTransport.sendMail(mailOptions);
-    })
-    .then(() => {
-      return console.log(`Mail successfully sent to ${val.name}<${val.email}>!`);
-    });
+        };
+        return mailTransport.sendMail(mailOptions);
+      })
+      .then(() => {
+        return console.log(`Mail successfully sent to ${val.name}<${val.email}>!`);
+      })
+      .catch();
+    return mailTransport2
+      .sendMail(mailOptions)
+      .then(() => {
+        mailOptions = {
+          to: val.email,
+          from: `"CQCQCQDX Radio" <${email}>`,
+          sender: `"CQCQCQDX Radio" <${email}>`,
+          replyTo: `"CQCQCQDX Radio" <${email}>`,
+          subject: `Message from "CQCQCQDX Radio"`,
+          html: `<div>
+            <div>
+              <p>Hi ${val.name},<br>
+                <br>
+                CQCQCQDX Radio has successfully received your message.<br>
+                We will try to respond to
+                you as soon as we can.<br>
+                <br>
+                <br>
+                Kind Regards,<br>
+                CQCQCQDX Radio
+              </p>
+            </div>
+            <hr>
+            <div>
+              <p>
+                <b><i>Important Info:</i></b><br>
+                <i>We do take time to read each and every single message sent to us.<br>
+                So, if you're not the one that sent a message to us on our website, please reply to this email and alert us immediately.</i>
+              </p>
+            </div>
+          </div>`
+        };
+        return mailTransport.sendMail(mailOptions);
+      })
+      .then(() => {
+        return console.log(`Mail successfully sent to ${val.name}<${val.email}>!`);
+      });
+  };
 });

@@ -2,7 +2,7 @@ import { Timestamp } from '@firebase/firestore-types';
 import { Url } from 'url';
 import { Rating } from './Rating';
 export interface Product {
-  condition: string;
+  condition: Condition;
   date_added: Timestamp;
   description: string;
   id: string;
@@ -15,3 +15,10 @@ export interface Product {
   used: boolean;
   category: string;
 }
+export type Condition =
+  | 'New'
+  | 'Renewed'
+  | 'Used - Open Box'
+  | 'Used - Very Good'
+  | 'Used - Good'
+  | 'Used - Acceptable';

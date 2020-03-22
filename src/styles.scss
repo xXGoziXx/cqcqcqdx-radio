@@ -4,6 +4,10 @@
 // Global Variable Overrides
 // @import './assets/scss/settings';
 $anchor-color: #f56356;
+$tab-color: #f56356;
+$tab-active-color: #f56356;
+$button-background: #f56356;
+$progress-meter-background: #f56356;
 // Import Foundation for Sites
 @import '~foundation-sites/scss/foundation';
 
@@ -24,7 +28,7 @@ $anchor-color: #f56356;
 @include foundation-button-group;
 @include foundation-close-button;
 @include foundation-label;
-// @include foundation-progress-bar;
+@include foundation-progress-bar;
 // @include foundation-slider;
 // @include foundation-switch;
 @include foundation-table;
@@ -43,7 +47,7 @@ $anchor-color: #f56356;
 @include foundation-media-object;
 @include foundation-orbit;
 @include foundation-responsive-embed;
-// @include foundation-tabs;
+@include foundation-tabs;
 // @include foundation-thumbnail;
 
 // ---- Menu-based containers ----
@@ -263,6 +267,19 @@ nav.breadcrumb-container {
       color: $accent !important;
     }
   }
+  &.hollow {
+    color: $accent;
+
+    border: 1px solid $accent;
+    &:hover, &:focus {
+      color: scale-color($accent, $lightness: -15%);
+
+      border: 1px solid scale-color($accent, $lightness: -15%);
+    }
+    &[disabled], &.disabled {
+      color: $accent !important;
+    }
+  }
 }
 .font-bolder {
   font-weight: 900 !important;
@@ -309,6 +326,11 @@ nav.orbit-bullets > button, .orbit-controls > button {
 // nav.orbit-bullets {
 //   background-color: rgba(255, 255, 255, 1);
 // }
+
+.tabs-content {
+  border-right: 0;
+  border-bottom: 0;
+}
 *:focus {
   outline: none;
 }

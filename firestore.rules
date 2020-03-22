@@ -4,25 +4,28 @@ service cloud.firestore {
     match /{document=**} {
       allow read, write: if false;
     }
+    match /PayPalSecrets/APIKeys {
+      allow read;
+    }
     match /messages/{document} {
-    	allow write: if true;
+    	allow write;
       allow read, update, delete: if false;
     }
     match /products/{document} {
-    	allow read : if true;
-      allow write, update, delete: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin == true;
+    	allow read;
+      allow write, update, delete: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin;
     }
     match /users/{userId} {
-      allow read : if true;
-      allow write, update, delete: if request.auth.uid == userId || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin == true;
+      allow read;
+      allow write, update, delete: if request.auth.uid == userId || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin;
       match /orders/{orderId} {
-      	allow read, write, update: if request.auth.uid == userId || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin == true;
-        allow delete: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin == true;
+      	allow read, write, update: if request.auth.uid == userId || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin;
+        allow delete: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin;
       }
     }
     match /users/adminList {
       allow read: if request.auth.uid != null;
-      allow write, update, delete: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin == true;
+      allow write, update, delete: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin;
     }
   }
 }

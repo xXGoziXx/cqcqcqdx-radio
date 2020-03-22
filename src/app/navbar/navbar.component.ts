@@ -4,6 +4,8 @@ import * as paypal from 'paypal-checkout';
 
 import { AuthService } from '../services/auth.service';
 import { used, manufacturers, brandNew, CategoryService } from '../services/category.service';
+import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { Subscription } from 'rxjs';
 declare var $: any;
 @Component({
   selector: 'app-navbar',
@@ -14,6 +16,10 @@ export class NavbarComponent implements OnInit {
   usedCategories = used;
   brandNewCategories = brandNew;
   manufacturerCategories = manufacturers;
+  productionKey: string;
+  sandboxKey: string;
+  PayPalSecretsDoc: AngularFirestoreDocument;
+  APIKeys;
   // paypal button
   createPaypalButton = checkoutCart => {
     paypal.Button.render(
@@ -28,9 +34,9 @@ export class NavbarComponent implements OnInit {
         },
         client: {
           // from https://developer.paypal.com/developer/applications/
-          sandbox: 'AdxeiunfE1Pi2lYB8jFgnBk-zd6Cz4aa4pGE91btkpdex8m10TI5uNUvgRmaJvg2W4DR3yKXGe3IGvMu',
+          sandbox: this.sandboxKey,
           // from https://developer.paypal.com/developer/applications/
-          production: 'AYXfqQHYPkCgH5ZpLf3NfvZGzbbnidPxO2Nk47fiKPA029JC3t_qO5VV8Fi55GN6k4Qf9vgBhnp8VAJL'
+          production: this.productionKey
         },
 
         // Pass the payment details for your transaction
@@ -48,7 +54,8 @@ export class NavbarComponent implements OnInit {
         // Pass a function to be called when the customer completes the payment
 
         onAuthorize(data, actions) {
-          return actions.payment.execute().then(function(response) {
+          return actions.payment.execute().then(response => {
+            
             console.log('The payment was completed!');
           });
         },
@@ -59,21 +66,36 @@ export class NavbarComponent implements OnInit {
           console.log('The payment was cancelled!');
         }
       },
-      '#modalCheckout'
+      '#basketCheckout'
     );
   };
+
   constructor(
     public authService: AuthService,
     public categoryService: CategoryService,
-    public productService: ProductService
+    public productService: ProductService,
+    private afs: AngularFirestore
   ) {
-    $('.reveal').on('open.zf.reveal', () => {
-      if (this.productService.cart.length !== 0) {
-        $('#modalCheckout').html('');
-        this.createPaypalButton(this.productService.checkoutCart);
-      }
+    this.PayPalSecretsDoc = this.afs.doc('PayPalSecrets/' + 'APIKeys');
+    this.APIKeys = this.PayPalSecretsDoc.valueChanges(); // Observable of Secret Data
+    const APIKeys$: Subscription = this.APIKeys.subscribe(e => {
+      // stores access_token from firestore
+      this.sandboxKey = e.sandbox;
+      this.productionKey = e.production;
+      // console.log(this.access_token);
+      APIKeys$.unsubscribe();
     });
   }
 
-  ngOnInit() {}
+  ngOnInit() {
+    $(() => {
+      $('#basketModal').on('open.zf.reveal', () => {
+        console.log('Testing!!');
+        if (this.productService.cart.length !== 0) {
+          $('#basketCheckout').html('');
+          this.createPaypalButton(this.productService.checkoutCart);
+        }
+      });
+    });
+  }
 }

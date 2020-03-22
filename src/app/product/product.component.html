@@ -32,18 +32,18 @@
             </h2>
           </div>
           <div class="cell small-12">
-            <h2 class="font-bolder text-uppercase margin-bottom-2">
+            <h2 class="font-bolder text-uppercase margin-bottom-1">
               {{ product.name }}
             </h2>
           </div>
           <br />
           <div class="cell small-12">
-            <h3 class="font-bold text-accent text-uppercase">{{ product.price | currency: 'EUR' }}</h3>
+            <h3 class="font-bold text-accent text-uppercase">Price: {{ product.price | currency: 'EUR' }}</h3>
           </div>
           <div class="cell small-12 margin-top-3">
             <div class="grid-x align-right align-middle">
               <div class="shrink cell">
-                <label for="quantity-label" class="font-bold">QUANTITY &nbsp;</label>
+                <label for="quantity-label" class="font-bold text-uppercase">Quantity &nbsp;</label>
               </div>
               <div class="shrink cell">
                 <input
@@ -80,6 +80,7 @@
         <p class="h3 font-bold text-white black padding-left-1 text-uppercase margin-bottom-1">
           Description
         </p>
+        <p class="margin-bottom-1"><b>Condition:</b> {{ product.condition }}</p>
         <p>{{ product.description }}</p>
       </div>
       <div class="cell small-12 margin-vertical-1">
