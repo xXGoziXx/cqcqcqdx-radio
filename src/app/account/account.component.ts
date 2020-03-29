@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Order } from '../interfaces/Order';
 import { Product } from '../interfaces/Product';
 import { AuthService } from '../services/auth.service';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import {
   AngularFirestoreCollection,
   AngularFirestore,
@@ -12,15 +12,17 @@ import {
 import { ProductService } from '../services/product.service';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { User } from '../interfaces/User';
-import { used, brandNew, manufacturers } from '../services/category.service';
+import { CategoryService } from '../services/category.service';
+import { ValidateDuplicateEntry } from '../validators/duplicateEntry.validator';
 @Component({
   selector: 'app-account',
   templateUrl: './account.component.html',
   styleUrls: ['./account.component.scss']
 })
-export class AccountComponent implements OnInit {
+export class AccountComponent implements OnInit, OnDestroy {
   usersOrderCollection: AngularFirestoreCollection<Order>;
   allUsersOrderCollection: AngularFirestoreCollection<Order>[];
+  allUsersCollectionSnapshot$: Subscription;
   allUserDocs: AngularFirestoreDocument<User>[];
   allUsersCollectionSnapshot: Observable<DocumentChangeAction<User>[]>;
   orders$: Observable<Order[]>;
@@ -31,8 +33,8 @@ export class AccountComponent implements OnInit {
   currOrderId = '';
   productForm: FormGroup;
   manufacturerForm: FormGroup;
-  categories = [...used, ...brandNew];
-  manufacturers = manufacturers;
+  categories = [...this.categoryService.used];
+  manufacturers = this.categoryService.manufacturers;
 
   tabPanels = [
     { id: 'myOrders', name: 'My Orders' },
@@ -92,16 +94,17 @@ export class AccountComponent implements OnInit {
       condition: ['', Validators.required],
       category: ['', Validators.required],
       description: ['', Validators.required],
-      image: ['']
+      images: ['']
     });
     this.manufacturerForm = this.fb.group({
-      name: ['', Validators.required],
-      image: ['']
+      name: ['', Validators.required, ValidateDuplicateEntry.bind(this)],
+      images: ['']
     });
   }
   constructor(
     public authService: AuthService,
     public productService: ProductService,
+    public categoryService: CategoryService,
     private afs: AngularFirestore,
     private fb: FormBuilder
   ) {
@@ -121,7 +124,7 @@ export class AccountComponent implements OnInit {
       if (this.authService.currentUserDoc.admin) {
         // gets the user IDs and stores it in an array
         this.allUsersCollectionSnapshot = this.afs.collection<User>('users').snapshotChanges();
-        this.allUsersCollectionSnapshot.subscribe(docs => {
+        this.allUsersCollectionSnapshot$ = this.allUsersCollectionSnapshot.subscribe(docs => {
           this.allUserIds = docs
             .filter(doc => doc.payload.doc.id !== 'adminList')
             .map(doc => {
@@ -139,5 +142,9 @@ export class AccountComponent implements OnInit {
     } catch (e) {
       console.log('No Orders');
     }
+  }
+
+  ngOnDestroy() {
+    this.allUsersCollectionSnapshot$.unsubscribe();
   }
 }

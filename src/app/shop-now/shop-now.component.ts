@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { brandNew, CategoryService } from '../services/category.service';
+import { CategoryService } from '../services/category.service';
+import { Product } from '../interfaces/Product';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-shop-now',
@@ -7,8 +10,11 @@ import { brandNew, CategoryService } from '../services/category.service';
   styleUrls: ['./shop-now.component.scss']
 })
 export class ShopNowComponent implements OnInit {
-  categories = brandNew;
-  constructor(public categoryService: CategoryService) {}
+  // categories = this.categoryService.brandNew;
+  products$: Observable<Product[]>;
+  constructor(public categoryService: CategoryService, private afs: AngularFirestore) {}
 
-  ngOnInit() {}
+  ngOnInit() {
+    this.products$ = this.afs.collection<Product>('products').valueChanges();
+  }
 }

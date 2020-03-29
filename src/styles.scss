@@ -84,7 +84,8 @@ $accent: #f56356;
       display: none;
     }
   }
-  @include breakpoint(medium) {
+
+@include breakpoint(medium) {
     .title-bar {
       display: none;
     }
@@ -293,6 +294,19 @@ nav.breadcrumb-container {
 .text-black {
   color: black;
 }
+.text-green {
+  color: green;
+}
+.text-red {
+  color: red;
+}
+.green {
+  background-color: green;
+}
+.red {
+  background-color: red;
+}
+
 .accent {
   background-color: $accent;
   &.light-1 {

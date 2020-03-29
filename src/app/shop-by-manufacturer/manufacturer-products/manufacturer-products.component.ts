@@ -3,13 +3,14 @@ import { ActivatedRoute } from '@angular/router';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { Product } from 'src/app/interfaces/Product';
 import { Observable } from 'rxjs';
+
 @Component({
-  selector: 'app-used-category',
-  templateUrl: './used-category.component.html',
-  styleUrls: ['./used-category.component.scss']
+  selector: 'app-manufacturer-products',
+  templateUrl: './manufacturer-products.component.html',
+  styleUrls: ['./manufacturer-products.component.scss']
 })
-export class UsedCategoryComponent implements OnInit, OnDestroy {
-  category = {
+export class ManufacturerProductsComponent implements OnInit, OnDestroy {
+  manufacturer = {
     route: '',
     banner: ''
   };
@@ -18,15 +19,15 @@ export class UsedCategoryComponent implements OnInit, OnDestroy {
   constructor(private route: ActivatedRoute, private afs: AngularFirestore) {}
   ngOnInit() {
     this.routeParams = this.route.paramMap.subscribe(params => {
-      // console.log(params.get('category'));
-      // 'category' is the variable name from 'app-routing'
-      this.category.route = params.get('category');
-      this.category.banner = params.get('category').replace(/-/g, ' ');
+      // console.log(params.get('manufacturer'));
+      // 'manufacturer' is the variable name from 'app-routing'
+      this.manufacturer.route = params.get('manufacturer');
+      this.manufacturer.banner = params.get('manufacturer').replace(/-/g, ' ');
       this.products$ = this.afs
-        .collection<Product>('products', ref => ref.where('category', '==', this.category.banner))
+        .collection<Product>('products', ref => ref.where('manufacturer', '==', this.manufacturer.banner))
         .valueChanges();
     });
-    // console.log(this.category);
+    // console.log(this.manufacturer);
   }
   ngOnDestroy(): void {
     // Called once, before the instance is destroyed.

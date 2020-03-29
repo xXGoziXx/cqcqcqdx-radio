@@ -3,9 +3,10 @@ import { ProductService } from '../services/product.service';
 import * as paypal from 'paypal-checkout';
 
 import { AuthService } from '../services/auth.service';
-import { used, manufacturers, brandNew, CategoryService } from '../services/category.service';
-import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { CategoryService } from '../services/category.service';
+import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { Subscription } from 'rxjs';
+import { Order } from '../interfaces/Order';
 declare var $: any;
 @Component({
   selector: 'app-navbar',
@@ -13,19 +14,18 @@ declare var $: any;
   styleUrls: ['./navbar.component.scss']
 })
 export class NavbarComponent implements OnInit {
-  usedCategories = used;
-  brandNewCategories = brandNew;
-  manufacturerCategories = manufacturers;
   productionKey: string;
   sandboxKey: string;
   PayPalSecretsDoc: AngularFirestoreDocument;
   APIKeys;
+  productCounter: number;
+  usersOrderCollection: AngularFirestoreCollection<Order>;
   // paypal button
   createPaypalButton = checkoutCart => {
     paypal.Button.render(
       {
         // Pass the client ids to use to create your transaction on sandbox and production environments
-        env: 'sandbox',
+        env: 'production',
         style: {
           size: 'medium',
           color: 'black',
@@ -55,8 +55,27 @@ export class NavbarComponent implements OnInit {
 
         onAuthorize(data, actions) {
           return actions.payment.execute().then(response => {
-            
             console.log('The payment was completed!');
+            let order;
+            return order = this.afs
+              .doc('users/adminList')
+              .valueChanges()
+              .subscribe(async doc => {
+                console.log(doc);
+                this.orderCounter = (doc as any).orderCounter;
+                console.log('oc', this.orderCounter);
+                console.log(
+                  'product_ids',
+                  this.productService.cart.map(item => Array(item.quantity).fill(item.id)).flat(Infinity)
+                );
+                await this.authService.userRef.collection('orders').add({
+                  order_id: this.orderCounter.toString(),
+                  product_ids: this.productService.cart.map(item => Array(item.quantity).fill(item.id)).flat(Infinity),
+                  total: this.productService.cart.map(item => item.price * item.quantity).reduce((x, y) => x + y, 0),
+                  status: 'Pending'
+                });
+                order.unsubscribe();
+              });
           });
         },
 
@@ -90,10 +109,10 @@ export class NavbarComponent implements OnInit {
   ngOnInit() {
     $(() => {
       $('#basketModal').on('open.zf.reveal', () => {
-        console.log('Testing!!');
         if (this.productService.cart.length !== 0) {
           $('#basketCheckout').html('');
           this.createPaypalButton(this.productService.checkoutCart);
+          console.log('cart:', this.productService.cart);
         }
       });
     });

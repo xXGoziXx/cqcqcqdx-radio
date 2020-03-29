@@ -100,6 +100,32 @@
                 </select>
               </label>
             </div>
+            <div class="small-8 cell align-center">
+              <label
+                >Access Code:
+                <div class="input-group margin-bottom-0">
+                  <input
+                    type="text"
+                    class="input-group-field"
+                    placeholder="000000"
+                    formControlName="accessCode"
+                    required
+                    autocomplete="on"
+                  />
+                  <span *ngIf="!!form.get('accessCode').errors; else checkBox" class="input-group-label"
+                    ><i class="fi fi-x text-red"></i
+                  ></span>
+                  <ng-template #checkBox>
+                    <span class="input-group-label"><i class="fi fi-check text-green"></i></span>
+                  </ng-template>
+                </div>
+                <div *ngIf="!!form.get('accessCode').errors && !!form.get('accessCode').dirty">
+                  <span class="text-red">Oops, that access code is false!</span>
+                  <br />
+                </div>
+                <br />
+              </label>
+            </div>
             <div class="small-12 cell margin-bottom-1">
               <button
                 class="button primary shadow bordered radius text-uppercase"

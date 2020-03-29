@@ -189,7 +189,7 @@
 
                       <i class="fi fi-photo"></i>
                     </label>
-                    <input id="imgUpload" type="file" formControlName="image" class="show-for-sr" />
+                    <input id="imgUpload" type="file" formControlName="images" class="show-for-sr" />
                     <!-- <div
                       class="progress"
                       role="progressbar"
@@ -241,14 +241,19 @@
                         formControlName="name"
                         required
                         autocomplete="off"
+                        class="margin-bottom-0"
                       />
+                      <div *ngIf="manufacturerForm.get('name').errors?.duplicateEntry">
+                        <span class="text-red">This Manufacturer already exists! Enter a different one...</span>
+                      </div>
                     </label>
+                    <br />
                   </div>
                   <div class="small-12 cell">
                     <label for="imgUpload" class="button text-uppercase"
                       >Upload an Image <i class="fi fi-photo"></i
                     ></label>
-                    <input id="imgUpload" type="file" formControlName="image" class="show-for-sr" />
+                    <input id="imgUpload" type="file" formControlName="images" class="show-for-sr" />
                     <!-- <div
                       class="progress"
                       role="progressbar"
