@@ -16,6 +16,7 @@
 'use strict';
 
 const functions = require('firebase-functions');
+const admin = require('firebase-admin');
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
 const OAuth2 = google.auth.OAuth2;
@@ -145,4 +146,55 @@ exports.sendContactMessage = functions.firestore.document('messages/{pushKey}').
         return console.log(`Mail successfully sent to ${val.name}<${val.email}>!`);
       });
   };
+});
+
+exports.incrementOrderCounter = functions.firestore
+  .document('users/{userId}/orders/{orderId}')
+  .onCreate((snap, context) => {
+    return admin
+      .firestore()
+      .doc('users/adminList')
+      .get()
+      .then(doc => {
+        let orderCounter = 0;
+        if (doc.exists) {
+          console.log('Document data:', doc.data());
+          orderCounter = doc.data().orderCounter++;
+          admin
+            .firestore()
+            .doc('users/adminList')
+            .update({ orderCounter });
+        } else {
+          // doc.data() will be undefined in this case
+          console.log('No such document!');
+        }
+        return orderCounter;
+      })
+      .catch(error => {
+        console.log('Error getting document:', error);
+      });
+  });
+exports.incrementProductCounter = functions.firestore.document('products/{productId}').onCreate((snap, context) => {
+  return admin
+    .firestore()
+    .doc('users/adminList')
+    .get()
+    .then(doc => {
+      let productCounter = 0;
+      if (doc.exists) {
+        console.log('Document data:', doc.data());
+        productCounter = doc.data().productCounter++;
+        admin
+          .firestore()
+          .doc('users/adminList')
+          .update({ productCounter });
+      } else {
+        // doc.data() will be undefined in this case
+        console.log('No such document!');
+      }
+      return productCounter;
+    })
+    .catch(error => {
+      console.log('Error getting document:', error);
+    });
 });

@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { CategoryService } from '../services/category.service';
 
 @Component({
   selector: 'app-shop-by-manufacturer',
@@ -6,10 +7,9 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./shop-by-manufacturer.component.scss']
 })
 export class ShopByManufacturerComponent implements OnInit {
+  categories = this.categoryService.manufacturers;
 
-  constructor() { }
+  constructor(public categoryService: CategoryService) {}
 
-  ngOnInit() {
-  }
-
+  ngOnInit() {}
 }

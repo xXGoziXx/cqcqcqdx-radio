@@ -32,18 +32,18 @@ export class ContactComponent implements OnInit {
       <hr>
       <div>
         <p>
-          Message from: ${name} <a href="mailto:${email}">&lt;${email}&gt;</a>
+          Message from: ${name.trim()} <a href="mailto:${email.trim()}">&lt;${email.trim()}&gt;</a>
           <br>
           Sent on: ${date}
           <br>
-          Phone: <a href="tel:${telephone}">${telephone}</a>
+          Phone: <a href="tel:${telephone.trim()}">${telephone.trim()}</a>
         </p>
       </div>
     `;
     const formRequest: Message = {
-      name,
-      email,
-      telephone,
+      name: name.trim(),
+      email: email.trim(),
+      telephone: telephone.trim(),
       message,
       date: firebase.firestore.Timestamp.fromDate(date),
       html

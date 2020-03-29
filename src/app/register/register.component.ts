@@ -5,6 +5,7 @@ import { AuthService } from '../services/auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { User } from '../interfaces/User';
+import { ValidateAccessCode } from '../validators/accessCode.validator';
 @Component({
   selector: 'app-register',
   templateUrl: './register.component.html',
@@ -33,6 +34,7 @@ export class RegisterComponent implements OnInit {
       address3: [''],
       townCity: ['', Validators.required],
       postcode: ['', Validators.required],
+      accessCode: ['', Validators.required, ValidateAccessCode.bind(this)],
       country: ['IE', Validators.required]
     });
   }

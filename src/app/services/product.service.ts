@@ -30,33 +30,33 @@ export class ProductService {
 
   addProduct = productForm => {
     console.log(productForm);
-    return this.afs
+    let adminListSub;
+    return (adminListSub = this.afs
       .doc('users/adminList')
       .valueChanges()
-      .subscribe(doc => {
+      .subscribe(async doc => {
         console.log(doc);
         this.productCounter = (doc as any).productCounter;
         console.log('pc', this.productCounter);
-        this.productsRef
-          .add({
-            ...productForm,
-            date_added: firebase.firestore.FieldValue.serverTimestamp(),
-            id: this.productCounter,
-            used: productForm.condition === 'New' ? false : true
-          })
-          .then(() => {
-            this.afs.doc('users/adminList').update({ productCounter: this.productCounter++ });
-          });
-      });
+        await this.productsRef.add({
+          ...productForm,
+          name: productForm.value.name.trim(),
+          images: productForm.value.image.split(','),
+          date_added: firebase.firestore.FieldValue.serverTimestamp(),
+          id: this.productCounter.toString(),
+          used: productForm.condition === 'New' ? false : true
+        });
+        adminListSub.unsubscribe();
+      }));
   };
   addManufacturer = manufacturerForm => {
     console.log({
       ...manufacturerForm,
-      image: ['']
+      images: ['']
     });
     return this.manufacturersRef.add({
-      ...manufacturerForm,
-      image: ['']
+      name: manufacturerForm.value.name.trim(),
+      images: manufacturerForm.value.image.split(',')
     });
   };
   removeItemFromCart = (product: Cart) => {

@@ -79,7 +79,7 @@
 <ng-template #menu>
   <li class="cell small-12 large-auto ">
     <a [routerLink]="['/shop-now']" routerLinkActive="active"><span>Shop Now</span></a>
-    <ul id="dropdown" class="simple-float dropdown menu show-for-large">
+    <!-- <ul id="dropdown" class="simple-float dropdown menu show-for-large">
       <li *ngFor="let brandNewCategory of brandNewCategories" class="align-stretch">
         <a
           [routerLink]="['/used-equipment', categoryService.linkUsed(brandNewCategory.text)]"
@@ -90,12 +90,12 @@
           </span>
         </a>
       </li>
-    </ul>
+    </ul> -->
   </li>
   <li class="cell small-12 large-auto ">
     <a [routerLink]="['/used-equipment']" routerLinkActive="active"><span>Used Equipment</span></a>
     <ul id="dropdown" class="simple-float dropdown menu show-for-large">
-      <li *ngFor="let usedCategory of usedCategories" class="align-stretch">
+      <li *ngFor="let usedCategory of categoryService.used" class="align-stretch">
         <a
           [routerLink]="['/used-equipment', categoryService.linkUsed(usedCategory.text)]"
           routerLinkActive="active"
@@ -110,9 +110,9 @@
   <li class="cell small-12 large-auto">
     <a [routerLink]="['/shop-by-manufacturer']" routerLinkActive="active"><span>Shop By Manufacturer</span></a>
     <ul id="dropdown" class="simple-float dropdown menu show-for-large">
-      <li *ngFor="let manufacturerCategory of manufacturerCategories" class="align-stretch">
+      <li *ngFor="let manufacturerCategory of categoryService.manufacturers" class="align-stretch">
         <a
-          [routerLink]="['/used-equipment', categoryService.linkUsed(manufacturerCategory.text)]"
+          [routerLink]="['/shop-by-manufacturer', categoryService.linkUsed(manufacturerCategory.text)]"
           routerLinkActive="active"
           class="height-100 align-center-middle"
           ><span>
@@ -122,12 +122,12 @@
       </li>
     </ul>
   </li>
-  <li class="cell small-12 large-auto">
+  <!-- <li class="cell small-12 large-auto">
     <a [routerLink]="['/new-in']" routerLinkActive="active"><span>New In</span></a>
-  </li>
-  <li class="cell small-12 large-auto">
+  </li> -->
+  <!-- <li class="cell small-12 large-auto">
     <a [routerLink]="['/part-ex']" routerLinkActive="active"><span>Part Ex</span></a>
-  </li>
+  </li> -->
   <li class="cell small-12 large-auto">
     <a routerLinkActive="active" *ngIf="authService.user$ | async; then account; else register">Register</a>
     <ng-template #account>

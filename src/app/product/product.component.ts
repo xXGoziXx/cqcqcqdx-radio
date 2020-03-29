@@ -1,7 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 
 import { Product } from '../interfaces/Product';
@@ -12,8 +12,9 @@ declare var $: any;
   templateUrl: './product.component.html',
   styleUrls: ['./product.component.scss']
 })
-export class ProductComponent implements OnInit {
+export class ProductComponent implements OnInit, OnDestroy {
   id: number;
+  routeParams: Subscription;
   isProductId = !Number.isNaN(this.id);
   myInterval = 3000;
   activeSlideIndex = 0;
@@ -45,42 +46,44 @@ export class ProductComponent implements OnInit {
     // }));
   }
   ngOnInit(): void {
-    this.route.paramMap.subscribe(params => {
+    this.routeParams = this.route.paramMap.subscribe(params => {
       // console.log(params.get('category'));
       // 'category' is the variable name from 'app-routing'
       this.id = parseInt(params.get('id'), 10);
-      console.log(params.get('id'));
+      // console.log(params.get('id'));
       this.isProductId = !Number.isNaN(this.id);
-      this.isProductId ? console.log(true, this.id) : console.log(false, this.id);
+      // this.isProductId ? console.log(true, this.id) : console.log(false, this.id);
       if (this.isProductId) {
         this.products$ = this.afs
           .collection<Product>('products', ref => ref.where('id', '==', this.id.toString()))
           .valueChanges();
         // there should only be one product for this
         const productsSub = this.products$.subscribe(products => {
-          products.forEach(product => {
-            product.images.forEach(image => {
-              console.log(image);
-              $('.slick-carousel').slick('unslick');
-              $('.slick-carousel').slick(this.slickOptions);
-              $('.slick-carousel').slick(
-                'slickAdd',
-                `<div>
-                <figure class="orbit-figure">
-                <img class="orbit-image" src="${image}" alt="${product.name}" />
-                </figure>
-                </div>`
-              );
-            });
-          });
-          // productsSub.unsubscribe();
+          // products.forEach(product => {
+          //   product.images.forEach(image => {
+          //     // console.log(image);
+          //     $('.slick-carousel').slick('unslick');
+          //     $('.slick-carousel').slick(this.slickOptions);
+          //     $('.slick-carousel').slick(
+          //       'slickAdd',
+          //       `<div>
+          //       <figure class="orbit-figure">
+          //       <img class="orbit-image" src="${image}" alt="${product.name}" />
+          //       </figure>
+          //       </div>`
+          //     );
+          //   });
+          // });
+          productsSub.unsubscribe();
         });
-      } else if (this.id) {
-        this.router.navigate(['/product']);
       } else {
-        // there should be all of them
-        this.products$ = this.afs.collection<Product>('products').valueChanges();
+        this.router.navigate(['/shop-now']);
       }
     });
+  }
+  ngOnDestroy(): void {
+    // Called once, before the instance is destroyed.
+    // Add 'implements OnDestroy' to the class.
+    this.routeParams.unsubscribe();
   }
 }

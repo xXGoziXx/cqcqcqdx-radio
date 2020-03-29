@@ -1,12 +1,11 @@
 import { Timestamp } from '@firebase/firestore-types';
-import { Url } from 'url';
 import { Rating } from './Rating';
 export interface Product {
   condition: Condition;
   date_added: Timestamp;
   description: string;
   id: string;
-  images: Array<Url>;
+  images: Array<string>;
   manufacturer: string;
   name: string;
   price: number;

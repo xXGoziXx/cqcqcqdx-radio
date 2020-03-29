@@ -1,11 +1,10 @@
 <div class="grid-container">
   <div class="grid-x banner shadow grid-margin-x align-center-middle">
     <div class="cell">
-      <h2 class="text-uppercase text-center ">Shop Now</h2>
+      <h2 class="text-uppercase text-center ">{{ manufacturer.banner }}</h2>
     </div>
   </div>
-  <!-- All the products go here -->
-  <div class="grid-x grid-margin-y grid-margin-x small-up-1 medium-up-3 large-up-5 align-stretch-spaced content ">
+  <div class="grid-x grid-margin-y grid-margin-x small-up-1 medium-up-3 large-up-5 align-stretch-spaced content">
     <div class="cell" *ngFor="let product of products$ | async">
       <!-- image has padding -->
       <a [routerLink]="['/product', product.id]" routerLinkActive="active">

@@ -2,24 +2,26 @@ import * as firebase from 'firebase/app';
 import $ from 'jquery';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-
+import { OnDestroy } from '@angular/core';
 import { EventEmitter, Injectable, Output } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
 import { User } from '../interfaces/User';
-
+import { Subscription } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class AuthService {
+export class AuthService implements OnDestroy {
   error: string;
   status = 'Signed Out!';
   user$: Observable<User>;
+  userSub: Subscription;
   userRef: AngularFirestoreDocument;
   currentUserDoc: User;
   adminList$: Observable<any>;
   adminList: any;
+  adminSub;: Subscription;
   authUser: firebase.User;
   countryList = [
     { abbr: 'AF', name: 'Afghanistan' },
@@ -76,7 +78,7 @@ export class AuthService {
     { abbr: 'CD', name: 'Congo, the Democratic Republic of the' },
     { abbr: 'CK', name: 'Cook Islands' },
     { abbr: 'CR', name: 'Costa Rica' },
-    { abbr: 'CI', name: "Côte d'Ivoire" },
+    { abbr: 'CI', name: `Côte d'Ivoire` },
     { abbr: 'HR', name: 'Croatia' },
     { abbr: 'CU', name: 'Cuba' },
     { abbr: 'CW', name: 'Curaçao' },
@@ -139,11 +141,11 @@ export class AuthService {
     { abbr: 'KZ', name: 'Kazakhstan' },
     { abbr: 'KE', name: 'Kenya' },
     { abbr: 'KI', name: 'Kiribati' },
-    { abbr: 'KP', name: "Korea, Democratic People's Republic of" },
+    { abbr: 'KP', name: `Korea, Democratic People's Republic of` },
     { abbr: 'KR', name: 'Korea, Republic of' },
     { abbr: 'KW', name: 'Kuwait' },
     { abbr: 'KG', name: 'Kyrgyzstan' },
-    { abbr: 'LA', name: "Lao People's Democratic Republic" },
+    { abbr: 'LA', name: `Lao People's Democratic Republic` },
     { abbr: 'LV', name: 'Latvia' },
     { abbr: 'LB', name: 'Lebanon' },
     { abbr: 'LS', name: 'Lesotho' },
@@ -292,16 +294,22 @@ export class AuthService {
       })
     );
     this.adminList$ = this.afs.doc('users/adminList').valueChanges();
-    this.user$.subscribe(userDoc => {
+    this.userSub = this.user$.subscribe(userDoc => {
       // console.log('User Docs: ', userDoc);
       this.currentUserDoc = userDoc;
     });
-    this.adminList$.subscribe(adminDoc => {
+    this.adminSub = this.adminList$.subscribe(adminDoc => {
       // console.log('Admin List: ', adminDoc);
       this.adminList = adminDoc;
+      // console.log(this.adminList);
     });
   }
 
+  // sends a reset password verification email
+  resetPassword({ value: { email } }): Promise<void> {
+    // destructs email from value from form
+    return this.afAuth.auth.sendPasswordResetEmail(email);
+  }
   // signs the user in with email and password
   signIn({ email, password }) {
     // console.log('Attempting Email: ', email);
@@ -384,7 +392,7 @@ export class AuthService {
                       townCity
                     },
                     admin: false,
-                    email,
+                    email: email.toLowerCase(),
                     firstName,
                     lastName,
                     telephone
@@ -453,5 +461,9 @@ export class AuthService {
         $('span.error').html(err);
         console.error(err);
       });
+  }
+  ngOnDestroy() {
+    this.userSub.unsubscribe();
+    this.adminSub.unsubscribe();
   }
 }

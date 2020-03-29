@@ -16,7 +16,7 @@ import { HomeComponent } from './home/home.component';
 import { UsedEquipmentComponent } from './used-equipment/used-equipment.component';
 import { ShopByManufacturerComponent } from './shop-by-manufacturer/shop-by-manufacturer.component';
 import { NewInComponent } from './new-in/new-in.component';
-import { PartExComponent } from './part-ex/part-ex.component';
+// import { PartExComponent } from './part-ex/part-ex.component';
 import { RegisterComponent } from './register/register.component';
 import { LoginComponent } from './login/login.component';
 import { ContactComponent } from './contact/contact.component';
@@ -25,6 +25,7 @@ import { UsedCategoryComponent } from './used-equipment/used-category/used-categ
 import { AccountComponent } from './account/account.component';
 import { EditComponent } from './account/edit/edit.component';
 import { ProductComponent } from './product/product.component';
+import { ManufacturerProductsComponent } from './shop-by-manufacturer/manufacturer-products/manufacturer-products.component';
 
 @NgModule({
   declarations: [
@@ -35,7 +36,7 @@ import { ProductComponent } from './product/product.component';
     UsedEquipmentComponent,
     ShopByManufacturerComponent,
     NewInComponent,
-    PartExComponent,
+    // PartExComponent,
     RegisterComponent,
     LoginComponent,
     ContactComponent,
@@ -43,7 +44,8 @@ import { ProductComponent } from './product/product.component';
     UsedCategoryComponent,
     AccountComponent,
     EditComponent,
-    ProductComponent
+    ProductComponent,
+    ManufacturerProductsComponent
   ],
   imports: [
     AppRoutingModule,

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
+import { Subscription } from 'rxjs';
 
 declare var $: any;
 @Component({
@@ -8,8 +9,9 @@ declare var $: any;
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'cqcqcqdx-radio';
+  router$: Subscription;
   routeTitle: any;
   slickOptions = {
     infinite: true,
@@ -30,13 +32,15 @@ export class AppComponent implements OnInit {
     unescape(word.replace(new RegExp(searchValue, 'g'), replaceValue));
 
   constructor(router: Router) {
-    router.events.pipe(filter(event => event instanceof NavigationEnd)).subscribe((res: NavigationEnd) => {
-      this.breadcrumbs = res.urlAfterRedirects.split('/');
-      this.breadcrumbs.shift();
-      if (this.breadcrumbs[0] === 'product') {
-        console.log('breadcrumb found');
-      }
-    });
+    this.router$ = router.events
+      .pipe(filter(event => event instanceof NavigationEnd))
+      .subscribe((res: NavigationEnd) => {
+        this.breadcrumbs = res.urlAfterRedirects.split('/');
+        this.breadcrumbs.shift();
+        // if (this.breadcrumbs[0] === 'product') {
+        //   console.log('breadcrumb found');
+        // }
+      });
   }
   onActivate(_: any) {
     $(() => {
@@ -59,4 +63,7 @@ export class AppComponent implements OnInit {
     });
   }
   ngOnInit() {}
+  ngOnDestroy() {
+    this.router$.unsubscribe();
+  }
 }
