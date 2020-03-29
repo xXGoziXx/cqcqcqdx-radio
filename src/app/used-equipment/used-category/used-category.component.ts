@@ -28,9 +28,7 @@ export class UsedCategoryComponent implements OnInit, OnDestroy {
     });
     // console.log(this.category);
   }
-  ngOnDestroy(): void {
-    // Called once, before the instance is destroyed.
-    // Add 'implements OnDestroy' to the class.
+  ngOnDestroy() {
     this.routeParams.unsubscribe();
   }
 }
