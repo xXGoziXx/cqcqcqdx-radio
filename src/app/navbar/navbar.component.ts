@@ -1,12 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../services/product.service';
 import * as paypal from 'paypal-checkout';
-
+import * as firebase from 'firebase/app';
 import { AuthService } from '../services/auth.service';
 import { CategoryService } from '../services/category.service';
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { Subscription } from 'rxjs';
 import { Order } from '../interfaces/Order';
+import 'firebase/firestore';
 declare var $: any;
 @Component({
   selector: 'app-navbar',
@@ -53,28 +54,40 @@ export class NavbarComponent implements OnInit {
 
         // Pass a function to be called when the customer completes the payment
 
-        onAuthorize(data, actions) {
+        onAuthorize: (data, actions) => {
           return actions.payment.execute().then(response => {
             console.log('The payment was completed!');
-            let order;
-            return order = this.afs
-              .doc('users/adminList')
-              .valueChanges()
-              .subscribe(async doc => {
-                console.log(doc);
-                this.orderCounter = (doc as any).orderCounter;
-                console.log('oc', this.orderCounter);
-                console.log(
-                  'product_ids',
-                  this.productService.cart.map(item => Array(item.quantity).fill(item.id)).flat(Infinity)
-                );
-                await this.authService.userRef.collection('orders').add({
-                  order_id: this.orderCounter.toString(),
-                  product_ids: this.productService.cart.map(item => Array(item.quantity).fill(item.id)).flat(Infinity),
-                  total: this.productService.cart.map(item => item.price * item.quantity).reduce((x, y) => x + y, 0),
-                  status: 'Pending'
-                });
-                order.unsubscribe();
+            // console.log('This:', this);
+            const orderCounter = this.authService.adminList.orderCounter;
+            // console.log('oc', orderCounter);
+            console.log(
+              'product_ids',
+              this.productService.cart.map(item => Array(item.quantity).fill(item.id)).flat(Infinity)
+            );
+            this.authService.userRef
+              .collection('orders')
+              .add({
+                delivery_address: this.authService.currentUserDoc.address,
+                order_date: firebase.firestore.FieldValue.serverTimestamp(),
+                order_id: orderCounter.toString(),
+                product_ids: this.productService.cart.map(item => Array(item.quantity).fill(item.id)).flat(Infinity),
+                total: this.productService.cart
+                  .map(item => item.price * item.quantity)
+                  .reduce((x, y) => +(x + y).toFixed(2), 0.0),
+                status: 'Pending'
+              })
+              .then(() => {
+                this.productService.cart = [];
+                this.productService.checkoutCart = {
+                  transactions: [
+                    {
+                      amount: {
+                        total: 0.0,
+                        currency: 'EUR'
+                      }
+                    }
+                  ]
+                };
               });
           });
         },
@@ -93,7 +106,7 @@ export class NavbarComponent implements OnInit {
     public authService: AuthService,
     public categoryService: CategoryService,
     public productService: ProductService,
-    private afs: AngularFirestore
+    public afs: AngularFirestore
   ) {
     this.PayPalSecretsDoc = this.afs.doc('PayPalSecrets/' + 'APIKeys');
     this.APIKeys = this.PayPalSecretsDoc.valueChanges(); // Observable of Secret Data

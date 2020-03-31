@@ -21,8 +21,9 @@ export class AuthService implements OnDestroy {
   currentUserDoc: User;
   adminList$: Observable<any>;
   adminList: any;
-  adminSub;: Subscription;
+  adminSub: Subscription;
   authUser: firebase.User;
+
   countryList = [
     { abbr: 'AF', name: 'Afghanistan' },
     { abbr: 'AX', name: 'Åland Islands' },

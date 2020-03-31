@@ -5,8 +5,8 @@ import { Manufacturer } from 'src/app/interfaces/Manufacturer';
 import { Observable, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { Cart } from '../interfaces/Cart';
-import firebase from 'firebase/app';
-import 'firebase/database'; // If using Firebase database
+import * as firebase from 'firebase/app';
+import 'firebase/firestore'; // If using Firebase database
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +16,7 @@ export class ProductService {
     transactions: [
       {
         amount: {
-          total: '0.00',
+          total: 0.0,
           currency: 'EUR'
         }
       }
@@ -73,8 +73,7 @@ export class ProductService {
       }
       this.checkoutCart.transactions[0].amount.total = this.cart
         .map(item => item.quantity * item.price)
-        .reduce((total, price) => total + price, 0.0)
-        .toString();
+        .reduce((total, price) => +(total + price).toFixed(2), 0.0);
     }
     console.log('Cart(after removal): ', this.cart);
   };
@@ -93,11 +92,16 @@ export class ProductService {
     }
     this.checkoutCart.transactions[0].amount.total = this.cart
       .map(item => item.quantity * item.price)
-      .reduce((total, price) => total + price, 0.0)
-      .toString();
+      .reduce((total, price) => +(total + price).toFixed(2), 0.0);
     console.log('Cart(after): ', this.cart);
     console.log('product Key: ', product.id);
     console.log('Checkout Cart: ', JSON.stringify(this.checkoutCart));
   };
+  get cartGetter() {
+    return this.cart;
+  }
+  get checkoutCartGetter() {
+    return this.checkoutCart;
+  }
   constructor(private afs: AngularFirestore) {}
 }

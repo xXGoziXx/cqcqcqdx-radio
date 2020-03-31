@@ -1,6 +1,7 @@
 import { Component, OnInit, SecurityContext } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import firebase from 'firebase/app';
+import * as firebase from 'firebase/app';
+import 'firebase/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Message } from '../interfaces/Message';

@@ -17,6 +17,7 @@
 
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+admin.initializeApp(functions.config().firebase);
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
 const OAuth2 = google.auth.OAuth2;
@@ -156,10 +157,11 @@ exports.incrementOrderCounter = functions.firestore
       .doc('users/adminList')
       .get()
       .then(doc => {
-        let orderCounter = 0;
+        let orderCounter = 1;
         if (doc.exists) {
           console.log('Document data:', doc.data());
-          orderCounter = doc.data().orderCounter++;
+          orderCounter += doc.data().orderCounter;
+          console.log('Order Counter:', orderCounter);
           admin
             .firestore()
             .doc('users/adminList')
@@ -180,10 +182,10 @@ exports.incrementProductCounter = functions.firestore.document('products/{produc
     .doc('users/adminList')
     .get()
     .then(doc => {
-      let productCounter = 0;
+      let productCounter = 1;
       if (doc.exists) {
         console.log('Document data:', doc.data());
-        productCounter = doc.data().productCounter++;
+        productCounter += doc.data().productCounter++;
         admin
           .firestore()
           .doc('users/adminList')

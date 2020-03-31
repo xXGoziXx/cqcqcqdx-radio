@@ -4,7 +4,10 @@
       <div class="cell small-6">
         <div class="grid-x grid-margin-y grid-margin-x align-center-middle content">
           <div class="cell small-12">
-            <img [src]="product.images[0] == '' ? '../../assets/img/No_image_available.svg': product.images[0]" [alt]="product.name" />
+            <img
+              [src]="product.images[0] == '' ? '../../assets/img/No_image_available.svg' : product.images[0]"
+              [alt]="product.name"
+            />
           </div>
           <!-- <div class="cell small-12">
             <div id="radio-orbit" class="orbit" role="region" aria-label="Radio Equipment" data-orbit>
@@ -75,6 +78,7 @@
         <p class="h3 font-bold text-white black padding-left-1 text-uppercase margin-bottom-1">
           Description
         </p>
+        <p class="margin-bottom-0"><b>Category:</b> {{ product.category | titlecase }}</p>
         <p class="margin-bottom-1"><b>Condition:</b> {{ product.condition }}</p>
         <p>{{ product.description }}</p>
       </div>
