@@ -36,7 +36,12 @@
           </div>
           <br />
           <div class="cell small-12">
-            <h3 class="font-bold text-accent text-uppercase">Price: {{ product.price | currency: 'EUR' }}</h3>
+            <h3 class="font-bold text-accent text-uppercase margin-bottom-0">
+              Price: {{ product.price | currency: 'EUR' }}
+            </h3>
+          </div>
+          <div class="cell small-12">
+            <h4 class="font-bold text-uppercase">Stock: {{ product.stock | number }}</h4>
           </div>
           <div class="cell small-12 margin-top-3">
             <div class="grid-x align-right align-middle">
@@ -49,6 +54,7 @@
                   class="margin-bottom-0"
                   id="quantity-label"
                   [value]="quantity"
+                  [max]="product.stock | number"
                   [(ngModel)]="quantity"
                 />
               </div>
@@ -59,7 +65,7 @@
               <button
                 class="button primary font-bold"
                 (click)="productService.addItemToCart(product, quantity)"
-                [disabled]="quantity < 1"
+                [disabled]="quantity < 1 || quantity > product.stock"
               >
                 ADD TO CART
               </button>

@@ -33,6 +33,7 @@ oauth2Client.setCredentials({
 const emails = email.split(',');
 const accessToken = oauth2Client.getAccessToken();
 const mailTransport = nodemailer.createTransport({
+  // @ts-ignore
   service: 'gmail',
   auth: {
     type: 'OAuth2',
@@ -44,6 +45,7 @@ const mailTransport = nodemailer.createTransport({
   }
 });
 const mailTransport2 = nodemailer.createTransport({
+  // @ts-ignore
   service: 'gmail',
   auth: {
     type: 'OAuth2',
@@ -70,7 +72,7 @@ exports.sendContactMessage = functions.firestore.document('messages/{pushKey}').
     subject: `Message from "${val.name}"`,
     html: val.html
   };
-  return () => {
+  return async () => {
     mailTransport
       .sendMail(mailOptions)
       .then(() => {
@@ -109,16 +111,14 @@ exports.sendContactMessage = functions.firestore.document('messages/{pushKey}').
         return console.log(`Mail successfully sent to ${val.name}<${val.email}>!`);
       })
       .catch();
-    return mailTransport2
-      .sendMail(mailOptions)
-      .then(() => {
-        mailOptions = {
-          to: val.email,
-          from: `"CQCQCQDX Radio" <${email}>`,
-          sender: `"CQCQCQDX Radio" <${email}>`,
-          replyTo: `"CQCQCQDX Radio" <${email}>`,
-          subject: `Message from "CQCQCQDX Radio"`,
-          html: `<div>
+    await mailTransport2.sendMail(mailOptions);
+    mailOptions = {
+      to: val.email,
+      from: `"CQCQCQDX Radio" <${email}>`,
+      sender: `"CQCQCQDX Radio" <${email}>`,
+      replyTo: `"CQCQCQDX Radio" <${email}>`,
+      subject: `Message from "CQCQCQDX Radio"`,
+      html: `<div>
             <div>
               <p>Hi ${val.name},<br>
                 <br>
@@ -140,52 +140,50 @@ exports.sendContactMessage = functions.firestore.document('messages/{pushKey}').
               </p>
             </div>
           </div>`
-        };
-        return mailTransport.sendMail(mailOptions);
-      })
-      .then(() => {
-        return console.log(`Mail successfully sent to ${val.name}<${val.email}>!`);
-      });
+    };
+    await mailTransport.sendMail(mailOptions);
+    return console.log(`Mail successfully sent to ${val.name}<${val.email}>!`);
   };
 });
 
 exports.incrementOrderCounter = functions.firestore
   .document('users/{userId}/orders/{orderId}')
-  .onCreate((snap, context) => {
-    return admin
-      .firestore()
-      .doc('users/adminList')
-      .get()
-      .then(doc => {
-        let orderCounter = 1;
-        if (doc.exists) {
-          console.log('Document data:', doc.data());
-          orderCounter += doc.data().orderCounter;
-          console.log('Order Counter:', orderCounter);
-          admin
-            .firestore()
-            .doc('users/adminList')
-            .update({ orderCounter });
-        } else {
-          // doc.data() will be undefined in this case
-          console.log('No such document!');
-        }
-        return orderCounter;
-      })
-      .catch(error => {
-        console.log('Error getting document:', error);
-      });
-  });
-exports.incrementProductCounter = functions.firestore.document('products/{productId}').onCreate((snap, context) => {
-  return admin
-    .firestore()
-    .doc('users/adminList')
-    .get()
-    .then(doc => {
-      let productCounter = 1;
+  .onCreate(async (snap, context) => {
+    let orderCounter = 1;
+    try {
+      const doc = await admin
+        .firestore()
+        .doc('users/adminList')
+        .get();
       if (doc.exists) {
         console.log('Document data:', doc.data());
-        productCounter += doc.data().productCounter++;
+        orderCounter += doc.data().orderCounter;
+        console.log('Order Counter:', orderCounter);
+        admin
+          .firestore()
+          .doc('users/adminList')
+          .update({ orderCounter });
+      } else {
+        // doc.data() will be undefined in this case
+        console.log('No such document!');
+      }
+    } catch (error) {
+      console.log('Error getting document:', error);
+    }
+    return orderCounter;
+  });
+exports.incrementProductCounter = functions.firestore
+  .document('products/{productId}')
+  .onCreate(async (snap, context) => {
+    let productCounter = 1;
+    try {
+      const doc = await admin
+        .firestore()
+        .doc('users/adminList')
+        .get();
+      if (doc.exists) {
+        console.log('Document data:', doc.data());
+        productCounter += doc.data().productCounter;
         admin
           .firestore()
           .doc('users/adminList')
@@ -194,9 +192,52 @@ exports.incrementProductCounter = functions.firestore.document('products/{produc
         // doc.data() will be undefined in this case
         console.log('No such document!');
       }
-      return productCounter;
-    })
-    .catch(error => {
+    } catch (error) {
       console.log('Error getting document:', error);
+    }
+    return productCounter;
+  });
+exports.updateStockFromOrder = functions.firestore
+  .document('users/{userId}/orders/{orderId}')
+  .onCreate(async (snap, context) => {
+    const orderDoc = snap.data();
+    console.log(orderDoc);
+    let orderProductIds = [];
+    let currId = 0;
+    let currPosition = -1;
+    orderDoc.product_ids.sort().forEach(id => {
+      if (currId === id) {
+        orderProductIds[currPosition].push(currId);
+      } else {
+        currId = id;
+        orderProductIds.push([currId]);
+        currPosition++;
+      }
     });
-});
+    console.log('orderProductIds:', orderProductIds);
+    orderProductIds.forEach(async (id, index) => {
+      let stock = -orderProductIds[index].length;
+      try {
+        const querySnapshot = await admin
+          .firestore()
+          .collection('products')
+          .where('id', '==', id)
+          .get();
+        const doc = querySnapshot[0];
+        if (doc.exists) {
+          console.log('Document data:', doc.data());
+          stock += doc.data().stock;
+          admin
+            .firestore()
+            .doc(`products/${doc.id}`)
+            .update({ stock });
+        } else {
+          // doc.data() will be undefined in this case
+          console.log('No such document!');
+        }
+      } catch (error) {
+        console.log('Error getting document:', error);
+      }
+      return stock;
+    });
+  });

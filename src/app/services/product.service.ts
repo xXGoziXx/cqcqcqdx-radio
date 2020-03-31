@@ -4,7 +4,7 @@ import { Product } from 'src/app/interfaces/Product';
 import { Manufacturer } from 'src/app/interfaces/Manufacturer';
 import { Observable, Subject } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { Cart } from '../interfaces/Cart';
+import { Item } from '../interfaces/Item';
 import * as firebase from 'firebase/app';
 import 'firebase/firestore'; // If using Firebase database
 
@@ -22,7 +22,7 @@ export class ProductService {
       }
     ]
   };
-  cart: Cart[] = [];
+  cart: Item[] = [];
   object = Object.keys;
   productsRef = this.afs.collection<Product>('products');
   manufacturersRef = this.afs.collection<Manufacturer>('manufacturers');
@@ -59,7 +59,7 @@ export class ProductService {
       images: manufacturerForm.value.image.split(',')
     });
   };
-  removeItemFromCart = (product: Cart) => {
+  removeItemFromCart = (product: Item) => {
     const productID = this.cart.map(x => x.id).indexOf(product.id);
     console.log('RIFC Product: ', product);
     if (this.cart[productID]) {

@@ -11,6 +11,7 @@ $accent: #f56356;
   #logo {
     place-self: stretch;
     a {
+      display: grid;
       width: 100%;
       height: 100%;
 
