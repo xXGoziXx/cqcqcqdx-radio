@@ -3,11 +3,15 @@
 
 // Global Variable Overrides
 // @import './assets/scss/settings';
-$anchor-color: #f56356;
-$tab-color: #f56356;
-$tab-active-color: #f56356;
-$button-background: #f56356;
-$progress-meter-background: #f56356;
+$foundation-palette: (
+  primary: #f56356,
+  secondary: #767676,
+  success: #3adb76,
+  warning: #ffae00,
+  alert: #cc4b37
+);
+$button-color: #fff;
+
 // Import Foundation for Sites
 @import '~foundation-sites/scss/foundation';
 
@@ -231,57 +235,56 @@ nav.breadcrumb-container {
           background-color: $accent;
           border: white solid 4px;
           border-radius: 50%;
-
-          .fi-shopping-bag {
-            color: white;
-            font-size: 1.4rem;
-          }
         }
       }
     }
   }
 }
-[type='text'], [type='password'], [type='date'], [type='datetime'], [type='datetime-local'], [type='month'], [type='week'], [type='email'], [type='number'], [type='search'], [type='tel'], [type='time'], [type='url'], [type='color'], textarea {
-  box-shadow: none;
-  &:focus {
-    border-color: $accent;
-  }
+.fi {
+  color: white;
+  font-size: 1.4rem;
 }
-.button, .button-group > .button {
-  &.primary {
-    background-color: $accent;
-    &:hover, &:focus {
-      background-color: scale-color($accent, $lightness: -15%);
+// [type='text'], [type='password'], [type='date'], [type='datetime'], [type='datetime-local'], [type='month'], [type='week'], [type='email'], [type='number'], [type='search'], [type='tel'], [type='time'], [type='url'], [type='color'], textarea {
+//   box-shadow: none;
+//   &:focus {
+//     border-color: $accent;
+//   }
+// }
+// .button, .button-group > .button {
+//   &.primary {
+//     background-color: $accent;
+//     &:hover, &:focus {
+//       background-color: scale-color($accent, $lightness: -15%);
 
-      cursor: pointer;
-    }
-    &[disabled], &.disabled {
-      background-color: $accent !important;
-    }
-  }
-  &.clear {
-    color: $accent;
-    &:hover, &:focus {
-      color: scale-color($accent, $lightness: -15%);
-    }
-    &[disabled], &.disabled {
-      color: $accent !important;
-    }
-  }
-  &.hollow {
-    color: $accent;
+//       cursor: pointer;
+//     }
+//     &[disabled], &.disabled {
+//       background-color: $accent !important;
+//     }
+//   }
+//   &.clear {
+//     color: $accent;
+//     &:hover, &:focus {
+//       color: scale-color($accent, $lightness: -15%);
+//     }
+//     &[disabled], &.disabled {
+//       color: $accent !important;
+//     }
+//   }
+//   &.hollow {
+//     color: $accent;
 
-    border: 1px solid $accent;
-    &:hover, &:focus {
-      color: scale-color($accent, $lightness: -15%);
+//     border: 1px solid $accent;
+//     &:hover, &:focus {
+//       color: scale-color($accent, $lightness: -15%);
 
-      border: 1px solid scale-color($accent, $lightness: -15%);
-    }
-    &[disabled], &.disabled {
-      color: $accent !important;
-    }
-  }
-}
+//       border: 1px solid scale-color($accent, $lightness: -15%);
+//     }
+//     &[disabled], &.disabled {
+//       color: $accent !important;
+//     }
+//   }
+// }
 .font-bolder {
   font-weight: 900 !important;
 }
@@ -347,4 +350,36 @@ nav.orbit-bullets > button, .orbit-controls > button {
 }
 *:focus {
   outline: none;
+}
+
+.inputfile {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  padding: 0;
+  margin: 0;
+
+  font-size: 100px;
+
+  cursor: pointer;
+  opacity: 0;
+  filter: alpha(opacity=0);
+  &:hover {
+    cursor: pointer;
+  }
+}
+.inputfilewrapper {
+  overflow: hidden;
+
+// color: white;
+
+  cursor: pointer;
+
+  &:hover {
+    cursor: pointer;
+  }
+}
+.inputfile-name {
+  cursor: default !important;
 }

@@ -10,7 +10,8 @@ import { Observable } from 'rxjs';
   styleUrls: ['./shop-now.component.scss']
 })
 export class ShopNowComponent implements OnInit {
-  // categories = this.categoryService.brandNew;
+  defaultImage = '../../assets/img/Spinner.svg';
+
   products$: Observable<Product[]>;
   constructor(public categoryService: CategoryService, private afs: AngularFirestore) {}
 

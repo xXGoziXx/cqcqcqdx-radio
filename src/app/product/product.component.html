@@ -63,14 +63,14 @@
           <div class="cell small-12 margin-top-1">
             <div class="button-group align-right align-middle">
               <button
-                class="button primary font-bold"
+                class="button  font-bold"
                 (click)="productService.addItemToCart(product, quantity)"
                 [disabled]="quantity < 1 || quantity > product.stock"
               >
                 ADD TO CART
               </button>
               <button
-                class="button primary font-bold"
+                class="button  font-bold"
                 (click)="productService.removeItemFromCart(product)"
                 [disabled]="this.productService.cart.length === 0"
               >

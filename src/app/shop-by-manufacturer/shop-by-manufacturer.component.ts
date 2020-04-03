@@ -7,7 +7,7 @@ import { CategoryService } from '../services/category.service';
   styleUrls: ['./shop-by-manufacturer.component.scss']
 })
 export class ShopByManufacturerComponent implements OnInit {
-  categories = this.categoryService.manufacturers;
+  defaultImage = '../../assets/img/Spinner.svg';
 
   constructor(public categoryService: CategoryService) {}
 

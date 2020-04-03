@@ -10,7 +10,11 @@
       <a [routerLink]="['/used-equipment', categoryService.linkUsed(category.text)]" routerLinkActive="active">
         <div class="grid-y card height-100 radius bordered shadow align-center">
           <div class="cell small-auto width-100 card-section">
-            <img [src]="category.src" [alt]="category.alt" />
+            <img
+              [lazyLoad]="category.src === '' ? '../../assets/img/No_image_available.svg' : category.src"
+              [defaultImage]="defaultImage"
+              [alt]="category.alt"
+            />
           </div>
           <div class="cell small-shrink width-100 card-section text">
             <p class="text-uppercase text-center align-self-middle font-bold">{{ category.text }}</p>

@@ -32,11 +32,7 @@
               <p class="text-accent text-center">{{ authService.error }}</p>
             </div>
             <div class="small-12 cell">
-              <button
-                class="button primary shadow bordered radius text-uppercase"
-                type="submit"
-                [disabled]="form.invalid"
-              >
+              <button class="button shadow bordered  text-uppercase" type="submit" [disabled]="form.invalid">
                 Login
               </button>
             </div>
@@ -55,7 +51,7 @@
                     required
                     #email="ngModel"
                 /></label>
-                <button type="submit" class="button primary" [disabled]="!f.valid">
+                <button type="submit" class="button  text-uppercase" [disabled]="!f.valid">
                   Reset Password
                 </button>
               </form>

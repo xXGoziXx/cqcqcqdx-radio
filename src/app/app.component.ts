@@ -32,6 +32,24 @@ export class AppComponent implements OnInit, OnDestroy {
     unescape(word.replace(new RegExp(searchValue, 'g'), replaceValue));
 
   constructor(router: Router) {
+    $(() => {
+      $(document).foundation();
+      $('#accordion').foundation('hideAll');
+      const carousel = $('.slick-carousel').slick(this.slickOptions);
+      $('.orbit-next').on('click', () => {
+        carousel.slick('slickNext');
+      });
+      $('.orbit-previous').on('click', () => {
+        carousel.slick('slickPrev');
+      });
+      $('.orbit-bullets>button').on('click', (e: { target: any }) => {
+        carousel.slick('slickGoTo', $(e.target).attr('data-slide'));
+      });
+      $('.slick-carousel').on('beforeChange', (_: any, __: any, currentSlide: string, nextSlide: string) => {
+        $('[data-slide=' + currentSlide + ']').removeClass('is-active');
+        $('[data-slide=' + nextSlide + ']').addClass('is-active');
+      });
+    });
     this.router$ = router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((res: NavigationEnd) => {

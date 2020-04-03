@@ -5,12 +5,17 @@
     </div>
   </div>
   <div class="grid-x grid-margin-y grid-margin-x small-up-1 medium-up-3 large-up-5 align-stretch-spaced content ">
-    <div class="cell" *ngFor="let category of categories">
+    <div class="cell" *ngFor="let category of categoryService.manufacturers">
       <!-- image has padding -->
       <a [routerLink]="['/shop-by-manufacturer', categoryService.linkUsed(category.text)]" routerLinkActive="active">
         <div class="grid-y card height-100 radius bordered shadow align-center">
-          <div class="cell small-auto width-100 card-section">
-            <img [src]="category.src  == '' ? '../../assets/img/No_image_available.svg': category.src" [alt]="category.alt" />
+          <div class="cell small-auto width-100 card-section align-middle">
+            <img
+              [lazyLoad]="category.src === '' ? '../../assets/img/No_image_available.svg' : category.src"
+                        [defaultImage]="defaultImage"
+
+              [alt]="category.alt"
+            />
           </div>
           <div class="cell small-shrink width-100 card-section text">
             <p class="text-uppercase text-center align-self-middle font-bold">{{ category.text }}</p>

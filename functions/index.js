@@ -172,6 +172,7 @@ exports.incrementOrderCounter = functions.firestore
     }
     return orderCounter;
   });
+
 exports.incrementProductCounter = functions.firestore
   .document('products/{productId}')
   .onCreate(async (snap, context) => {
@@ -197,6 +198,7 @@ exports.incrementProductCounter = functions.firestore
     }
     return productCounter;
   });
+  
 exports.updateStockFromOrder = functions.firestore
   .document('users/{userId}/orders/{orderId}')
   .onCreate(async (snap, context) => {
