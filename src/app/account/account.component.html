@@ -51,7 +51,7 @@
                     <td>{{ order.status }}</td>
                     <td class="text-center">
                       <button
-                        class="button text-center margin-bottom-0 primary"
+                        class="button text-center margin-bottom-0 "
                         (click)="showOrder(order.product_ids, order.order_id)"
                         type="button"
                       >
@@ -183,32 +183,59 @@
                       ></textarea>
                     </label>
                   </div>
-                  <div class="small-12 cell">
-                    <label for="imgUpload" class="button text-uppercase"
-                      >Upload an Image
-
-                      <i class="fi fi-photo"></i>
+                  <div class="small-shrink shrink cell margin-right-0">
+                    <label
+                      for="imgUpload"
+                      class="shadow text-uppercase button prefix inputfilewrapper margin-bottom-0 height-100"
+                      multiple="true"
+                      >Upload an Image <i class="fi fi-photo"></i>
+                      <input
+                        id="imgUpload"
+                        type="file"
+                        multiple="true"
+                        class="inputfile "
+                        accept="image/*"
+                        formControlName="images"
+                      />
                     </label>
-                    <input id="imgUpload" type="file" formControlName="images" class="show-for-sr" />
-                    <!-- <div
-                      class="progress"
+                  </div>
+                  <div class="small-auto auto cell margin-left-0">
+                    <input type="text" class="inputfile-name height-100 margin-bottom-0 no-input" disabled />
+                  </div>
+                  <div class="small-12 cell" *ngFor="let upload of uploads">
+                    <!-- <p><b>Progress:</b> {{ upload.percentage | async }}%</!-->
+                    <div
+                      class="progress margin-bottom-0"
                       role="progressbar"
                       tabindex="0"
-                      aria-valuenow="25"
+                      attr.aria-valuenow="{{ upload.percentage | async }}"
                       aria-valuemin="0"
-                      aria-valuetext="25 percent"
+                      attr.aria-valuetext="{{ upload.percentage | async }} percent"
                       aria-valuemax="100"
                       id="imageProgress"
                     >
-                      <span class="progress-meter" style="width: 25%">
-                        <span class="progress-meter-text">25%</span>
+                      <span class="progress-meter" [style.width]="(upload.percentage | async | number: '1.0-0') + '%'">
+                        <span class="progress-meter-text">{{ upload.percentage | async | number: '1.0-0' }}</span>
                       </span>
-                    </div> -->
+                    </div>
                   </div>
+                  <ng-container *ngIf="uploads">
+                    <div
+                      class="cell small-12 align-middle text-center"
+                      *ngFor="let upload of uploads; let index = index"
+                    >
+                      <img
+                        [defaultImage]="defaultImage"
+                        [lazyLoad]="upload.url"
+                        [alt]="upload.fileName"
+                        height="300px"
+                      />
+                    </div>
+                  </ng-container>
 
                   <div class="small-12 cell margin-bottom-1">
                     <button
-                      class="button primary shadow bordered radius text-uppercase"
+                      class="button  shadow bordered radius text-uppercase"
                       type="submit"
                       [disabled]="productForm.invalid"
                     >
@@ -227,7 +254,7 @@
             </h5>
             <form
               [formGroup]="manufacturerForm"
-              (ngSubmit)="productService.addManufacturer(manufacturerForm.value)"
+              (ngSubmit)="productService.addManufacturer(manufacturerForm.value, uploadsToImages(uploads)); manufacturerForm.reset()"
               class="margin-top-1"
             >
               <div class="grid-container fluid">
@@ -249,29 +276,58 @@
                     </label>
                     <br />
                   </div>
-                  <div class="small-12 cell">
-                    <label for="imgUpload" class="button text-uppercase"
-                      >Upload an Image <i class="fi fi-photo"></i
-                    ></label>
-                    <input id="imgUpload" type="file" formControlName="images" class="show-for-sr" />
-                    <!-- <div
-                      class="progress"
+                  <div class="small-shrink shrink cell margin-right-0">
+                    <label
+                      for="imgUpload"
+                      class="text-uppercase button prefix inputfilewrapper margin-bottom-0 height-100"
+                      multiple="true"
+                      >Upload an Image <i class="fi fi-photo"></i>
+                      <input
+                        id="imgUpload"
+                        type="file"
+                        multiple="true"
+                        class="inputfile "
+                        accept="image/*"
+                        formControlName="images"
+                      />
+                    </label>
+                  </div>
+                  <div class="small-auto auto cell margin-left-0">
+                    <input type="text" class="inputfile-name height-100 margin-bottom-0 no-input" disabled />
+                  </div>
+                  <div class="small-12 cell" *ngFor="let upload of uploads">
+                    <!-- <p><b>Progress:</b> {{ upload.percentage | async }}%</!-->
+                    <div
+                      class="progress margin-bottom-0"
                       role="progressbar"
                       tabindex="0"
-                      aria-valuenow="25"
+                      attr.aria-valuenow="{{ upload.percentage | async }}"
                       aria-valuemin="0"
-                      aria-valuetext="25 percent"
+                      attr.aria-valuetext="{{ upload.percentage | async }} percent"
                       aria-valuemax="100"
                       id="imageProgress"
                     >
-                      <span class="progress-meter" style="width: 25%">
-                        <span class="progress-meter-text">25%</span>
+                      <span class="progress-meter" [style.width]="(upload.percentage | async | number: '1.0-0') + '%'">
+                        <span class="progress-meter-text">{{ upload.percentage | async | number: '1.0-0' }}</span>
                       </span>
-                    </div> -->
+                    </div>
                   </div>
-                  <div class="small-12 cell margin-bottom-1">
+                  <ng-container *ngIf="uploads">
+                    <div
+                      class="cell small-12 align-middle text-center"
+                      *ngFor="let upload of uploads; let index = index"
+                    >
+                      <img
+                        [defaultImage]="defaultImage"
+                        [lazyLoad]="upload.url"
+                        [alt]="upload.fileName"
+                        height="300px"
+                      />
+                    </div>
+                  </ng-container>
+                  <div class="small-12 cell margin-top-1 margin-bottom-1">
                     <button
-                      class="button primary shadow bordered radius text-uppercase"
+                      class="button  shadow bordered radius text-uppercase"
                       type="submit"
                       [disabled]="manufacturerForm.invalid"
                     >
@@ -307,7 +363,7 @@
                       <td>{{ allOrder.status }}</td>
                       <td class="text-center">
                         <button
-                          class="button text-center margin-bottom-0 primary"
+                          class="button text-center margin-bottom-0 "
                           (click)="showOrder(allOrder.product_ids, allOrder.order_id)"
                           type="button"
                         >

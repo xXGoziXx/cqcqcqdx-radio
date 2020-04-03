@@ -10,7 +10,11 @@
       <a [routerLink]="['/product', product.id]" routerLinkActive="active">
         <div class="grid-y card height-100 radius bordered shadow align-center">
           <div class="cell small-auto width-100 card-section">
-            <img [src]="product.images[0]" [alt]="product.name" />
+            <img
+              [lazyLoad]="product.images[0] === '' ? '../../assets/img/No_image_available.svg' : product.images[0]"
+              [defaultImage]="defaultImage"
+              [alt]="product.name"
+            />
           </div>
           <div class="cell small-shrink width-100 card-section text ">
             <span class="fi-wrapper align-self-stretch align-center">

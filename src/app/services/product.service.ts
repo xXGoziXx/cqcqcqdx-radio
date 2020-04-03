@@ -49,14 +49,14 @@ export class ProductService {
         adminListSub.unsubscribe();
       }));
   };
-  addManufacturer = manufacturerForm => {
+  addManufacturer = (manufacturerForm, images) => {
     console.log({
       ...manufacturerForm,
-      images: ['']
+      images
     });
     return this.manufacturersRef.add({
-      name: manufacturerForm.value.name.trim(),
-      images: manufacturerForm.value.image.split(',')
+      name: manufacturerForm.name,
+      images
     });
   };
   removeItemFromCart = (product: Item) => {

@@ -6,6 +6,8 @@ import { CategoryService } from '../services/category.service';
   styleUrls: ['./used-equipment.component.scss']
 })
 export class UsedEquipmentComponent implements OnInit {
+  defaultImage = '../../assets/img/Spinner.svg';
+
   categories = this.categoryService.used;
   constructor(public categoryService: CategoryService) {}
 

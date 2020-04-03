@@ -25,7 +25,7 @@
     <div class="weekdays cell">Monday - Friday: <br class="show-for-medium-only" />9:00am - 5:00pm</div>
     <div class="weekends cell">Saturday: <br class="show-for-medium-only" />9:30am - 4:00pm</div>
   </div>
-  <!-- <div class="cell auto"></div> -->
+  <!-- <div class="cell auto"></  div> -->
 
   <div id="shopping" class="cell small-4 medium-shrink">
     <div class="basket">
@@ -35,7 +35,7 @@
     <!-- <div class="wishlist"><i class="fi fi-heart"></i>&nbsp;Wishlist</div> -->
     <div class="cart text-center">
       <button
-        class="button text-center margin-bottom-0 primary accent"
+        class="button text-center margin-bottom-0  accent"
         data-tooltip
         title="View Basket"
         data-open="basketModal"
@@ -189,7 +189,7 @@
               <td>{{ item.quantity }}</td>
               <td>
                 <button
-                  class="button text-center margin-bottom-0 primary"
+                  class="button text-center margin-bottom-0 "
                   (click)="this.productService.removeItemFromCart(item)"
                   type="button"
                 >
