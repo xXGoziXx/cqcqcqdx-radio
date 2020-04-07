@@ -16,6 +16,7 @@ import { User } from '../interfaces/User';
 import { CategoryService } from '../services/category.service';
 import { ValidateDuplicateEntry } from '../validators/duplicateEntry.validator';
 import { tap, map } from 'rxjs/operators';
+import { Manufacturer } from '../interfaces/Manufacturer';
 
 @Component({
   selector: 'app-account',
@@ -44,7 +45,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   tabPanels = [
     { id: 'myOrders', name: 'My Orders' },
     { id: 'addProduct', name: 'Add Product' },
-    { id: 'addManufacturer', name: 'Add Manufacturer' },
+    { id: 'addManufacturer', name: 'Add / Remove Manufacturer' },
     { id: 'viewAllOrders', name: 'View All Orders' }
   ];
   objectFlattener = (values: object) => {
@@ -107,7 +108,28 @@ export class AccountComponent implements OnInit, OnDestroy {
       images: ['']
     });
   }
-
+  removeManufacturer(name) {
+    console.log('removeManufacturer', name);
+    const manufacturerDocIdsSub = this.afs
+      .collection<Manufacturer>('manufacturers', ref => ref.where('name', '==', name))
+      .snapshotChanges()
+      .pipe(
+        map(actions =>
+          actions.map(a => {
+            const data = a.payload.doc.data() as Manufacturer;
+            const id = a.payload.doc.id;
+            console.log({ id, ...data });
+            return id;
+          })
+        )
+      )
+      .subscribe(ids => {
+        ids.forEach(id => {
+          this.afs.doc<Manufacturer>('manufacturers/' + id).delete();
+        });
+        manufacturerDocIdsSub.unsubscribe();
+      });
+  }
   constructor(
     public authService: AuthService,
     public productService: ProductService,
@@ -120,6 +142,42 @@ export class AccountComponent implements OnInit, OnDestroy {
   }
 
   uploadsToImages = uploads => uploads.map(upload => upload.url);
+  uploadToStorage(event, id?) {
+    // reset the array
+    const updateUploads = [];
+    if (!id) {
+      this.uploads = [];
+    }
+
+    const fileList = event.target.files;
+    const allPercentage: Observable<number>[] = [];
+    // console.log(fileList);
+    for (const file of fileList) {
+      const path = `images/${new Date().getTime()}_${file.name}`;
+      const ref = this.storage.ref(path);
+      const task = this.storage.upload(path, file);
+      const percentage$ = task.percentageChanges();
+      allPercentage.push(percentage$);
+
+      const uploadTrack = {
+        fileName: file.name,
+        percentage: percentage$
+      };
+      // push each upload into the array
+      id ? updateUploads.push(uploadTrack) : this.uploads.push(uploadTrack);
+      // for every upload do whatever you want in firestore with the uploaded file
+      const t = task.then(async imageFile => {
+        const url = await imageFile.ref.getDownloadURL();
+        id ? (updateUploads[updateUploads.length - 1].url = url) : (this.uploads[this.uploads.length - 1].url = url);
+        // id ? console.log('updateUploads:', updateUploads) : console.log('uploads:', this.uploads);
+        this.afs.doc<Manufacturer>('manufacturers/' + id).update({ images: updateUploads.map(image => image.url) });
+        return this.uploads;
+      });
+    }
+
+    return { allPercentage, updateUploads };
+  }
+
   ngOnInit(): void {
     // Creates the form
     this.createForm();
@@ -139,18 +197,40 @@ export class AccountComponent implements OnInit, OnDestroy {
             .map(doc => {
               return doc.payload.doc.id;
             });
-          console.log(this.allUserIds);
+          // console.log(this.allUserIds);
           // uses the ids to get all the user refs
           this.allUserDocs = this.allUserIds.map(id => this.afs.collection<User>('users').doc<User>(id));
           // gets all the orders from the user ord
           this.allUsersOrderCollection = this.allUserDocs.map(userRef => userRef.collection<Order>('orders'));
-          console.log('allUserDocs', this.allUserDocs);
+          // console.log('allUserDocs', this.allUserDocs);
           this.allOrders = this.allUsersOrderCollection.map(userOrderCollection => userOrderCollection.valueChanges());
         });
       }
     } catch (e) {
       console.log('No Orders');
     }
+    $(document).on('change', '#imgUpdate', event => {
+      console.log(event);
+      const manufacturerDocIdsSub = this.afs
+        .collection<Manufacturer>('manufacturers', ref => ref.where('name', '==', event.target.name))
+        .snapshotChanges()
+        .pipe(
+          map(actions =>
+            actions.map(a => {
+              const data = a.payload.doc.data() as Manufacturer;
+              const id = a.payload.doc.id;
+              console.log({ id, ...data });
+              return id;
+            })
+          )
+        )
+        .subscribe(ids => {
+          ids.forEach(id => {
+            this.uploadToStorage(event, id);
+          });
+          manufacturerDocIdsSub.unsubscribe();
+        });
+    });
     $(document).on('change', '#imgUpload', event => {
       console.log('This is actually working');
       const $input = $(event);
@@ -184,33 +264,7 @@ export class AccountComponent implements OnInit, OnDestroy {
         $input.removeClass('has-focus');
       });
 
-      // reset the array
-      this.uploads = [];
-      const fileList = event.target.files;
-      const allPercentage: Observable<number>[] = [];
-      console.log(fileList);
-      for (const file of fileList) {
-        const path = `images/${new Date().getTime()}_${file.name}`;
-        const ref = this.storage.ref(path);
-        const task = this.storage.upload(path, file);
-        const percentage$ = task.percentageChanges();
-        allPercentage.push(percentage$);
-
-        // create composed object with different information. ADAPT THIS ACCORDING YOUR NEED
-        const uploadTrack = {
-          fileName: file.name,
-          percentage: percentage$
-        };
-        // push each upload into the array
-        this.uploads.push(uploadTrack);
-        // for every upload do whatever you want in firestore with the uploaded file
-        const t = task.then(async imageFile => {
-          const url = await imageFile.ref.getDownloadURL();
-          this.uploads[this.uploads.length - 1].url = url;
-          console.log(this.uploads);
-          return this.uploads;
-        });
-      }
+      const { allPercentage } = this.uploadToStorage(event);
 
       this.allPercentage = combineLatest(allPercentage).pipe(
         map(percentages => {

@@ -1,12 +1,16 @@
 <!-- This demo uses float grid but you can use flex grid too -->
 <div class="top-bar grid-x grid-padding-x top-nav align-top">
   <div id="logo" class="cell shrink">
-    <a [routerLink]="['/']" routerLinkActive="active" class="text-hide  ">
-      <img src="../../assets/logo.png" alt="cqcqcqdx-logo" />
-      CQCQCQDX
-    </a>
+    <div class="grid-x">
+      <a [routerLink]="['/']" routerLinkActive="active" class="text-hide cell small-shrink">
+        <img src="../../assets/logo.png" alt="cqcqcqdx-logo" class="small-12" />
+        CQCQCQDX
+      </a>
+      <a [routerLink]="['/']" routerLinkActive="active" class="cell small-shrink">
+        <b class="logotype hide-for-large"> CQCQCQDX</b>
+      </a>
+    </div>
     <br />
-    <a [routerLink]="['/']" routerLinkActive="active"><b class="logotype hide-for-large"> CQCQCQDX</b></a>
   </div>
   <div class="cell auto show-for-large">
     <a [routerLink]="['/']" routerLinkActive="active"><b class="logotype"> CQCQCQDX </b></a>

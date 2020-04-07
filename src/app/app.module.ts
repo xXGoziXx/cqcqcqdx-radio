@@ -26,6 +26,7 @@ import { ShopNowComponent } from './shop-now/shop-now.component';
 import { UsedCategoryComponent } from './used-equipment/used-category/used-category.component';
 import { UsedEquipmentComponent } from './used-equipment/used-equipment.component';
 import { environment } from '../environments/environment';
+import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 
 @NgModule({
   declarations: [
@@ -45,7 +46,8 @@ import { environment } from '../environments/environment';
     AccountComponent,
     EditComponent,
     ProductComponent,
-    ManufacturerProductsComponent
+    ManufacturerProductsComponent,
+    PrivacyPolicyComponent
   ],
   imports: [
     AngularFireAuthModule,

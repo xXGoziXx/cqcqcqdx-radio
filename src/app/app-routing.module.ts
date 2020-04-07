@@ -15,6 +15,7 @@ import { ShopNowComponent } from './shop-now/shop-now.component';
 import { EditComponent } from './account/edit/edit.component';
 import { ProductComponent } from './product/product.component';
 import { ManufacturerProductsComponent } from './shop-by-manufacturer/manufacturer-products/manufacturer-products.component';
+import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.component';
 
 const routes: Routes = [
   {
@@ -114,6 +115,12 @@ const routes: Routes = [
     pathMatch: 'full',
     component: ContactComponent,
     data: { breadcrumb: 'Contact Us' }
+  },
+  {
+    path: 'privacy-policy',
+    pathMatch: 'full',
+    component: PrivacyPolicyComponent,
+    data: { breadcrumb: 'Privacy Policy' }
   },
   {
     path: '',

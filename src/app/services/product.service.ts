@@ -1,9 +1,7 @@
 import { Injectable } from '@angular/core';
-import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { Product } from 'src/app/interfaces/Product';
 import { Manufacturer } from 'src/app/interfaces/Manufacturer';
-import { Observable, Subject } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
 import { Item } from '../interfaces/Item';
 import * as firebase from 'firebase/app';
 import 'firebase/firestore'; // If using Firebase database

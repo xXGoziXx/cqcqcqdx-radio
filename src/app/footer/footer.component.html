@@ -1,6 +1,23 @@
 <div class="grid-container fluid height-100 grid-x grid-padding-x">
+  <div class="cell small-6 align-middle margin-top-1">
+    <a
+      href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CW7YY6RHSCDVJ&source=url"
+      target="_blank"
+      ><img
+        src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"
+        border="0"
+        title="PayPal - The safer, easier way to pay online!"
+        alt="Donate with PayPal button"
+    /></a>
+  </div>
+
+  <div class="cell small-6 align-center-middle margin-top-1">
+    <p class="text-right">
+      <a [routerLink]="['/privacy-policy']" routerLinkActive="active">Privacy Policy</a>
+    </p>
+  </div>
   <div class="cell small-12 align-bottom">
-    <p class="text-center margin-bottom-0">
+    <p class="text-center margin-0">
       &copy; CQCQCQDX Radio. All Rights Reserved. 2020
       {{ (date | date: 'yyyy') === '2020' ? '' : ' - ' + (date | date: 'yyyy') }}
     </p>

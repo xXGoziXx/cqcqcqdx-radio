@@ -1,3 +1,20 @@
 img {
   max-height: 300px;
 }
+.action-buttons {
+  z-index: 100;
+
+  background: rgba(0, 0, 0, .5);
+
+  transition: background linear .1s;
+  i {
+    font-size: 250%;
+  }
+
+  &:hover {
+    background: rgba(0, 0, 0, .75);
+  }
+  &:focus, &:active {
+    background: rgba(0, 0, 0, 1);
+  }
+}

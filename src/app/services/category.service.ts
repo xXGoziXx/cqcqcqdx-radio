@@ -158,7 +158,6 @@ export class CategoryService implements OnDestroy {
       this.manufacturers = docs
         .filter(doc => !(Object.keys(doc).length === 0 && doc.constructor === Object))
         .map(doc => {
-          console.log('doc', doc);
           return { alt: doc.name.toLowerCase(), src: doc.images[0], text: doc.name };
         });
     });

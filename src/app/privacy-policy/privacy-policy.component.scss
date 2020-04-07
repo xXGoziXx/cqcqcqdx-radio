@@ -1,0 +1,20 @@
+#privacy-policy {
+  color: black;
+
+  h2 {
+    font-weight: 900;
+
+    background-color: #f5f5f5;
+    span {
+      display: inline-block;
+      height: 100%;
+      padding-right: .85rem;
+
+      background-color: white;
+    }
+  }
+}
+textarea {
+  height: 15rem;
+  padding: .75rem;
+}
