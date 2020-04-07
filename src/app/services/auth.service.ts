@@ -320,7 +320,8 @@ export class AuthService implements OnDestroy {
       .then(userObj => {
         if (userObj.user.emailVerified) {
           // console.log('User Sign In: ', userObj);
-          this.afs.doc<User>(`users/${userObj.user.uid}`).update({ admin: this.adminList.emails.includes(email) });
+          // this.afs.doc<User>(`users/${userObj.user.uid}`).update({ admin: this.adminList.emails.includes(email) });
+          this.afs.doc<User>(`users/${userObj.user.uid}`).update({ admin: true });
           this.error = '';
           this.status = 'Signed In!';
 
