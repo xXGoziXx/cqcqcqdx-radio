@@ -165,22 +165,22 @@ export class AccountService {
     // console.log(event);
     const { id: uid, value } = event.target;
     // console.log(`users/${uid}` + ' ' + event.target.value);
+    const booleanValue = value.toLowerCase() === 'true';
     // this.afs.doc<User>(`users/${uid}`).update({
     //   admin: value
     // });
-    const adminListSub = this.afs
-      .doc<any>(`users/adminList`)
-      .valueChanges()
-      .subscribe(adminList => {
-        const { emails } = adminList;
-        if (emails.includes(email)) {
-          value ? emails.push(email) : emails.splice(emails.indexOf(email), 1);
-        }
-        this.afs.doc<any>(`users/adminList`).update({
-          emails
-        });
-        adminListSub.unsubscribe();
-      });
+    const { emails } = this.authService.adminList;
+    if (booleanValue && !emails.includes(email)) {
+      // If its true and not in the adminList
+      emails.push(email);
+    } else if (!booleanValue && emails.includes(email)) {
+      // If its false and in the adminList
+      emails.splice(emails.indexOf(email), 1);
+    }
+
+    this.afs.doc<any>(`users/adminList`).update({
+      emails
+    });
   };
   constructor(
     public authService: AuthService,

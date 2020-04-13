@@ -66,32 +66,36 @@ exports.updateUserDetails = functions.firestore.document('users/adminList').onUp
   console.log('snap: ', snap);
   console.log('context: ', context);
   const { before, after } = snap;
-  const email = _.difference(before.data().emails, after.data().emails)[0];
-  let uid;
-  const users = await admin
-    .firestore()
-    .collection('users')
-    .where('email', '==', email)
-    .get();
-  users.forEach(user => {
-    uid = user.data().uid;
-  });
-  if (after.data().emails.includes(email)) {
-    admin
-      .firestore()
-      .doc(`users/${uid}`)
-      .update({
-        admin: true
-      });
-  } else {
-    admin
-      .firestore()
-      .doc(`users/${uid}`)
-      .update({
-        admin: false
-      });
+  console.log('Before: ', before.data());
+  console.log('After: ', after.data());
+  let value = false;
+  let emails = _.difference(before.data().emails, after.data().emails);
+  if (!emails.length) {
+    value = true;
+    emails = _.difference(after.data().emails, before.data().emails);
   }
-  return email;
+  if (emails.length) {
+    console.log('Email Difference: ', emails[0], value);
+    let uid;
+    const users = await admin
+      .firestore()
+      .collection('users')
+      .where('email', '==', emails[0])
+      .get();
+    users.forEach(user => {
+      console.log('User: ', user);
+      uid = user.data().uid;
+    });
+    console.log('Users: ', users);
+    admin
+      .firestore()
+      .doc(`users/${uid}`)
+      .update({
+        admin: value
+      });
+    return emails[0];
+  }
+  return 'The admin list of emails did not change!';
 });
 exports.sendContactMessage = functions.firestore.document('messages/{pushKey}').onCreate((snap, context) => {
   const val = snap.data();

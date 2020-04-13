@@ -27,12 +27,12 @@
                   (change)="accountService.updateAdminStatus($event, user.email)"
                   [value]="this.authService.currentUserDoc.admin"
                 >
-                  <option value="false" [selected]="user.admin === false">False&nbsp;</option>
-                  <option value="true" [selected]="user.admin === true">True&nbsp;</option>
+                  <option [value]="false" [selected]="user.admin === false">False&nbsp;</option>
+                  <option [value]="true" [selected]="user.admin === true">True&nbsp;</option>
                 </select>
               </label>
               <ng-template #statusView>
-                {{ user.admin | titlecase }}
+                {{ user.admin ? 'True&nbsp;' : 'False&nbsp;' }}
               </ng-template>
             </td>
             <td>{{ dateIfRecorded(user.lastLoggedIn) }}</td>
