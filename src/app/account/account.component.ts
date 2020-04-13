@@ -1,22 +1,15 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Order } from '../interfaces/Order';
-import { Product } from '../interfaces/Product';
 import { AuthService } from '../services/auth.service';
-import { Observable, Subscription, combineLatest } from 'rxjs';
-import {
-  AngularFirestoreCollection,
-  AngularFirestore,
-  DocumentChangeAction,
-  AngularFirestoreDocument
-} from '@angular/fire/firestore';
-import { AngularFireStorage } from '@angular/fire/storage';
+import { combineLatest } from 'rxjs';
+import { AngularFirestore } from '@angular/fire/firestore';
 import { ProductService } from '../services/product.service';
-import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { User } from '../interfaces/User';
 import { CategoryService } from '../services/category.service';
-import { ValidateDuplicateEntry } from '../validators/duplicateEntry.validator';
 import { tap, map } from 'rxjs/operators';
 import { Manufacturer } from '../interfaces/Manufacturer';
+import { AccountService } from '../services/account.service';
+import { Product } from '../interfaces/Product';
 
 @Component({
   selector: 'app-account',
@@ -24,220 +17,113 @@ import { Manufacturer } from '../interfaces/Manufacturer';
   styleUrls: ['./account.component.scss']
 })
 export class AccountComponent implements OnInit, OnDestroy {
-  defaultImage = '../../assets/img/Spinner.svg';
-  usersOrderCollection: AngularFirestoreCollection<Order>;
-  allUsersOrderCollection: AngularFirestoreCollection<Order>[];
-  allUsersCollectionSnapshot$: Subscription;
-  allUserDocs: AngularFirestoreDocument<User>[];
-  allUsersCollectionSnapshot: Observable<DocumentChangeAction<User>[]>;
-  orders$: Observable<Order[]>;
-  allOrders: Array<Observable<Order[]>> = [];
-  allUserIds: Array<string> = [];
-  allUsers: Array<User> = [];
-  products$: Array<Observable<Product[]>>;
-  currOrderId = '';
-  productForm: FormGroup;
-  manufacturerForm: FormGroup;
-  categories = [...this.categoryService.used];
-  manufacturers = this.categoryService.manufacturers;
-  uploads: any[];
-  allPercentage: Observable<any>;
   tabPanels = [
-    { id: 'myOrders', name: 'My Orders' },
-    { id: 'addProduct', name: 'Add Product' },
-    { id: 'addManufacturer', name: 'Add / Remove Manufacturer' },
-    { id: 'viewAllOrders', name: 'View All Orders' }
-  ];
-  objectFlattener = (values: object) => {
-    let result = '';
-    let counter = 3;
-    const valuesTracker = { ...values };
-    while (Object.keys(valuesTracker).length) {
-      // console.log('Values: ', valuesTracker);
-      Object.keys(valuesTracker).forEach(prop => {
-        const value = valuesTracker[prop];
-        if (value instanceof Object && value.constructor === Object) {
-          result += this.objectFlattener(value) + ', ';
-        } else if (Array.isArray(value)) {
-          for (const item of value) {
-            if ((item instanceof Object && item.constructor === Object) || Array.isArray(item)) {
-              result += this.objectFlattener(item) + ', ';
-            } else {
-              result += item + ', ';
-            }
-          }
-        } else {
-          result += value + ', ';
-        }
-        delete valuesTracker[prop];
-      });
-      counter--;
-    }
-    // console.log('Result: ', result);
-    // console.log('Values: ', valuesTracker);
-    // remove excess commas
-    return result.replace(/(^\s*,\s*)*(\s+,)*(\s*,\s*$)*/g, '');
-  };
+    { id: 'myOrders', name: 'My Orders', collection: 'myOrders', adminOnly: false },
+    { id: 'addProduct', name: 'Add / Remove Product', collection: 'products', adminOnly: false },
+    { id: 'addManufacturer', name: 'Add / Remove Manufacturer', collection: 'manufacturer', adminOnly: false },
+    { id: 'viewAllOrders', name: 'View All Orders', collection: 'allOrders', adminOnly: false },
+    { id: 'viewAllMembers', name: 'View All Members', collection: 'allMembers', adminOnly: true }
+  ].filter(tabPanel => (tabPanel.adminOnly && this.authService.currentUserDoc.admin) || !tabPanel.adminOnly);
 
-  showOrder = (ids, i) => {
-    console.log(...ids);
-    this.products$ = [];
-    ids.forEach(id => {
-      this.products$.push(
-        this.afs
-          .collection<Product>('products', ref => ref.where('id', '==', id))
-          .valueChanges()
-      );
-    });
-    this.currOrderId = this.currOrderId === i ? '' : i;
-  };
-
-  createForm() {
-    this.productForm = this.fb.group({
-      name: ['', Validators.required],
-      manufacturer: ['', Validators.required],
-      price: [0.0, Validators.required],
-      stock: [1],
-      condition: ['', Validators.required],
-      category: ['', Validators.required],
-      description: ['', Validators.required],
-      images: ['']
-    });
-    this.manufacturerForm = this.fb.group({
-      name: ['', Validators.required, ValidateDuplicateEntry.bind(this)],
-      images: ['']
-    });
-  }
-  removeManufacturer(name) {
-    console.log('removeManufacturer', name);
-    const manufacturerDocIdsSub = this.afs
-      .collection<Manufacturer>('manufacturers', ref => ref.where('name', '==', name))
-      .snapshotChanges()
-      .pipe(
-        map(actions =>
-          actions.map(a => {
-            const data = a.payload.doc.data() as Manufacturer;
-            const id = a.payload.doc.id;
-            console.log({ id, ...data });
-            return id;
-          })
-        )
-      )
-      .subscribe(ids => {
-        ids.forEach(id => {
-          this.afs.doc<Manufacturer>('manufacturers/' + id).delete();
-        });
-        manufacturerDocIdsSub.unsubscribe();
-      });
-  }
   constructor(
     public authService: AuthService,
     public productService: ProductService,
     public categoryService: CategoryService,
-    private afs: AngularFirestore,
-    private storage: AngularFireStorage,
-    private fb: FormBuilder
+    public accountService: AccountService,
+    private afs: AngularFirestore
   ) {
-    console.log(this.categories);
-  }
-
-  uploadsToImages = uploads => uploads.map(upload => upload.url);
-  uploadToStorage(event, id?) {
-    // reset the array
-    const updateUploads = [];
-    if (!id) {
-      this.uploads = [];
-    }
-
-    const fileList = event.target.files;
-    const allPercentage: Observable<number>[] = [];
-    // console.log(fileList);
-    for (const file of fileList) {
-      const path = `images/${new Date().getTime()}_${file.name}`;
-      const ref = this.storage.ref(path);
-      const task = this.storage.upload(path, file);
-      const percentage$ = task.percentageChanges();
-      allPercentage.push(percentage$);
-
-      const uploadTrack = {
-        fileName: file.name,
-        percentage: percentage$
-      };
-      // push each upload into the array
-      id ? updateUploads.push(uploadTrack) : this.uploads.push(uploadTrack);
-      // for every upload do whatever you want in firestore with the uploaded file
-      const t = task.then(async imageFile => {
-        const url = await imageFile.ref.getDownloadURL();
-        id ? (updateUploads[updateUploads.length - 1].url = url) : (this.uploads[this.uploads.length - 1].url = url);
-        // id ? console.log('updateUploads:', updateUploads) : console.log('uploads:', this.uploads);
-        this.afs.doc<Manufacturer>('manufacturers/' + id).update({ images: updateUploads.map(image => image.url) });
-        return this.uploads;
-      });
-    }
-
-    return { allPercentage, updateUploads };
-  }
-
-  ngOnInit(): void {
+    console.log(this.accountService.categories);
     // Creates the form
-    this.createForm();
+    this.accountService.createForm();
 
     try {
       // stores the users collection of order Refs
-      this.usersOrderCollection = this.authService.userRef.collection<Order>('orders');
+      this.accountService.usersOrderCollection = this.authService.userRef.collection<Order>('orders');
       // stores the users collection of order Document Data asynchronously
-      this.orders$ = this.usersOrderCollection.valueChanges();
-      // allows admins to get all user orders
-      if (this.authService.currentUserDoc.admin) {
-        // gets the user IDs and stores it in an array
-        this.allUsersCollectionSnapshot = this.afs.collection<User>('users').snapshotChanges();
-        this.allUsersCollectionSnapshot$ = this.allUsersCollectionSnapshot.subscribe(docs => {
-          this.allUserIds = docs
+      this.accountService.orders$ = this.accountService.usersOrderCollection.valueChanges();
+
+      // gets the user IDs and stores it in an array
+      this.accountService.allUsersCollectionSnapshot = this.afs.collection<User>('users').snapshotChanges();
+      this.accountService.allUsersCollectionSnapshot$ = this.accountService.allUsersCollectionSnapshot.subscribe(
+        docs => {
+          this.accountService.allUserIds = docs
             .filter(doc => doc.payload.doc.id !== 'adminList')
             .map(doc => {
               return doc.payload.doc.id;
             });
-          // console.log(this.allUserIds);
+          // console.log(this.accountService.allUserIds);
           // uses the ids to get all the user refs
-          this.allUserDocs = this.allUserIds.map(id => this.afs.collection<User>('users').doc<User>(id));
+          this.accountService.allUserDocs = this.accountService.allUserIds.map(id =>
+            this.afs.collection<User>('users').doc<User>(id)
+          );
           // gets all the orders from the user ord
-          this.allUsersOrderCollection = this.allUserDocs.map(userRef => userRef.collection<Order>('orders'));
-          // console.log('allUserDocs', this.allUserDocs);
-          this.allOrders = this.allUsersOrderCollection.map(userOrderCollection => userOrderCollection.valueChanges());
-        });
-      }
+          this.accountService.allUsersOrderCollection = this.accountService.allUserDocs.map(userRef =>
+            userRef.collection<Order>('orders')
+          );
+          // console.log('allUserDocs', this.accountService.allUserDocs);
+          this.accountService.allOrders = this.accountService.allUsersOrderCollection.map(userOrderCollection =>
+            userOrderCollection.valueChanges()
+          );
+        }
+      );
     } catch (e) {
       console.log('No Orders');
     }
     $(document).on('change', '#imgUpdate', event => {
-      console.log(event);
-      const manufacturerDocIdsSub = this.afs
-        .collection<Manufacturer>('manufacturers', ref => ref.where('name', '==', event.target.name))
-        .snapshotChanges()
-        .pipe(
-          map(actions =>
-            actions.map(a => {
-              const data = a.payload.doc.data() as Manufacturer;
-              const id = a.payload.doc.id;
-              console.log({ id, ...data });
-              return id;
-            })
-          )
-        )
-        .subscribe(ids => {
-          ids.forEach(id => {
-            this.uploadToStorage(event, id);
-          });
-          manufacturerDocIdsSub.unsubscribe();
-        });
+      // console.log(event);
+      switch (this.accountService.collection) {
+        case 'manufacturers':
+          const manufacturerDocIdsSub = this.afs
+            .collection<Manufacturer>('manufacturers', ref => ref.where('name', '==', event.target.name))
+            .snapshotChanges()
+            .pipe(
+              map(actions =>
+                actions.map(a => {
+                  const data = a.payload.doc.data() as Manufacturer;
+                  const id = a.payload.doc.id;
+                  // console.log({ id, ...data });
+                  return id;
+                })
+              )
+            )
+            .subscribe(ids => {
+              ids.forEach(id => {
+                this.accountService.uploadToStorage(event, id);
+              });
+              manufacturerDocIdsSub.unsubscribe();
+            });
+          break;
+        case 'products':
+          const productDocIdsSub = this.afs
+            .collection<Product>('products', ref => ref.where('name', '==', event.target.name))
+            .snapshotChanges()
+            .pipe(
+              map(actions =>
+                actions.map(a => {
+                  const data = a.payload.doc.data() as Product;
+                  const id = a.payload.doc.id;
+                  // console.log({ id, ...data });
+                  return id;
+                })
+              )
+            )
+            .subscribe(ids => {
+              ids.forEach(id => {
+                this.accountService.uploadToStorage(event, id);
+              });
+              productDocIdsSub.unsubscribe();
+            });
+          break;
+
+        default:
+          break;
+      }
     });
     $(document).on('change', '#imgUpload', event => {
-      console.log('This is actually working');
       const $input = $(event);
       const $label = $('.inputfile-name');
       const labelVal = $label.val();
-      console.log($input);
-      console.log('change');
+      // console.log($input);
       let fileName = '';
 
       if (event.target.files && event.target.files.length > 1) {
@@ -248,7 +134,7 @@ export class AccountComponent implements OnInit, OnDestroy {
       } else if (event.target.value) {
         fileName = event.target.value.split('\\').pop();
       }
-      console.log(fileName);
+      // console.log(fileName);
       if (fileName) {
         $label.val(fileName);
       } else {
@@ -264,9 +150,9 @@ export class AccountComponent implements OnInit, OnDestroy {
         $input.removeClass('has-focus');
       });
 
-      const { allPercentage } = this.uploadToStorage(event);
+      const { allPercentage } = this.accountService.uploadToStorage(event);
 
-      this.allPercentage = combineLatest(allPercentage).pipe(
+      this.accountService.allPercentage = combineLatest(allPercentage).pipe(
         map(percentages => {
           let result = 0;
           for (const percentage of percentages) {
@@ -274,12 +160,19 @@ export class AccountComponent implements OnInit, OnDestroy {
           }
           return result / percentages.length;
         }),
-        tap(console.log)
+        // tap(console.log)
       );
     });
   }
+  updateCollection = collection => {
+    // console.log(`Now we're in ${collection}`);
+
+    this.accountService.collection = collection;
+  };
+
+  ngOnInit(): void {}
 
   ngOnDestroy() {
-    this.allUsersCollectionSnapshot$.unsubscribe();
+    this.accountService.allUsersCollectionSnapshot$.unsubscribe();
   }
 }

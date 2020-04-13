@@ -8,4 +8,4 @@ export interface Order {
   total: number;
   status: Status;
 }
-export type Status = 'Pending' | 'Delivered';
+export type Status = 'Pending' | 'Sold';

@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Product } from 'src/app/interfaces/Product';
-import { Manufacturer } from 'src/app/interfaces/Manufacturer';
+import { Product } from '../interfaces/Product';
+import { Manufacturer } from '../interfaces/Manufacturer';
+import { map } from 'rxjs/operators';
+
 import { Item } from '../interfaces/Item';
-import * as firebase from 'firebase/app';
-import 'firebase/firestore'; // If using Firebase database
+import firebase from '@firebase/app';
+import '@firebase/firestore'; // If using Firebase database
 
 @Injectable({
   providedIn: 'root'
@@ -27,20 +29,20 @@ export class ProductService {
   productCounter: number;
 
   addProduct = productForm => {
-    console.log(productForm);
+    // console.log(productForm);
     let adminListSub;
     return (adminListSub = this.afs
       .doc('users/adminList')
       .valueChanges()
       .subscribe(async doc => {
-        console.log(doc);
+        // console.log(doc);
         this.productCounter = (doc as any).productCounter;
-        console.log('pc', this.productCounter);
+        // console.log('pc', this.productCounter);
         await this.productsRef.add({
           ...productForm,
           name: productForm.value.name.trim(),
           images: productForm.value.image.split(','),
-          date_added: firebase.firestore.FieldValue.serverTimestamp(),
+          date_added: firebase.firestore.Timestamp.now(),
           id: this.productCounter.toString(),
           used: productForm.condition === 'New' ? false : true
         });
@@ -48,20 +50,64 @@ export class ProductService {
       }));
   };
   addManufacturer = (manufacturerForm, images) => {
-    console.log({
-      ...manufacturerForm,
-      images
-    });
+    // console.log({
+    //   ...manufacturerForm,
+    //   images
+    // });
     return this.manufacturersRef.add({
       name: manufacturerForm.name,
       images
     });
   };
+  removeManufacturer = name => {
+    // console.log('removeManufacturer', name);
+    const manufacturerDocIdsSub = this.afs
+      .collection<Manufacturer>('manufacturers', ref => ref.where('name', '==', name))
+      .snapshotChanges()
+      .pipe(
+        map(actions =>
+          actions.map(a => {
+            const data = a.payload.doc.data() as Manufacturer;
+            const id = a.payload.doc.id;
+            // console.log({ id, ...data });
+            return id;
+          })
+        )
+      )
+      .subscribe(ids => {
+        ids.forEach(id => {
+          this.afs.doc<Manufacturer>('manufacturers/' + id).delete();
+        });
+        manufacturerDocIdsSub.unsubscribe();
+      });
+  };
+  removeProduct = name => {
+    // console.log('removeProduct', name);
+    const productDocIdsSub = this.afs
+      .collection<Product>('products', ref => ref.where('name', '==', name))
+      .snapshotChanges()
+      .pipe(
+        map(actions =>
+          actions.map(a => {
+            const data = a.payload.doc.data() as Product;
+            const id = a.payload.doc.id;
+            // console.log({ id, ...data });
+            return id;
+          })
+        )
+      )
+      .subscribe(ids => {
+        ids.forEach(id => {
+          this.afs.doc<Product>('products/' + id).delete();
+        });
+        productDocIdsSub.unsubscribe();
+      });
+  };
   removeItemFromCart = (product: Item) => {
     const productID = this.cart.map(x => x.id).indexOf(product.id);
-    console.log('RIFC Product: ', product);
+    // console.log('RIFC Product: ', product);
     if (this.cart[productID]) {
-      console.log('No. of products: ', this.cart[productID].quantity);
+      // console.log('No. of products: ', this.cart[productID].quantity);
       // Removes item from shopping cart if it's only there once
       // Otherwise decreases the quantity
       if (this.cart[productID].quantity === 1) {
@@ -73,11 +119,11 @@ export class ProductService {
         .map(item => item.quantity * item.price)
         .reduce((total, price) => +(total + price).toFixed(2), 0.0);
     }
-    console.log('Cart(after removal): ', this.cart);
+    // console.log('Cart(after removal): ', this.cart);
   };
   addItemToCart = (product, quantity) => {
     const productID = this.cart.map(x => x.id).indexOf(product.id);
-    console.log('Cart(before): ', this.cart);
+    // console.log('Cart(before): ', this.cart);
     if (productID !== -1) {
       this.cart[productID].quantity += quantity;
     } else {
@@ -91,9 +137,9 @@ export class ProductService {
     this.checkoutCart.transactions[0].amount.total = this.cart
       .map(item => item.quantity * item.price)
       .reduce((total, price) => +(total + price).toFixed(2), 0.0);
-    console.log('Cart(after): ', this.cart);
-    console.log('product Key: ', product.id);
-    console.log('Checkout Cart: ', JSON.stringify(this.checkoutCart));
+    // console.log('Cart(after): ', this.cart);
+    // console.log('product Key: ', product.id);
+    // console.log('Checkout Cart: ', JSON.stringify(this.checkoutCart));
   };
   get cartGetter() {
     return this.cart;

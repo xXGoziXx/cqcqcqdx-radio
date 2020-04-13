@@ -1,13 +1,13 @@
+import firebase from '@firebase/app';
+import '@firebase/firestore';
 import { Component, OnInit } from '@angular/core';
 import { ProductService } from '../services/product.service';
 import * as paypal from 'paypal-checkout';
-import * as firebase from 'firebase/app';
 import { AuthService } from '../services/auth.service';
 import { CategoryService } from '../services/category.service';
 import { AngularFirestore, AngularFirestoreDocument, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { Subscription } from 'rxjs';
 import { Order } from '../interfaces/Order';
-import 'firebase/firestore';
 declare var $: any;
 @Component({
   selector: 'app-navbar',
@@ -44,7 +44,7 @@ export class NavbarComponent implements OnInit {
         // See https://developer.paypal.com/docs/api/payments/#payment_create for the expected json parameters
 
         payment(data, actions) {
-          console.log('This basket is', checkoutCart);
+          // console.log('This basket is', checkoutCart);
           return actions.payment.create(checkoutCart);
         },
 
@@ -60,15 +60,15 @@ export class NavbarComponent implements OnInit {
             // console.log('This:', this);
             const orderCounter = this.authService.adminList.orderCounter;
             // console.log('oc', orderCounter);
-            console.log(
-              'product_ids',
-              this.productService.cart.map(item => Array(item.quantity).fill(item.id)).flat(Infinity)
-            );
+            // console.log(
+            //   'product_ids',
+            //   this.productService.cart.map(item => Array(item.quantity).fill(item.id)).flat(Infinity)
+            // );
             this.authService.userRef
               .collection('orders')
               .add({
                 delivery_address: this.authService.currentUserDoc.address,
-                order_date: firebase.firestore.FieldValue.serverTimestamp(),
+                order_date: firebase.firestore.Timestamp.now(),
                 order_id: orderCounter.toString(),
                 product_ids: this.productService.cart.map(item => Array(item.quantity).fill(item.id)).flat(Infinity),
                 total: this.productService.cart
@@ -125,7 +125,7 @@ export class NavbarComponent implements OnInit {
         if (this.productService.cart.length !== 0) {
           $('#basketCheckout').html('');
           this.createPaypalButton(this.productService.checkoutCart);
-          console.log('cart:', this.productService.cart);
+          // console.log('cart:', this.productService.cart);
         }
       });
     });

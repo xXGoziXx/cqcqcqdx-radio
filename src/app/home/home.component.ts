@@ -1,7 +1,5 @@
 import { Component, SecurityContext, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-// import { Orbit } from 'foundation-sites/js/foundation';
-import $ from 'jquery';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',

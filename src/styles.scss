@@ -362,7 +362,6 @@ nav.orbit-bullets > button, .orbit-controls > button {
 
   font-size: 100px;
 
-  cursor: pointer;
   opacity: 0;
   filter: alpha(opacity=0);
   &:hover {
@@ -382,4 +381,12 @@ nav.orbit-bullets > button, .orbit-controls > button {
 }
 .inputfile-name {
   cursor: default !important;
+}
+input[type=file], /* FF, IE7+, chrome (except button) */
+input[type=file]::-webkit-file-upload-button {
+  /* chromes and blink button */
+  cursor: pointer;
+}
+select {
+  margin: 0;
 }

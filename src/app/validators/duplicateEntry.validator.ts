@@ -1,6 +1,6 @@
 import { AbstractControl } from '@angular/forms';
-import * as firebase from 'firebase/app';
-import 'firebase/firestore';
+import firebase from '@firebase/app';
+import '@firebase/firestore';
 export async function ValidateDuplicateEntry(control: AbstractControl) {
   let manufacturerNames: Array<string>;
   const manufacturers$ = await firebase

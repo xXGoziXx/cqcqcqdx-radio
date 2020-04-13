@@ -1,9 +1,9 @@
-import * as firebase from 'firebase/app';
+import firebase from '@firebase/app';
+import '@firebase/firestore'; // If using Firebase database
 import $ from 'jquery';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
-import { OnDestroy } from '@angular/core';
-import { EventEmitter, Injectable, Output } from '@angular/core';
+import { OnDestroy, Injectable } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { Router } from '@angular/router';
@@ -279,15 +279,25 @@ export class AuthService implements OnDestroy {
     this.user$ = this.afAuth.authState.pipe(
       switchMap(user => {
         this.authUser = user;
+        // console.log('User: ', this.authUser);
         // Checks if user is logged in
-        // console.log(user);
         if (user && user.emailVerified) {
           // Stores the User's Doc Reference
           this.userRef = this.afs.doc<User>(`users/${user.uid}`);
-
+          console.log(user.displayName + ' just signed in!');
           // Stores the User's Entry Collection Reference
           // console.log('Entry Collection', this.userRef.collection('entries'));
           // console.log(user.getIdTokenResult());
+          const createdOnDate = parseInt((user.metadata as any).a, 10);
+          const lastLoggedInDate = parseInt((user.metadata as any).b, 10);
+          // console.log('createdOn', createdOnDate);
+          // console.log('lastLoggedIn', lastLoggedInDate);
+          this.afs.doc<User>(`users/${user.uid}`).update({
+            uid: user.uid,
+            lastLoggedIn: firebase.firestore.Timestamp.fromMillis(lastLoggedInDate),
+            createdOn: firebase.firestore.Timestamp.fromMillis(createdOnDate)
+          });
+          this.router.navigate(['/']);
           return this.userRef.valueChanges();
         } else {
           return of(null);
@@ -320,8 +330,8 @@ export class AuthService implements OnDestroy {
       .then(userObj => {
         if (userObj.user.emailVerified) {
           // console.log('User Sign In: ', userObj);
-          // this.afs.doc<User>(`users/${userObj.user.uid}`).update({ admin: this.adminList.emails.includes(email) });
-          this.afs.doc<User>(`users/${userObj.user.uid}`).update({ admin: true });
+
+          // this.afs.doc<User>(`users/${userObj.user.uid}`).update({ admin: true });
           this.error = '';
           this.status = 'Signed In!';
 
@@ -387,6 +397,7 @@ export class AuthService implements OnDestroy {
                 .then(() => {
                   console.log('Email verification sent');
                   const newUser: User = {
+                    uid: userObj.user.uid,
                     address: {
                       address_lines: [address1, address2, address3],
                       country,
@@ -397,7 +408,9 @@ export class AuthService implements OnDestroy {
                     email: email.toLowerCase(),
                     firstName,
                     lastName,
-                    telephone
+                    telephone,
+                    lastLoggedIn: firebase.firestore.Timestamp.now(),
+                    createdOn: firebase.firestore.Timestamp.now()
                   };
                   this.afs
                     .doc<User>(`users/${userObj.user.uid}`)
@@ -439,7 +452,7 @@ export class AuthService implements OnDestroy {
     postcode,
     country
   }) {
-    const updatedDetails: User = {
+    const updatedDetails: Partial<User> = {
       address: {
         address_lines: [address1, address2, address3],
         country,
@@ -454,7 +467,7 @@ export class AuthService implements OnDestroy {
     };
     this.afs
       .doc<User>(`users/${this.authUser.uid}`)
-      .set(updatedDetails, { merge: true })
+      .update(updatedDetails)
       .then(() => {
         $('.callout.success').show();
       })

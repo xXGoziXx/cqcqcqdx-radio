@@ -1,6 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { Manufacturer } from '../interfaces/Manufacturer';
+import { Product } from '../interfaces/Product';
 import { Subscription } from 'rxjs';
 
 @Injectable({
@@ -8,7 +9,9 @@ import { Subscription } from 'rxjs';
 })
 export class CategoryService implements OnDestroy {
   manufacturersRef: AngularFirestoreCollection<Manufacturer>;
+  productsRef: AngularFirestoreCollection<Product>;
   manufacturersRefSub: Subscription;
+  productsRefSub: Subscription;
   used = [
     {
       alt: 'accessories',
@@ -147,6 +150,7 @@ export class CategoryService implements OnDestroy {
     }
   ];
   manufacturers = [];
+  products = [];
   linkUsed(text) {
     return text.replace(/\s/g, '-');
   }
@@ -159,6 +163,15 @@ export class CategoryService implements OnDestroy {
         .filter(doc => !(Object.keys(doc).length === 0 && doc.constructor === Object))
         .map(doc => {
           return { alt: doc.name.toLowerCase(), src: doc.images[0], text: doc.name };
+        });
+    });
+    this.productsRef = this.afs.collection<Product>('products');
+    this.productsRefSub = this.productsRef.valueChanges().subscribe(docs => {
+      // console.log(docs);
+      this.products = docs
+        .filter(doc => !(Object.keys(doc).length === 0 && doc.constructor === Object))
+        .map(doc => {
+          return { alt: doc.name.toLowerCase(), src: doc.images[0], text: doc.name, id: doc.id };
         });
     });
   }

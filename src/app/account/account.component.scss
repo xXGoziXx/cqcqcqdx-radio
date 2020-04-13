@@ -7,14 +7,22 @@ img {
   background: rgba(0, 0, 0, .5);
 
   transition: background linear .1s;
+
+  &:hover, &:hover > span {
+    background: rgba(0, 0, 0, .75);
+
+    cursor: pointer !important;
+  }
   i {
     font-size: 250%;
-  }
-
-  &:hover {
-    background: rgba(0, 0, 0, .75);
   }
   &:focus, &:active {
     background: rgba(0, 0, 0, 1);
   }
+}
+input.inputfile {
+  z-index: -1;
+
+  width: 0;
+  height: 0;
 }

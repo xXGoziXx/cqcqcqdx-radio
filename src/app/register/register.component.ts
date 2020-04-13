@@ -1,10 +1,7 @@
-import { Component, OnInit, SecurityContext } from '@angular/core';
-import { DomSanitizer } from '@angular/platform-browser';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../services/auth.service';
 
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { User } from '../interfaces/User';
 import { ValidateAccessCode } from '../validators/accessCode.validator';
 @Component({
   selector: 'app-register',
@@ -14,12 +11,7 @@ import { ValidateAccessCode } from '../validators/accessCode.validator';
 export class RegisterComponent implements OnInit {
   form: FormGroup;
 
-  constructor(
-    public authService: AuthService,
-    private fb: FormBuilder,
-    private afs: AngularFirestore,
-    private sanitizer: DomSanitizer
-  ) {
+  constructor(public authService: AuthService, private fb: FormBuilder) {
     this.createForm();
   }
   createForm() {

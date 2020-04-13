@@ -20,6 +20,7 @@ const admin = require('firebase-admin');
 admin.initializeApp(functions.config().firebase);
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
+const _ = require('lodash');
 const OAuth2 = google.auth.OAuth2;
 const { id, secret, refresh_token, email } = functions.config().client;
 const oauth2Client = new OAuth2(
@@ -61,6 +62,37 @@ const mailTransport2 = nodemailer.createTransport({
 // TODO: Change this to your app or company name to customize the email sent.
 const APP_NAME = 'Cloud Storage for CQCQCQDX Radio Firebase';
 
+exports.updateUserDetails = functions.firestore.document('users/adminList').onUpdate(async (snap, context) => {
+  console.log('snap: ', snap);
+  console.log('context: ', context);
+  const { before, after } = snap;
+  const email = _.difference(before.data().emails, after.data().emails)[0];
+  let uid;
+  const users = await admin
+    .firestore()
+    .collection('users')
+    .where('email', '==', email)
+    .get();
+  users.forEach(user => {
+    uid = user.data().uid;
+  });
+  if (after.data().emails.includes(email)) {
+    admin
+      .firestore()
+      .doc(`users/${uid}`)
+      .update({
+        admin: true
+      });
+  } else {
+    admin
+      .firestore()
+      .doc(`users/${uid}`)
+      .update({
+        admin: false
+      });
+  }
+  return email;
+});
 exports.sendContactMessage = functions.firestore.document('messages/{pushKey}').onCreate((snap, context) => {
   const val = snap.data();
   console.log('Data: ', val);
@@ -73,16 +105,14 @@ exports.sendContactMessage = functions.firestore.document('messages/{pushKey}').
     html: val.html
   };
   return async () => {
-    mailTransport
-      .sendMail(mailOptions)
-      .then(() => {
-        mailOptions = {
-          to: val.email,
-          from: `"CQCQCQDX Radio" <${email}>`,
-          sender: `"CQCQCQDX Radio" <${email}>`,
-          replyTo: `"CQCQCQDX Radio" <${email}>`,
-          subject: `Message from "CQCQCQDX Radio"`,
-          html: `<div>
+    await mailTransport.sendMail(mailOptions);
+    mailOptions = {
+      to: val.email,
+      from: `"CQCQCQDX Radio" <${email}>`,
+      sender: `"CQCQCQDX Radio" <${email}>`,
+      replyTo: `"CQCQCQDX Radio" <${email}>`,
+      subject: `Message from "CQCQCQDX Radio"`,
+      html: `<div>
             <div>
               <p>Hi ${val.name},<br>
                 <br>
@@ -104,13 +134,9 @@ exports.sendContactMessage = functions.firestore.document('messages/{pushKey}').
               </p>
             </div>
           </div>`
-        };
-        return mailTransport.sendMail(mailOptions);
-      })
-      .then(() => {
-        return console.log(`Mail successfully sent to ${val.name}<${val.email}>!`);
-      })
-      .catch();
+    };
+    await mailTransport.sendMail(mailOptions);
+    console.log(`Mail successfully sent to ${val.name}<${val.email}>!`);
     await mailTransport2.sendMail(mailOptions);
     mailOptions = {
       to: val.email,
@@ -198,7 +224,7 @@ exports.incrementProductCounter = functions.firestore
     }
     return productCounter;
   });
-  
+
 exports.updateStockFromOrder = functions.firestore
   .document('users/{userId}/orders/{orderId}')
   .onCreate(async (snap, context) => {

@@ -1,0 +1,45 @@
+<div class="grid-y tabs-panel" id="viewAllMembers">
+  <div class="cell small-10 table-scroll">
+    <table class="shadow unstriped">
+      <thead>
+        <tr class="shadow">
+          <th class="text-uppercase">Name</th>
+          <th class="text-uppercase">Email Address</th>
+          <th class="text-uppercase">Address</th>
+          <th class="text-uppercase">Telephone</th>
+          <th class="text-uppercase">Admin Status</th>
+          <th class="text-uppercase">Last Logged In</th>
+          <th class="text-uppercase">Created On</th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let user of accountService.allUsers$ | async">
+          <tr *ngIf="user.address">
+            <td>{{ user.firstName + ' ' + user.lastName }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ accountService.addressFormatter(user.address) }}</td>
+            <td>{{ user.telephone }}</td>
+            <td>
+              <label *ngIf="authService.currentUserDoc.admin && user.uid !== authService.authUser.uid; else statusView">
+                <select
+                  id="{{ user.uid }}"
+                  name="status"
+                  (change)="accountService.updateAdminStatus($event, user.email)"
+                  [value]="this.authService.currentUserDoc.admin"
+                >
+                  <option value="false" [selected]="user.admin === false">False&nbsp;</option>
+                  <option value="true" [selected]="user.admin === true">True&nbsp;</option>
+                </select>
+              </label>
+              <ng-template #statusView>
+                {{ user.admin | titlecase }}
+              </ng-template>
+            </td>
+            <td>{{ dateIfRecorded(user.lastLoggedIn) }}</td>
+            <td>{{ dateIfRecorded(user.createdOn) }}</td>
+          </tr>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>

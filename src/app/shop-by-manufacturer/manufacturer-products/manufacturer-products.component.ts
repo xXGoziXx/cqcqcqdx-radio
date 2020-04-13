@@ -1,7 +1,7 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
-import { Product } from 'src/app/interfaces/Product';
+import { Product } from '../../interfaces/Product';
 import { Observable } from 'rxjs';
 
 @Component({

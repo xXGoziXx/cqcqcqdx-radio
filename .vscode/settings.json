@@ -17,8 +17,13 @@
     "panel.border": "#54190d",
     "sideBar.border": "#54190d",
     "editorGroup.border": "#54190d",
-    "tab.activeBorder": "#54190d"
+    "tab.activeBorder": "#54190d",
+    "statusBar.border": "#280c06",
+    "titleBar.border": "#280c06"
   },
   "peacock.remoteColor": "#280c06",
-  "peacock.color": "#280c06"
+  "peacock.color": "#280c06",
+  "cSpell.words": [
+    "Tokelau"
+  ]
 }

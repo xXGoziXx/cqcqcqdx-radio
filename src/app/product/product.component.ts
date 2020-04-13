@@ -1,6 +1,5 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { DomSanitizer } from '@angular/platform-browser';
 import { Observable, Subscription } from 'rxjs';
 import { AngularFirestore } from '@angular/fire/firestore';
 
@@ -57,25 +56,6 @@ export class ProductComponent implements OnInit, OnDestroy {
         this.products$ = this.afs
           .collection<Product>('products', ref => ref.where('id', '==', this.id.toString()))
           .valueChanges();
-        // there should only be one product for this
-        const productsSub = this.products$.subscribe(products => {
-          // products.forEach(product => {
-          //   product.images.forEach(image => {
-          //     // console.log(image);
-          //     $('.slick-carousel').slick('unslick');
-          //     $('.slick-carousel').slick(this.slickOptions);
-          //     $('.slick-carousel').slick(
-          //       'slickAdd',
-          //       `<div>
-          //       <figure class="orbit-figure">
-          //       <img class="orbit-image" src="${image}" alt="${product.name}" />
-          //       </figure>
-          //       </div>`
-          //     );
-          //   });
-          // });
-          productsSub.unsubscribe();
-        });
       } else {
         this.router.navigate(['/shop-now']);
       }

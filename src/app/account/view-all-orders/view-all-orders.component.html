@@ -1,0 +1,91 @@
+<div class="grid-y tabs-panel" id="viewAllOrders">
+  <div class="cell small-10 table-scroll">
+    <table class="shadow unstriped">
+      <thead>
+        <tr class="shadow">
+          <th class="text-uppercase">Order ID</th>
+          <th class="text-uppercase">Order Date</th>
+          <th class="text-uppercase">Delivery Address</th>
+          <th class="text-uppercase">Total</th>
+          <th class="text-uppercase">Status</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <ng-container *ngFor="let allOrders$ of accountService.allOrders">
+          <ng-container *ngFor="let allOrder of allOrders$ | async">
+            <tr>
+              <!-- Order ID -->
+              <td>{{ allOrder.order_id }}</td>
+              <!-- Order Date -->
+              <td>{{ allOrder.order_date.toMillis() | date: 'yyyy/MM/dd h:mm:ss a' }}</td>
+              <!-- Delivery Address -->
+              <td>{{ accountService.addressFormatter(allOrder.delivery_address) }}</td>
+              <!-- Total -->
+              <td>{{ allOrder.total | currency: 'EUR' }}</td>
+              <!-- Status -->
+              <td>
+                <label *ngIf="authService.currentUserDoc.admin; else statusView">
+                  <select
+                    id="{{ allOrder.order_id }}"
+                    name="status"
+                    (change)="accountService.updateOrderStatus($event)"
+                  >
+                    <option value="Pending" [selected]="allOrder.status === 'Pending'">Pending</option>
+                    <option value="Sold" [selected]="allOrder.status === 'Sold'">Sold</option>
+                  </select>
+                </label>
+                <ng-template #statusView>
+                  {{ allOrder.status }}
+                </ng-template>
+              </td>
+              <td class="text-center">
+                <button
+                  class="button text-center margin-bottom-0 "
+                  (click)="accountService.showOrder(allOrder.product_ids, allOrder.order_id)"
+                  type="button"
+                >
+                  <!-- Screen readers will see "close" -->
+                  <span class="show-for-sr">Close</span>
+                  <!-- Visual users will see the X, but not the "Close" text -->
+                  <span aria-hidden="true"><i class="fi fi-shopping-cart"></i></span>
+                </button>
+              </td>
+            </tr>
+            <!-- Show ordered Products -->
+            <ng-container *ngIf="accountService.currOrderId === allOrder.order_id">
+              <tr *ngFor="let products of accountService.products$" [class]="'allOrder-' + allOrder.order_id">
+                <td colspan="2" class="width-25">
+                  <ng-container *ngFor="let product of products | async">
+                    <img [src]="product.images[0]" [alt]="product.name" />
+                  </ng-container>
+                </td>
+                <td colspan="3">
+                  <ng-container *ngFor="let product of products | async">
+                    <p><span class="font-bold">Name:</span> {{ product.name | titlecase }}</p>
+                    <p><span class="font-bold">Brand:</span> {{ product.manufacturer | titlecase }}</p>
+                    <p><span class="font-bold">Price:</span> {{ product.price | currency: 'EUR' }}</p>
+                  </ng-container>
+                </td>
+                <td class="text-center" colspan="1">
+                  <ng-container *ngFor="let product of products | async">
+                    <a
+                      [routerLink]="['/product', product.id]"
+                      class="button text-center margin-bottom-0 hollow"
+                      (click)="accountService.showOrder(allOrder.product_ids, allOrder.order_id)"
+                      type="button"
+                    >
+                      <!-- Screen readers will see "close" -->
+                      <span class="show-for-sr">Close</span>
+                      <!-- Visual users will see the X, but not the "Close" text -->
+                      <span aria-hidden="true" class="font-bold"><i class="fi fi-eye text-accent"></i></span> </a
+                  ></ng-container>
+                </td>
+              </tr>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </tbody>
+    </table>
+  </div>
+</div>
