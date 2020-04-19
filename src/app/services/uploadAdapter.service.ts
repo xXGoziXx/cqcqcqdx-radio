@@ -13,7 +13,7 @@ export class UploadAdapterService {
 
   // Starts the upload process.
   upload = async () => {
-    console.log('Loader: ', this.loader);
+    // console.log('Loader: ', this.loader);
     this.accountService.uploadingImages = true;
     const file = await this.loader.file;
     const path = `images/${new Date().getTime()}_${file.name}`;
@@ -24,7 +24,7 @@ export class UploadAdapterService {
     }
     const task = await this.storage.upload(path, file);
     const url = await task.ref.getDownloadURL();
-    console.log(url);
+    // console.log(url);
     this.accountService.uploadingImages = false;
     return { default: url };
   };

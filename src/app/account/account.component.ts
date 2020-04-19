@@ -22,7 +22,7 @@ export class AccountComponent implements OnInit, OnDestroy {
   tabPanels = [
     { id: 'myOrders', name: 'My Orders', collection: 'myOrders', adminOnly: false },
     { id: 'addProduct', name: 'Add / Remove Product', collection: 'products', adminOnly: false },
-    { id: 'addManufacturer', name: 'Add / Remove Manufacturer', collection: 'manufacturer', adminOnly: false },
+    { id: 'addManufacturer', name: 'Add / Remove Manufacturer', collection: 'manufacturer', adminOnly: true },
     { id: 'addOrder', name: 'Add Order', collection: 'addOrder', adminOnly: true },
     { id: 'viewAllOrders', name: 'View / Remove Orders', collection: 'allOrders', adminOnly: false },
     { id: 'viewAllMembers', name: 'View All Members', collection: 'allMembers', adminOnly: true },
@@ -36,7 +36,7 @@ export class AccountComponent implements OnInit, OnDestroy {
     public accountService: AccountService,
     private afs: AngularFirestore
   ) {
-    console.log(this.accountService.categories);
+    // console.log(this.accountService.categories);
     // Creates the form
     this.accountService.createForm();
 

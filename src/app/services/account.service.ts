@@ -83,7 +83,7 @@ export class AccountService {
     return address === result ? address : this.cleanAddress(result);
   };
   showOrder = (ids, i) => {
-    console.log(...ids);
+    // console.log(...ids);
     this.products$ = [];
     ids.forEach(id => {
       this.products$.push(

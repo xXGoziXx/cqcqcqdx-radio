@@ -25,12 +25,12 @@ export class UpdateNewsComponent implements OnInit, AfterViewChecked {
     this.pendingActions.push('Saving changes');
     const adminList = await this.afs.doc('users/adminList').ref.get();
     this.pendingActions.pop();
-    console.log(adminList.data().news);
+    // console.log(adminList.data().news);
     this.editorData = adminList.data().news;
   };
 
   onReady = editor => {
-    console.log('Editor: ', this.editorComponent);
+    // console.log('Editor: ', this.editorComponent);
     this.handleSaveButton(editor);
     this.handleBeforeunload(editor);
   };
@@ -41,7 +41,7 @@ export class UpdateNewsComponent implements OnInit, AfterViewChecked {
 
     saveButton.on('click', async evt => {
       const data = this.editorData;
-      console.log(data);
+      // console.log(data);
       // Register the action of saving the data as a "pending action".
       // All asynchronous actions related to the editor are tracked like this,
       // so later on you only need to check `pendingActions.hasAny` to check
@@ -71,7 +71,7 @@ export class UpdateNewsComponent implements OnInit, AfterViewChecked {
   // Listen to new changes (to enable the "Save" button) and to
   // pending actions (to show the spinner animation when the editor is busy).
   onStatusChange = () => {
-    console.log(this.editorData);
+    // console.log(this.editorData);
     this.isDirty = true;
   };
 
@@ -87,7 +87,7 @@ export class UpdateNewsComponent implements OnInit, AfterViewChecked {
   ngOnInit(): void {}
   ngAfterViewChecked() {
     if (this.accountService.collection === 'news' && !this.adapterUploaded && this.editorComponent.editorInstance) {
-      console.log(this.editorComponent.editorInstance);
+      // console.log(this.editorComponent.editorInstance);
       this.editorComponent.editorInstance.plugins.get('FileRepository').createUploadAdapter = loader => {
         // Configure the URL to the upload script in your back-end here!
         return new UploadAdapterService(loader, this.storage, this.accountService);
