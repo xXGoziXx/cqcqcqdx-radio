@@ -112,9 +112,9 @@
                     required
                     autocomplete="on"
                   />
-                  <span *ngIf="!!form.get('accessCode').errors; else checkBox" class="input-group-label"
-                    ><i class="fi fi-x text-red"></i
-                  ></span>
+                  <span *ngIf="!!form.get('accessCode').errors; else checkBox" class="input-group-label">
+                    <i class="fi fi-x text-red"></i>
+                  </span>
                   <ng-template #checkBox>
                     <span class="input-group-label"><i class="fi fi-check text-green"></i></span>
                   </ng-template>
@@ -127,7 +127,7 @@
               </label>
             </div>
             <div class="small-12 cell margin-bottom-1">
-              <button class="button  shadow bordered radius text-uppercase" type="submit" [disabled]="form.invalid">
+              <button class="button  shadow bordered text-uppercase" type="submit" [disabled]="form.invalid">
                 Register
               </button>
             </div>

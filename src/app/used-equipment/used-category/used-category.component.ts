@@ -24,8 +24,9 @@ export class UsedCategoryComponent implements OnInit, OnDestroy {
       // 'category' is the variable name from 'app-routing'
       this.category.route = params.get('category');
       this.category.banner = params.get('category').replace(/-/g, ' ');
+      console.log(this.category.banner);
       this.products$ = this.afs
-        .collection<Product>('products', ref => ref.where('category', '==', this.category.banner))
+        .collection<Product>('products', ref => ref.where('category', '==', this.category.banner.toLowerCase()))
         .valueChanges();
     });
     // console.log(this.category);

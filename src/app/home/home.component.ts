@@ -1,11 +1,15 @@
-import { Component, SecurityContext, OnInit } from '@angular/core';
+import { Component, SecurityContext, OnInit, OnDestroy } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-home',
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss']
 })
-export class HomeComponent implements OnInit {
+export class HomeComponent implements OnInit, OnDestroy {
+  news: string;
+  adminListSub: Subscription;
   myInterval = 3000;
   activeSlideIndex = 0;
   radios = [
@@ -25,13 +29,22 @@ export class HomeComponent implements OnInit {
       caption: 'Yaesu FTDX9000D'
     }
   ];
-  constructor(sanitizer: DomSanitizer) {
+  constructor(sanitizer: DomSanitizer, public afs: AngularFirestore) {
     this.radios = this.radios.map((radio: any) => ({
       src: radio.src,
       alt: radio.alt,
       caption: sanitizer.sanitize(SecurityContext.HTML, radio.caption)
     }));
+    this.adminListSub = this.afs
+      .doc<any>('users/adminList')
+      .valueChanges()
+      .subscribe(adminList => {
+        this.news = adminList.news;
+      });
   }
 
   ngOnInit() {}
+  ngOnDestroy() {
+    this.adminListSub.unsubscribe();
+  }
 }

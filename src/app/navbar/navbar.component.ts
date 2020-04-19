@@ -74,7 +74,8 @@ export class NavbarComponent implements OnInit {
                 total: this.productService.cart
                   .map(item => item.price * item.quantity)
                   .reduce((x, y) => +(x + y).toFixed(2), 0.0),
-                status: 'Pending'
+                status: 'Pending',
+                user_uid: this.authService.currentUserDoc.uid
               })
               .then(() => {
                 this.productService.cart = [];

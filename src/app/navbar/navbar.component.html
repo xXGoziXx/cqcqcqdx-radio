@@ -82,19 +82,10 @@
 <!-- Menu Routes -->
 <ng-template #menu>
   <li class="cell small-12 large-auto ">
+    <a [routerLink]="['/']" routerLinkActive="active"><span>Home</span></a>
+  </li>
+  <li class="cell small-12 large-auto ">
     <a [routerLink]="['/shop-now']" routerLinkActive="active"><span>Shop Now</span></a>
-    <!-- <ul id="dropdown" class="simple-float dropdown menu show-for-large">
-      <li *ngFor="let brandNewCategory of brandNewCategories" class="align-stretch">
-        <a
-          [routerLink]="['/used-equipment', categoryService.linkUsed(brandNewCategory.text)]"
-          routerLinkActive="active"
-          class="height-100 align-center-middle"
-          ><span>
-            {{ brandNewCategory.alt.toLowerCase() }}
-          </span>
-        </a>
-      </li>
-    </ul> -->
   </li>
   <li class="cell small-12 large-auto ">
     <a [routerLink]="['/used-equipment']" routerLinkActive="active"><span>Used Equipment</span></a>
@@ -116,6 +107,10 @@
     <ul id="dropdown" class="simple-float dropdown menu show-for-large">
       <li *ngFor="let manufacturerCategory of categoryService.manufacturers" class="align-stretch">
         <a
+          *ngIf="
+            manufacturerCategory.text !== 'Castle Electronics UK  [ Service & Repairs Department ]';
+            else castleElectronics
+          "
           [routerLink]="['/shop-by-manufacturer', categoryService.linkUsed(manufacturerCategory.text)]"
           routerLinkActive="active"
           class="height-100 align-center-middle"
@@ -123,6 +118,13 @@
             {{ manufacturerCategory.alt.toLowerCase() }}
           </span>
         </a>
+        <ng-template #castleElectronics>
+          <a href="http://www.hamradiosales.co.uk/CASTLE-1A.htm" class="height-100 align-center-middle"
+            ><span>
+              {{ manufacturerCategory.alt.toLowerCase() }}
+            </span>
+          </a>
+        </ng-template>
       </li>
     </ul>
   </li>

@@ -1,10 +1,21 @@
 <div class="grid-container">
   <div class="grid-x banner shadow grid-margin-x align-center-middle">
     <div class="cell">
-      <h2 class="text-uppercase text-center ">Everyday Radios & Accessories</h2>
+      <h2 class="text-uppercase text-center ">Home</h2>
     </div>
   </div>
+
   <div class="grid-x grid-margin-y grid-margin-x align-center-middle content">
+    <div class="cell small-12 ">
+      <div class="grid-x">
+        <div class="cell small-12" id="linksNews">
+          <h2 class="text-uppercase">
+            <span class="height-100">News</span>
+          </h2>
+        </div>
+        <div class="cell small-12" [innerHTML]="news"></div>
+      </div>
+    </div>
     <div class="cell small-12">
       <div id="radio-orbit" class="orbit" role="region" aria-label="Radio Equipment" data-orbit>
         <div class="orbit-wrapper">

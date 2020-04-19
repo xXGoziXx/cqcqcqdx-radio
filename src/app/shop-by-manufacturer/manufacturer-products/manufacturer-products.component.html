@@ -8,7 +8,7 @@
     <div class="cell" *ngFor="let product of products$ | async">
       <!-- image has padding -->
       <a [routerLink]="['/product', product.id]" routerLinkActive="active">
-        <div class="grid-y card height-100 radius bordered shadow align-center">
+        <div class="grid-y card height-100 bordered shadow align-center">
           <div class="cell small-auto width-100 card-section">
             <img
               [src]="product.images[0] == '' ? '../../assets/img/No_image_available.svg' : product.images[0]"
@@ -27,4 +27,7 @@
       </a>
     </div>
   </div>
+  <ng-container *ngIf="(products$ | async)?.length == 0">
+    <h3 class="font-bold text-black text-uppercase text-center">No products from this manufacturer available</h3>
+  </ng-container>
 </div>

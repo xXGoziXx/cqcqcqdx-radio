@@ -8,7 +8,7 @@
     <div class="cell" *ngFor="let category of categories">
       <!-- image has padding -->
       <a [routerLink]="['/used-equipment', categoryService.linkUsed(category.text)]" routerLinkActive="active">
-        <div class="grid-y card height-100 radius bordered shadow align-center">
+        <div class="grid-y card height-100 bordered shadow align-center">
           <div class="cell small-auto width-100 card-section">
             <img
               [lazyLoad]="category.src === '' ? '../../assets/img/No_image_available.svg' : category.src"

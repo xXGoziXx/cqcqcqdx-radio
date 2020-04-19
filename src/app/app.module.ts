@@ -8,6 +8,7 @@ import { AngularFireModule } from '@angular/fire';
 import { AngularFirestore, AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule } from '@angular/fire/storage';
 import { LazyLoadImageModule } from 'ng-lazyload-image';
+import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { environment } from '../environments/environment';
 
 import { AppRoutingModule } from './app-routing.module';
@@ -31,10 +32,13 @@ import { PrivacyPolicyComponent } from './privacy-policy/privacy-policy.componen
 import { ViewAllOrdersComponent } from './account/view-all-orders/view-all-orders.component';
 import { AddProductComponent } from './account/add-product/add-product.component';
 import { AddManufacturerComponent } from './account/add-manufacturer/add-manufacturer.component';
+import { AddOrderComponent } from './account/add-order/add-order.component';
+import { UpdateNewsComponent } from './account/update-news/update-news.component';
 import { MyOrdersComponent } from './account/my-orders/my-orders.component';
 import { ViewAllMembersComponent } from './account/view-all-members/view-all-members.component';
 
 import { AuthService } from './services/auth.service';
+import { SortByPipe } from './pipes/sort-by.pipe';
 
 @NgModule({
   declarations: [
@@ -60,7 +64,10 @@ import { AuthService } from './services/auth.service';
     MyOrdersComponent,
     AddProductComponent,
     AddManufacturerComponent,
-    ViewAllMembersComponent
+    ViewAllMembersComponent,
+    AddOrderComponent,
+    SortByPipe,
+    UpdateNewsComponent
   ],
   imports: [
     AngularFireAuthModule,
@@ -69,6 +76,7 @@ import { AuthService } from './services/auth.service';
     AngularFirestoreModule.enablePersistence({ synchronizeTabs: true }),
     AppRoutingModule,
     BrowserModule,
+    CKEditorModule,
     FormsModule,
     LazyLoadImageModule,
     ReactiveFormsModule

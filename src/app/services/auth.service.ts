@@ -336,8 +336,6 @@ export class AuthService implements OnDestroy {
           this.status = 'Signed In!';
 
           console.log('Signed In!');
-
-          this.router.navigate(['/']);
         } else {
           this.signOut();
           throw {
@@ -439,7 +437,7 @@ export class AuthService implements OnDestroy {
       });
     // console.log('Signed Up!');
   }
-  updateAccount({
+  async updateAccount({
     email,
     firstName,
     lastName,
@@ -465,17 +463,22 @@ export class AuthService implements OnDestroy {
       lastName,
       telephone
     };
-    this.afs
-      .doc<User>(`users/${this.authUser.uid}`)
-      .update(updatedDetails)
-      .then(() => {
-        $('.callout.success').show();
-      })
-      .catch(err => {
-        $('.callout.alert').show();
-        $('span.error').html(err);
-        console.error(err);
-      });
+    if (password || password.trim().length !== 0) {
+      try {
+        await this.afAuth.auth.currentUser.updatePassword(password);
+        console.log('Update Successful!');
+      } catch (err) {
+        console.log('Error: ', err);
+      }
+    }
+    try {
+      await this.afs.doc<User>(`users/${this.authUser.uid}`).update(updatedDetails);
+      $('.callout.success').show();
+    } catch (err) {
+      $('.callout.alert').show();
+      $('span.error').html(err);
+      console.error(err);
+    }
   }
   ngOnDestroy() {
     this.userSub.unsubscribe();

@@ -9,6 +9,7 @@
           <th class="text-uppercase">Total</th>
           <th class="text-uppercase">Status</th>
           <th></th>
+          <th *ngIf="authService.currentUserDoc.admin"></th>
         </tr>
       </thead>
       <tbody>
@@ -45,10 +46,22 @@
                   (click)="accountService.showOrder(allOrder.product_ids, allOrder.order_id)"
                   type="button"
                 >
+                  <!-- Screen readers will see "open" -->
+                  <span class="show-for-sr">Open Basket</span>
+                  <!-- Visual users will see the Basket Icon, but not the "Open" text -->
+                  <span aria-hidden="true"><i class="fi fi-shopping-cart"></i></span>
+                </button>
+              </td>
+              <td class="text-center" *ngIf="authService.currentUserDoc.admin">
+                <button
+                  class="button text-center margin-bottom-0 "
+                  (click)="accountService.deleteOrder(allOrder.user_uid, allOrder.order_uid)"
+                  type="button"
+                >
                   <!-- Screen readers will see "close" -->
                   <span class="show-for-sr">Close</span>
                   <!-- Visual users will see the X, but not the "Close" text -->
-                  <span aria-hidden="true"><i class="fi fi-shopping-cart"></i></span>
+                  <span aria-hidden="true"><i class="fi fi-trash"></i></span>
                 </button>
               </td>
             </tr>
@@ -83,7 +96,17 @@
                 </td>
               </tr>
             </ng-container>
-          </ng-container>
+          </ng-container> </ng-container
+        ><ng-container
+          *ngIf="(accountService.allOrders[0] | async)?.length == 0 || (accountService.allOrders[0] | async) == null"
+        >
+          <tr>
+            <td colspan="6">
+              <h3 class="font-bold text-accent text-center text-uppercase">
+                There are no orders
+              </h3>
+            </td>
+          </tr>
         </ng-container>
       </tbody>
     </table>

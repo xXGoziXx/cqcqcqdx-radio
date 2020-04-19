@@ -89,7 +89,7 @@ $accent: #f56356;
     }
   }
 
-@include breakpoint(medium) {
+  @include breakpoint(medium) {
     .title-bar {
       display: none;
     }
@@ -98,9 +98,10 @@ $accent: #f56356;
 
 @import '../node_modules/@icon/foundation-icons/foundation-icons.css';
 
-html, body {
+html,
+body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans',
-  'Helvetica Neue', sans-serif;
+    'Helvetica Neue', sans-serif;
 
   background: #fff;
   main {
@@ -166,7 +167,7 @@ nav.breadcrumb-container {
     margin: 0 0 -20px 0;
 
     li {
-      font-size: .85rem;
+      font-size: 0.85rem;
       font-weight: 500;
       &:not(:last-child)::after {
         content: '//';
@@ -193,7 +194,8 @@ nav.breadcrumb-container {
         cursor: pointer;
         .card-section.text {
           background-color: $accent;
-          & > p, p:first-of-type {
+          & > p,
+          p:first-of-type {
             color: white;
           }
         }
@@ -203,15 +205,15 @@ nav.breadcrumb-container {
 
         display: grid;
 
-        -webkit-transition: all .1s ease-in-out;
-                transition: all .1s ease-in-out;
+        -webkit-transition: all 0.1s ease-in-out;
+        transition: all 0.1s ease-in-out;
         &.text {
           p {
             margin-bottom: 0;
 
             color: $accent;
             &:first-of-type {
-              margin-top: .5rem;
+              margin-top: 0.5rem;
 
               color: black;
             }
@@ -325,16 +327,19 @@ nav.breadcrumb-container {
     background-color: lighten($color: black, $amount: 50);
   }
 }
-.orbit-caption, .orbit-controls > button {
+.orbit-caption,
+.orbit-controls > button {
   background-color: rgba(0, 0, 0, 1);
 }
 .orbit-controls > button {
   -webkit-filter: invert(100%);
-          filter: invert(100%);
+  filter: invert(100%);
 }
-nav.orbit-bullets > button, .orbit-controls > button {
-  transition: all ease-in-out .2s;
-  &:focus, &:hover {
+nav.orbit-bullets > button,
+.orbit-controls > button {
+  transition: all ease-in-out 0.2s;
+  &:focus,
+  &:hover {
     outline: none;
 
     cursor: pointer;
@@ -371,7 +376,7 @@ nav.orbit-bullets > button, .orbit-controls > button {
 .inputfilewrapper {
   overflow: hidden;
 
-// color: white;
+  // color: white;
 
   cursor: pointer;
 
@@ -389,4 +394,11 @@ input[type=file]::-webkit-file-upload-button {
 }
 select {
   margin: 0;
+}
+
+.ck-editor__editable_inline {
+  min-height: 500px;
+}
+.callout {
+  display: none;
 }

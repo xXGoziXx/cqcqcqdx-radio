@@ -21,47 +21,37 @@ admin.initializeApp(functions.config().firebase);
 const nodemailer = require('nodemailer');
 const { google } = require('googleapis');
 const _ = require('lodash');
-const OAuth2 = google.auth.OAuth2;
-const { id, secret, refresh_token, email } = functions.config().client;
-const oauth2Client = new OAuth2(
-  id, // ClientID
-  secret, // Client Secret
-  'https://developers.google.com/oauthplayground' // Redirect URL
-);
-oauth2Client.setCredentials({
-  refresh_token: refresh_token
-});
-const emails = email.split(',');
-const accessToken = oauth2Client.getAccessToken();
-const mailTransport = nodemailer.createTransport({
-  // @ts-ignore
-  service: 'gmail',
-  auth: {
-    type: 'OAuth2',
-    user: emails[0],
-    clientId: id,
-    clientSecret: secret,
-    refreshToken: refresh_token,
-    accessToken: accessToken
-  }
-});
-const mailTransport2 = nodemailer.createTransport({
-  // @ts-ignore
-  service: 'gmail',
-  auth: {
-    type: 'OAuth2',
-    user: emails[1],
-    clientId: id,
-    clientSecret: secret,
-    refreshToken: refresh_token,
-    accessToken: accessToken
-  }
-});
 
 // Your organisation name to include in the emails
 // TODO: Change this to your app or company name to customize the email sent.
 const APP_NAME = 'Cloud Storage for CQCQCQDX Radio Firebase';
 
+exports.deleteUser = functions.firestore.document('users/{userId}').onDelete(async (snap, context) => {
+  console.log('snap: ', snap);
+  console.log('context: ', context);
+  console.log('data: ', snap.data());
+  const uid = snap.data().uid;
+  try {
+    const sub = await admin
+      .firestore()
+      .collection(`users/${uid}/orders`)
+      .get();
+    console.log('Users orders successfully deleted!');
+    if (sub.docs.length > 0) {
+      sub.docs.forEach(doc => {
+        doc.ref.delete();
+      });
+    }
+  } catch (error) {
+    console.log('User has no orders!');
+  }
+  try {
+    await admin.auth().deleteUser(uid);
+    return console.log('Successfully deleted user');
+  } catch (error) {
+    return console.log('Error deleting user:', error);
+  }
+});
 exports.updateUserDetails = functions.firestore.document('users/adminList').onUpdate(async (snap, context) => {
   console.log('snap: ', snap);
   console.log('context: ', context);
@@ -83,102 +73,128 @@ exports.updateUserDetails = functions.firestore.document('users/adminList').onUp
       .where('email', '==', emails[0])
       .get();
     users.forEach(user => {
-      console.log('User: ', user);
-      uid = user.data().uid;
-    });
-    console.log('Users: ', users);
-    admin
-      .firestore()
-      .doc(`users/${uid}`)
-      .update({
+      user.ref.update({
         admin: value
       });
+    });
+    console.log('Users: ', users);
     return emails[0];
   }
   return 'The admin list of emails did not change!';
 });
+
+exports.onUpdateManufacturers = functions.firestore
+  .document('manufacturers/{manufacturerId}')
+  .onUpdate(async (snap, context) => {
+    console.log('snap: ', snap);
+    console.log('context: ', context);
+    const { before, after } = snap;
+    console.log('Before: ', before.data());
+    console.log('After: ', after.data());
+    const products = await admin
+      .firestore()
+      .collection('products')
+      .where('manufacturer', '==', before.data().name)
+      .get();
+    products.forEach(async product => {
+      await product.ref.update({
+        manufacturer: after.data().name
+      });
+    });
+    return products;
+  });
+
 exports.sendContactMessage = functions.firestore.document('messages/{pushKey}').onCreate((snap, context) => {
+  const { email, password } = functions.config().client;
+  const emails = email.split(',');
+  const passwords = password.split(',');
+  console.log(emails, passwords);
+  const mailTransport0 = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: emails[0],
+      pass: passwords[0]
+    }
+  });
+  const mailTransport1 = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: emails[1],
+      pass: passwords[1]
+    }
+  });
+
   const val = snap.data();
   console.log('Data: ', val);
   let mailOptions = {
-    to: email,
+    to: emails[0],
     from: `"${val.name}" <${val.email}>`,
     sender: `"${val.name}" <${val.email}>`,
     replyTo: `"${val.name}" ${val.email}`,
     subject: `Message from "${val.name}"`,
     html: val.html
   };
-  return async () => {
-    await mailTransport.sendMail(mailOptions);
-    mailOptions = {
-      to: val.email,
-      from: `"CQCQCQDX Radio" <${email}>`,
-      sender: `"CQCQCQDX Radio" <${email}>`,
-      replyTo: `"CQCQCQDX Radio" <${email}>`,
-      subject: `Message from "CQCQCQDX Radio"`,
-      html: `<div>
-            <div>
-              <p>Hi ${val.name},<br>
-                <br>
-                CQCQCQDX Radio has successfully received your message.<br>
-                We will try to respond to
-                you as soon as we can.<br>
-                <br>
-                <br>
-                Kind Regards,<br>
-                CQCQCQDX Radio
-              </p>
-            </div>
-            <hr>
-            <div>
-              <p>
-                <b><i>Important Info:</i></b><br>
-                <i>We do take time to read each and every single message sent to us.<br>
-                So, if you're not the one that sent a message to us on our website, please reply to this email and alert us immediately.</i>
-              </p>
-            </div>
-          </div>`
-    };
-    await mailTransport.sendMail(mailOptions);
-    console.log(`Mail successfully sent to ${val.name}<${val.email}>!`);
-    await mailTransport2.sendMail(mailOptions);
-    mailOptions = {
-      to: val.email,
-      from: `"CQCQCQDX Radio" <${email}>`,
-      sender: `"CQCQCQDX Radio" <${email}>`,
-      replyTo: `"CQCQCQDX Radio" <${email}>`,
-      subject: `Message from "CQCQCQDX Radio"`,
-      html: `<div>
-            <div>
-              <p>Hi ${val.name},<br>
-                <br>
-                CQCQCQDX Radio has successfully received your message.<br>
-                We will try to respond to
-                you as soon as we can.<br>
-                <br>
-                <br>
-                Kind Regards,<br>
-                CQCQCQDX Radio
-              </p>
-            </div>
-            <hr>
-            <div>
-              <p>
-                <b><i>Important Info:</i></b><br>
-                <i>We do take time to read each and every single message sent to us.<br>
-                So, if you're not the one that sent a message to us on our website, please reply to this email and alert us immediately.</i>
-              </p>
-            </div>
-          </div>`
-    };
-    await mailTransport.sendMail(mailOptions);
-    return console.log(`Mail successfully sent to ${val.name}<${val.email}>!`);
+  // email sent to nosarobo@gmail.com
+  mailTransport0.sendMail(mailOptions, (err, data) => {
+    err ? console.log('1. Error Occurs:', err) : console.log('1. Email Sent:', data);
+  });
+
+  mailOptions = {
+    to: emails[1],
+    from: `"${val.name}" <${val.email}>`,
+    sender: `"${val.name}" <${val.email}>`,
+    replyTo: `"${val.name}" ${val.email}`,
+    subject: `Message from "${val.name}"`,
+    html: val.html
   };
+  // email sent to myradiogear@gmail.com
+  mailTransport1.sendMail(mailOptions, (err, data) => {
+    err ? console.log('2. Error Occurs:', err) : console.log('2. Email Sent:', data);
+  });
+
+  console.log('Mail Options: ', mailOptions);
+  // for user from myradiogear@gmail.com
+  mailOptions = {
+    to: val.email,
+    from: `"CQCQCQDX Radio" <${emails[1]}>`,
+    sender: `"CQCQCQDX Radio" <${emails[1]}>`,
+    replyTo: `"CQCQCQDX Radio" <${emails[1]}>`,
+    subject: `Message from "CQCQCQDX Radio"`,
+    html: `<div>
+            <div>
+              <p>Hi ${val.name},<br>
+                <br>
+                CQCQCQDX Radio has successfully received your message.<br>
+                We will try to respond to
+                you as soon as we can.<br>
+                <br>
+                <br>
+                Kind Regards,<br>
+                CQCQCQDX Radio
+              </p>
+            </div>
+            <hr>
+            <div>
+              <p>
+                <b><i>Important Info:</i></b><br>
+                <i>We do take time to read each and every single message sent to us.<br>
+                So, if you're not the one that sent a message to us on our website, please reply to this email and alert us immediately.</i>
+              </p>
+            </div>
+          </div>`
+  };
+  mailTransport1.sendMail(mailOptions, (err, data) => {
+    err ? console.log('3. Error Occurs:', err) : console.log('3. Email Sent:', data);
+  });
+  return console.log(`Mail successfully sent to ${val.name}<${val.email}>!`);
 });
 
 exports.incrementOrderCounter = functions.firestore
   .document('users/{userId}/orders/{orderId}')
   .onCreate(async (snap, context) => {
+    console.log('snap: ', snap);
+    console.log('context: ', context);
+    await snap.ref.update({ order_uid: snap.ref.id });
     let orderCounter = 1;
     try {
       const doc = await admin

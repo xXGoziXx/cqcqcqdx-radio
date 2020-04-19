@@ -1,0 +1,76 @@
+<div class="grid-y tabs-panel" id="addOrder">
+  <div class="cell small-12 large-10 form-container margin-top-1 margin-bottom-1">
+    <h5 class="text-uppercase font-bolder margin-top-1">
+      You can add an order by filling out the form below
+    </h5>
+    <form
+      [formGroup]="accountService.orderForm"
+      (ngSubmit)="addOrder(accountService.orderForm.value); accountService.orderForm.reset()"
+      class="margin-top-1"
+    >
+      <div class="grid-container fluid">
+        <div class="grid-x grid-margin-x">
+          <div class="small-12 cell">
+            <label
+              >1st Line Address:
+              <input
+                type="text"
+                placeholder="1st Line Address..."
+                formControlName="address1"
+                required
+                autocomplete="on"
+              />
+            </label>
+          </div>
+          <div class="small-12 cell">
+            <label>
+              2nd Line Address:
+              <input type="text" placeholder="2nd Line Address..." formControlName="address2" autocomplete="on" />
+            </label>
+          </div>
+          <div class="small-12 cell">
+            <label>
+              3rd Line Address:
+              <input type="text" placeholder="3rd Line Address..." formControlName="address3" autocomplete="on" />
+            </label>
+          </div>
+          <div class="small-12 cell">
+            <label>
+              Town/City:
+              <input type="text" placeholder="Town/City..." formControlName="townCity" required autocomplete="on" />
+            </label>
+          </div>
+          <div class="small-6 cell">
+            <label>
+              Postcode:
+              <input type="text" placeholder="Postcode..." formControlName="postcode" required autocomplete="on" />
+            </label>
+          </div>
+          <div class="small-6 cell">
+            <label>
+              Country:
+              <select formControlName="country" required>
+                <option [value]="country.abbr" *ngFor="let country of authService.countryList">
+                  {{ country.name }}
+                </option>
+              </select>
+            </label>
+          </div>
+          <div class="small-12 cell margin-top-1 margin-bottom-1">
+            <p class="font-bold">Please make sure the products for this order are already in your basket!</p>
+            <button
+              class="button  shadow bordered text-uppercase"
+              type="submit"
+              [disabled]="accountService.orderForm.invalid || !this.productService.cart.length"
+            >
+              Add order
+            </button>
+            <p *ngIf="!this.productService.cart.length" class="text-accent">
+              There are no products in your basket to add to order!
+            </p>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>

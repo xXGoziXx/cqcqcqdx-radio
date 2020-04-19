@@ -9,7 +9,7 @@
     <div class="cell" *ngFor="let product of products$ | async">
       <!-- image has padding -->
       <a [routerLink]="['/product', product.id]" routerLinkActive="active">
-        <div class="grid-y card height-100 radius bordered shadow align-center">
+        <div class="grid-y card height-100 bordered shadow align-center">
           <div class="cell small-auto width-100 card-section">
             <img
               [alt]="product.name"

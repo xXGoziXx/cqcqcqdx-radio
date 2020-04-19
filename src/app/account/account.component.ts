@@ -6,10 +6,12 @@ import { AngularFirestore } from '@angular/fire/firestore';
 import { ProductService } from '../services/product.service';
 import { User } from '../interfaces/User';
 import { CategoryService } from '../services/category.service';
-import { tap, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Manufacturer } from '../interfaces/Manufacturer';
 import { AccountService } from '../services/account.service';
 import { Product } from '../interfaces/Product';
+import { filter } from 'rxjs/operators';
+import * as $ from 'jquery';
 
 @Component({
   selector: 'app-account',
@@ -21,8 +23,10 @@ export class AccountComponent implements OnInit, OnDestroy {
     { id: 'myOrders', name: 'My Orders', collection: 'myOrders', adminOnly: false },
     { id: 'addProduct', name: 'Add / Remove Product', collection: 'products', adminOnly: false },
     { id: 'addManufacturer', name: 'Add / Remove Manufacturer', collection: 'manufacturer', adminOnly: false },
-    { id: 'viewAllOrders', name: 'View All Orders', collection: 'allOrders', adminOnly: false },
-    { id: 'viewAllMembers', name: 'View All Members', collection: 'allMembers', adminOnly: true }
+    { id: 'addOrder', name: 'Add Order', collection: 'addOrder', adminOnly: true },
+    { id: 'viewAllOrders', name: 'View / Remove Orders', collection: 'allOrders', adminOnly: false },
+    { id: 'viewAllMembers', name: 'View All Members', collection: 'allMembers', adminOnly: true },
+    { id: 'updateNews', name: 'Update News', collection: 'news', adminOnly: true }
   ].filter(tabPanel => (tabPanel.adminOnly && this.authService.currentUserDoc.admin) || !tabPanel.adminOnly);
 
   constructor(
@@ -62,7 +66,7 @@ export class AccountComponent implements OnInit, OnDestroy {
           );
           // console.log('allUserDocs', this.accountService.allUserDocs);
           this.accountService.allOrders = this.accountService.allUsersOrderCollection.map(userOrderCollection =>
-            userOrderCollection.valueChanges()
+            userOrderCollection.valueChanges().pipe(filter(orders => orders.length > 0))
           );
         }
       );
@@ -159,7 +163,7 @@ export class AccountComponent implements OnInit, OnDestroy {
             result = result + percentage;
           }
           return result / percentages.length;
-        }),
+        })
         // tap(console.log)
       );
     });

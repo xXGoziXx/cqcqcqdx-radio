@@ -7,8 +7,8 @@
   <div class="grid-x grid-margin-y grid-margin-x small-up-1 medium-up-3 large-up-5 align-stretch-spaced content ">
     <div class="cell" *ngFor="let category of categoryService.manufacturers">
       <!-- image has padding -->
-      <a [routerLink]="['/shop-by-manufacturer', categoryService.linkUsed(category.text)]" routerLinkActive="active">
-        <div class="grid-y card height-100 radius bordered shadow align-center">
+      <a *ngIf="category.text !== 'Castle Electronics UK  [ Service & Repairs Department ]';else castleElectronics" [routerLink]="['/shop-by-manufacturer', categoryService.linkUsed(category.text)]" routerLinkActive="active">
+        <div class="grid-y card height-100 bordered shadow align-center">
           <div class="cell small-auto width-100 card-section align-middle">
             <img
               [lazyLoad]="category.src === '' ? '../../assets/img/No_image_available.svg' : category.src"
@@ -22,6 +22,24 @@
           </div>
         </div>
       </a>
+      <ng-template #castleElectronics>
+        <a href="http://www.hamradiosales.co.uk/CASTLE-1A.htm">
+          <div class="grid-y card height-100 bordered shadow align-center">
+            <div class="cell small-auto width-100 card-section align-middle">
+              <img
+                [lazyLoad]="category.src === '' ? '../../assets/img/No_image_available.svg' : category.src"
+                          [defaultImage]="defaultImage"
+
+                [alt]="category.alt"
+              />
+            </div>
+            <div class="cell small-shrink width-100 card-section text">
+              <p class="text-uppercase text-center align-self-middle font-bold">{{ category.text }}</p>
+            </div>
+          </div>
+        </a>
+      </ng-template>
+
     </div>
   </div>
 </div>

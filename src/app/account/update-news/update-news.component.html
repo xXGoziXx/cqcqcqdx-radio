@@ -1,0 +1,45 @@
+<div class="grid-y tabs-panel" id="updateNews">
+  <div class="cell small-12 large-10 margin-top-1 margin-bottom-1">
+    <h5 class="text-uppercase font-bolder margin-top-1">
+      You can update the news on the Homepage by editing it here
+    </h5>
+    <ckeditor
+      #editor
+      [editor]="Editor"
+      [(ngModel)]="editorData"
+      (change)="onStatusChange()"
+      (ready)="onReady(Editor)"
+    ></ckeditor>
+  </div>
+  <div class="small-12 cell margin-top-1 margin-bottom-1">
+    <button
+      id="save"
+      class="button shadow bordered text-uppercase margin-bottom-0"
+      [disabled]="!this.isDirty || pendingActions.length || this.accountService.uploadingImages"
+    >
+      Save
+    </button>
+    <span *ngIf="pendingActions.length || accountService.uploadingImages">
+      <img class="spinner" [src]="accountService.defaultImage" alt="spinner" />
+    </span>
+  </div>
+</div>
+<ng-container *ngIf="accountService.collection === 'news'">
+  <div class="callout success" data-closable>
+    <h5>Success!</h5>
+    <p>The news has been successfully updated.</p>
+    <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="callout alert" data-closable>
+    <h5>Alert!</h5>
+    <p>
+      An error occurred when trying to update the news. <br />Please Try Again! <br />Error Code:
+      <span class="error"></span>
+    </p>
+    <button class="close-button" aria-label="Dismiss alert" type="button" data-close>
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+</ng-container>

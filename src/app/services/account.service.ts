@@ -23,26 +23,27 @@ import { Address } from '../interfaces/Address';
   providedIn: 'root'
 })
 export class AccountService {
-  defaultImage = '../../assets/img/Spinner.svg';
-  usersOrderCollection: AngularFirestoreCollection<Order>;
-  allUsersOrderCollection: AngularFirestoreCollection<Order>[];
-  allUsersCollectionSnapshot$: Subscription;
-  allUserDocs: AngularFirestoreDocument<User>[];
-  allUsersCollectionSnapshot: Observable<DocumentChangeAction<User>[]>;
-  orders$: Observable<Order[]>;
   allOrders: Array<Observable<Order[]>> = [];
+  allPercentage: Observable<any>;
+  allUserDocs: AngularFirestoreDocument<User>[];
   allUserIds: Array<string> = [];
   allUsers$: Observable<User[]>;
-
-  products$: Array<Observable<Product[]>>;
-  currOrderId = '';
-  productForm: FormGroup;
-  manufacturerForm: FormGroup;
+  allUsersCollectionSnapshot$: Subscription;
+  allUsersCollectionSnapshot: Observable<DocumentChangeAction<User>[]>;
+  allUsersOrderCollection: AngularFirestoreCollection<Order>[];
   categories = [...this.categoryService.used];
-  manufacturers = this.categoryService.manufacturers;
-  uploads: any[];
-  allPercentage: Observable<any>;
   collection = '';
+  currOrderId = '';
+  defaultImage = '../../assets/img/Spinner.svg';
+  manufacturerForm: FormGroup;
+  manufacturers = this.categoryService.manufacturers;
+  orderForm: FormGroup;
+  orders$: Observable<Order[]>;
+  productForm: FormGroup;
+  products$: Array<Observable<Product[]>>;
+  uploads: any[];
+  uploadingImages = false;
+  usersOrderCollection: AngularFirestoreCollection<Order>;
 
   createForm() {
     this.productForm = this.fb.group({
@@ -59,7 +60,16 @@ export class AccountService {
       name: ['', Validators.required, ValidateDuplicateEntry.bind(this)],
       images: ['']
     });
+    this.orderForm = this.fb.group({
+      address1: ['', Validators.required],
+      address2: [''],
+      address3: [''],
+      townCity: ['', Validators.required],
+      country: ['', Validators.required],
+      postcode: ['', Validators.required]
+    });
   }
+
   addressFormatter = (values: Address) => {
     return this.cleanAddress(
       `${values.address_lines.toString()}, ${values.townCity}, ${values.postcode}, ${values.country}`
@@ -181,6 +191,18 @@ export class AccountService {
     this.afs.doc<any>(`users/adminList`).update({
       emails
     });
+  };
+  deleteUser = (uid: string) => {
+    this.afs.doc<any>(`users/${uid}`).delete();
+  };
+  deleteOrder = async (userId: string, orderId: string) => {
+    console.log('userId: ', userId);
+    console.log('orderId: ', orderId);
+    const docSnapshot = await this.afs.firestore.doc(`users/${userId}/orders/${orderId}`).get();
+    console.log(docSnapshot);
+    if (docSnapshot.exists) {
+      this.afs.doc<any>(`users/${userId}/orders/${orderId}`).delete();
+    }
   };
   constructor(
     public authService: AuthService,

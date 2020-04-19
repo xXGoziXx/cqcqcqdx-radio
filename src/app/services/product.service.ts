@@ -29,8 +29,9 @@ export class ProductService {
   productCounter: number;
 
   addProduct = productForm => {
-    // console.log(productForm);
+    console.log(productForm);
     let adminListSub;
+    const images = productForm.image ? productForm.image.split(',') : [''];
     return (adminListSub = this.afs
       .doc('users/adminList')
       .valueChanges()
@@ -40,8 +41,8 @@ export class ProductService {
         // console.log('pc', this.productCounter);
         await this.productsRef.add({
           ...productForm,
-          name: productForm.value.name.trim(),
-          images: productForm.value.image.split(','),
+          name: productForm.name.trim(),
+          images,
           date_added: firebase.firestore.Timestamp.now(),
           id: this.productCounter.toString(),
           used: productForm.condition === 'New' ? false : true
@@ -55,7 +56,7 @@ export class ProductService {
     //   images
     // });
     return this.manufacturersRef.add({
-      name: manufacturerForm.name,
+      name: manufacturerForm.name.trim(),
       images
     });
   };
@@ -81,18 +82,18 @@ export class ProductService {
         manufacturerDocIdsSub.unsubscribe();
       });
   };
-  removeProduct = name => {
+  removeProduct = id => {
     // console.log('removeProduct', name);
     const productDocIdsSub = this.afs
-      .collection<Product>('products', ref => ref.where('name', '==', name))
+      .collection<Product>('products', ref => ref.where('id', '==', id))
       .snapshotChanges()
       .pipe(
         map(actions =>
           actions.map(a => {
             const data = a.payload.doc.data() as Product;
-            const id = a.payload.doc.id;
-            // console.log({ id, ...data });
-            return id;
+            const docId = a.payload.doc.id;
+            // console.log({ docId, ...data });
+            return docId;
           })
         )
       )

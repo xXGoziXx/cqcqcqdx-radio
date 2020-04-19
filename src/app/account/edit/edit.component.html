@@ -9,7 +9,7 @@
       <h5 class="text-uppercase font-bolder margin-top-1">
         You can create your account by filling out the form below:
       </h5>
-      <form class="margin-top-1" [formGroup]="form" (ngSubmit)="this.authService.updateAccount(this.form.value)">
+      <form class="margin-top-1" [formGroup]="form" (ngSubmit)="this.authService.updateAccount(this.form.value);">
         <div class="grid-container fluid">
           <div class="grid-x grid-margin-x">
             <div class="small-12 medium-6 cell">
@@ -113,8 +113,8 @@
                 </select>
               </label>
             </div>
-            <div class="small-12 cell margin-bottom-1">
-              <button class="button  shadow bordered radius text-uppercase" type="submit" [disabled]="form.invalid">
+            <div class="small-12 cell margin-bottom-1 margin-top-1">
+              <button class="button  shadow bordered text-uppercase" type="submit" [disabled]="form.invalid">
                 Update your Account
               </button>
             </div>

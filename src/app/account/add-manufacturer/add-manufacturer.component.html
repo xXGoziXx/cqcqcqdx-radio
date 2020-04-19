@@ -74,7 +74,7 @@
           </ng-container>
           <div class="small-12 cell margin-top-1 margin-bottom-1">
             <button
-              class="button  shadow bordered radius text-uppercase"
+              class="button  shadow bordered text-uppercase"
               type="submit"
               [disabled]="accountService.manufacturerForm.invalid"
             >
@@ -91,7 +91,7 @@
       <div class="cell" *ngFor="let category of categoryService.manufacturers">
         <!-- image has padding -->
 
-        <div class="grid-y card height-100 radius bordered shadow align-center">
+        <div class="grid-y card height-100 bordered shadow align-center">
           <div class="cell small-auto width-100 card-section align-middle">
             <img
               [lazyLoad]="category.src === '' ? '../../assets/img/No_image_available.svg' : category.src"
@@ -132,5 +132,10 @@
         </div>
       </div>
     </div>
+        <ng-container *ngIf="categoryService.manufacturers.length == 0">
+          <h1 class="font-bold text-accent text-uppercase text-center">
+            No manufacturers available
+          </h1>
+        </ng-container>
   </div>
 </div>

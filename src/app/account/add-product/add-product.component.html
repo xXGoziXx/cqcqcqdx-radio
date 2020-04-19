@@ -135,7 +135,7 @@
 
           <div class="small-12 cell margin-top-1 margin-bottom-1">
             <button
-              class="button  shadow bordered radius text-uppercase"
+              class="button  shadow bordered text-uppercase"
               type="submit"
               [disabled]="accountService.productForm.invalid"
             >
@@ -149,15 +149,15 @@
       <h5 class="text-uppercase font-bolder margin-top-1">
         You can remove a product or change the product image by clicking either of the icons
       </h5>
-      <div class="cell" *ngFor="let category of categoryService.products">
+      <div class="cell" *ngFor="let product of categoryService.products">
         <!-- image has padding -->
 
-        <div class="grid-y card height-100 radius bordered shadow align-center">
+        <div class="grid-y card height-100 bordered shadow align-center">
           <div class="cell small-auto width-100 card-section align-middle">
             <img
-              [lazyLoad]="category.src === '' ? '../../assets/img/No_image_available.svg' : category.src"
+              [lazyLoad]="product.src === '' ? '../../assets/img/No_image_available.svg' : product.src"
               [defaultImage]="accountService.defaultImage"
-              [alt]="category.alt"
+              [alt]="product.alt"
             />
             <div class="grid-x position-absolute height-100 width-100">
               <div class="cell small-6 align-middle text-center action-buttons">
@@ -166,7 +166,7 @@
                     ><i class="fi fi-photo"></i>
                     <input
                       id="imgUpdate"
-                      [name]="category.text"
+                      [name]="product.text"
                       type="file"
                       class="inputfile height-100 width-50"
                       accept="image/*"
@@ -176,22 +176,22 @@
               </div>
               <div
                 class="cell small-6 align-middle text-center action-buttons"
-                (click)="productService.removeProduct(category.id)"
+                (click)="productService.removeProduct(product.id)"
               >
                 <span class="grid-x align-center-middle height-100 width-100"><i class="fi fi-trash"></i></span>
               </div>
             </div>
           </div>
-          <a
-            [routerLink]="['/shop-by-manufacturer', categoryService.linkUsed(category.text)]"
-            routerLinkActive="active"
-          >
+          <a [routerLink]="['/shop-by-manufacturer', categoryService.linkUsed(product.text)]" routerLinkActive="active">
             <div class="cell small-shrink width-100 card-section text">
-              <p class="text-uppercase text-center align-self-middle font-bold">{{ category.text }}</p>
+              <p class="text-uppercase text-center align-self-middle font-bold">{{ product.text }}</p>
             </div>
           </a>
         </div>
       </div>
     </div>
+    <ng-container *ngIf="categoryService.products.length == 0">
+      <h1 class="font-bold text-accent text-uppercase text-center">No Products Available</h1>
+    </ng-container>
   </div>
 </div>
