@@ -16,6 +16,8 @@ export class ShopNowComponent implements OnInit {
   constructor(public categoryService: CategoryService, private afs: AngularFirestore) {}
 
   ngOnInit() {
-    this.products$ = this.afs.collection<Product>('products').valueChanges();
+    this.products$ = this.afs
+      .collection<Product>('products', ref => ref.orderBy('name'))
+      .valueChanges();
   }
 }

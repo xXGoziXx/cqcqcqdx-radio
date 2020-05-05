@@ -6,7 +6,7 @@
     <form
       [formGroup]="accountService.manufacturerForm"
       (ngSubmit)="
-        productService.addManufacturer(
+        accountService.addManufacturer(
           accountService.manufacturerForm.value,
           accountService.uploadsToImages(accountService.uploads)
         );
@@ -86,7 +86,8 @@
     </form>
     <div class="grid-x grid-margin-y grid-margin-x small-up-1 medium-up-2 large-up-4 align-stretch-spaced content ">
       <h5 class="text-uppercase font-bolder margin-top-1">
-        You can remove a manufacturer or change the manufacturer image by clicking either of the icons
+        You can <span *ngIf="this.authService.currentUserDoc.admin">remove a manufacturer or</span> change the
+        manufacturer image by clicking either of the icons
       </h5>
       <div class="cell" *ngFor="let category of categoryService.manufacturers">
         <!-- image has padding -->
@@ -99,7 +100,13 @@
               [alt]="category.alt"
             />
             <div class="grid-x position-absolute height-100 width-100">
-              <div class="cell small-6 align-middle text-center action-buttons">
+              <div
+                class="cell align-middle text-center action-buttons"
+                [ngClass]="{
+                  'small-6': this.authService.currentUserDoc.admin,
+                  'small-12': !this.authService.currentUserDoc.admin
+                }"
+              >
                 <span class="grid-x align-center-middle height-100 width-100">
                   <label for="imgUpdate" class="inputfilewrapper"
                     ><i class="fi fi-photo"></i>
@@ -107,15 +114,20 @@
                       id="imgUpdate"
                       [name]="category.text"
                       type="file"
-                      class="inputfile height-100 width-50"
+                      class="inputfile height-100"
+                      [ngClass]="{
+                        'width-100': !this.authService.currentUserDoc.admin,
+                        'width-50': this.authService.currentUserDoc.admin
+                      }"
                       accept="image/*"
                     />
                   </label>
                 </span>
               </div>
               <div
+                *ngIf="this.authService.currentUserDoc.admin"
                 class="cell small-6 align-middle text-center action-buttons"
-                (click)="productService.removeManufacturer(category.text)"
+                (click)="accountService.removeManufacturer(category.text)"
               >
                 <span class="grid-x align-center-middle height-100 width-100"><i class="fi fi-trash"></i></span>
               </div>
@@ -132,10 +144,10 @@
         </div>
       </div>
     </div>
-        <ng-container *ngIf="categoryService.manufacturers.length == 0">
-          <h1 class="font-bold text-accent text-uppercase text-center">
-            No manufacturers available
-          </h1>
-        </ng-container>
+    <ng-container *ngIf="categoryService.manufacturers.length == 0">
+      <h1 class="font-bold text-accent text-uppercase text-center">
+        No manufacturers available
+      </h1>
+    </ng-container>
   </div>
 </div>

@@ -24,7 +24,9 @@ export class ManufacturerProductsComponent implements OnInit, OnDestroy {
       this.manufacturer.route = params.get('manufacturer');
       this.manufacturer.banner = params.get('manufacturer').replace(/-/g, ' ');
       this.products$ = this.afs
-        .collection<Product>('products', ref => ref.where('manufacturer', '==', this.manufacturer.banner))
+        .collection<Product>('products', ref =>
+          ref.where('manufacturer', '==', this.manufacturer.banner).orderBy('name')
+        )
         .valueChanges();
     });
     // console.log(this.manufacturer);

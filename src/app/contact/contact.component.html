@@ -15,6 +15,83 @@
           allowfullscreen
         ></iframe>
       </div>
+      <div class="cell small-12 large-6 small-order-2 large-order-3 show-for-medium">
+        <div class="grid-y">
+          <div class="cell">
+            <h5 class="font-bold">
+              Get in Touch
+            </h5>
+            <p>
+              10 Gaelic View, Newtown, Kill,<br />
+              Co. Kildare, W91 W8Y6 <br />
+              <b>Telephone: </b><a href="tel: 089 982 2017">089 982 2017</a><br />
+              <!-- <b>Fax:</b> 01922 417829<br /> -->
+              <b>Email: </b><a href="mailto:myradiogear@gmail.com">myradiogear@gmail.com</a><br />
+              <!-- <b>Skype:</b> radioworld_uk<br /> -->
+            </p>
+          </div>
+          <div class="cell">
+            <h5 class="font-bold">
+              Returns & Deliveries:
+            </h5>
+            <p>
+              <b>Telephone: </b><a href="tel: 089 982 2017">089 982 2017</a><br />
+              <!-- <b>Fax:</b> 01922 417829 -->
+            </p>
+          </div>
+        </div>
+        <div class="cell">
+          <h5 class="font-bold">
+            Repairs:
+          </h5>
+          <p>
+            <b>Website: </b>
+            <a href="http://www.hamradiosales.co.uk/CASTLE-1A.htm" target="_blank">
+              http://www.hamradiosales.co.uk/CASTLE-1A.htm
+            </a>
+            <br />
+            CQCQCQDX is an official agent to Castle Electronics in the UK for services and repairs of Icom, Kenwood,
+            Yaesu and all electronics.
+          </p>
+        </div>
+      </div>
+      <div class="cell small-12 large-6 small-order-3 large-order-4 show-for-medium">
+        <form [formGroup]="form" (ngSubmit)="onSubmit()">
+          <div class="grid-container">
+            <div class="grid-x grid-padding-x">
+              <div class="small-12 cell">
+                <label
+                  >First Name:
+                  <input type="text" placeholder="First Name..." formControlName="name" required />
+                </label>
+              </div>
+              <div class="small-6 cell">
+                <label
+                  >Email Address:
+                  <input type="email" placeholder="Email Address..." formControlName="email" required />
+                </label>
+              </div>
+              <div class="small-6 cell">
+                <label
+                  >Telephone:
+                  <input type="tel" placeholder="Telephone..." formControlName="telephone" required />
+                </label>
+              </div>
+              <div class="small-12 cell">
+                <label
+                  >Message:
+                  <textarea placeholder="Message..." formControlName="message" required></textarea>
+                </label>
+              </div>
+              <div class="small-12 cell text-right">
+                <button class="button  shadow bordered text-uppercase" type="submit" [disabled]="form.invalid">
+                  Submit
+                </button>
+              </div>
+            </div>
+          </div>
+        </form>
+      </div>
     </div>
     <div class="cell small-12 large-6 small-order-1 large-order-2">
       <div class="grid-x">
@@ -24,7 +101,7 @@
           </h2>
         </div>
         <div class="cell small-12">
-          <p>
+          <!-- <p>
             This website has been created to involve our member in buying and selling there used equipment. The website
             will be exclusive only to our members of the dx radio group ireland.
             <br />
@@ -41,11 +118,60 @@
             <br />
             This site is designed to let our members to have the freedom to buy or sell their used equipment and be
             completely assured the equipment they're buying is in good working order and physical condition.
+          </p> -->
+          <h3>CQDX' RADIO GROUP IRELAND. &nbsp;</h3>
+          <p>I would like to welcome you all to our new and updated website,</p>
+          <p>
+            This site has been created to give our members / operators the freedom to buy and sell there secondhand
+            radio Gear.
           </p>
+          <p>
+            This will ensure all operators Equipment you are buying and selling, will be clean presentable and in good
+            working order at all times, we will all know the history of each item in time and we can shop in comfort and
+            obtain reliable equipment, each time a person is selling an item 2% of the selling price will be donated
+            back to the site via the donate button below.
+          </p>
+          <p>
+            For Example, an item for sale is €45.00 @ 2% donation is 90 cent is put back into the site to maintain this
+            webpage.
+          </p>
+          <p>
+            Regular updated will be added to this site, each and every member can add their own equipment to buy or sell
+            with no extra hassle.
+          </p>
+          <p>
+            its up to all members to add their equipment to this site to ensure different stocks are visible weekly in
+            time this will flourish.
+          </p>
+          <p>
+            Please be aware this site is only for members of our group, non members cannot avail of this site.
+          </p>
+          <p>
+            All you need to do now is click the register tab on the home page fill in the registration form and submit
+            it to gain access to this website.
+          </p>
+          <p>
+            A random code will be issued to all members via email or whats app group messenger this is an ACCESS KEY
+            that has been created to insure you and only you have access to this site, anyone who forwards this site
+            link onto another person will be asked to register this can only be approved or declined by the
+            Administration team.
+          </p>
+          <p>
+            CQDX' is an Official Agent in Ireland to Castle Electronics UK, for Service and Repairs of Icom, Kenwood,
+            Yaesu and all Electronics,
+          </p>
+          <p>Please click the link provided to access Castle Electronics website.</p>
+          <p>
+            Website:
+            <a href="http://www.hamradiosales.co.uk/CASTLE-1A.htm">http://www.hamradiosales.co.uk/CASTLE-1A.htm</a>
+          </p>
+          <p>Please enjoy our new and updated website,</p>
+          <p>Regards.</p>
+          <p>Administration Team.</p>
         </div>
       </div>
     </div>
-    <div class="cell small-12 large-6 small-order-2 large-order-3">
+    <div class="cell small-12 large-6 small-order-2 large-order-3 hide-for-large">
       <div class="grid-y">
         <div class="cell">
           <h5 class="font-bold">
@@ -85,7 +211,7 @@
         </p>
       </div>
     </div>
-    <div class="cell small-12 large-6 small-order-3 large-order-4">
+    <div class="cell small-12 large-6 small-order-3 large-order-4 hide-for-large">
       <form [formGroup]="form" (ngSubmit)="onSubmit()">
         <div class="grid-container">
           <div class="grid-x grid-padding-x">

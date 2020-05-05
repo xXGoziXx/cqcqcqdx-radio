@@ -7,10 +7,12 @@
 #linksNews {
   color: black;
 
+  background-color: transparent;
   h2 {
     font-weight: 900;
 
-    background-color: #f5f5f5;
+    background-color: rgba(245, 245, 245);
+
     span {
       display: inline-block;
       height: 100%;

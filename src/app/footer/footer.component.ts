@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-
+import { Observable } from 'rxjs';
+import { AuthService } from '../services/auth.service';
+import { AngularFirestore } from '@angular/fire/firestore';
 @Component({
   selector: 'app-footer',
   templateUrl: './footer.component.html',
@@ -7,9 +9,10 @@ import { Component, OnInit } from '@angular/core';
 })
 export class FooterComponent implements OnInit {
   date = Date.now();
-  constructor() { }
-
-  ngOnInit() {
+  links$: Observable<any>;
+  constructor(private afs: AngularFirestore, public authService: AuthService) {
+    this.links$ = this.afs.collection('links', ref => ref.orderBy('name')).valueChanges();
   }
 
+  ngOnInit() {}
 }

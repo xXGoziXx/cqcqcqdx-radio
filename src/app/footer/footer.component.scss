@@ -1,0 +1,24 @@
+h5 {
+  padding-left: 10px;
+}
+ul {
+  flex-direction: column;
+  flex-wrap: wrap;
+
+  display: flex;
+  max-height: 250px;
+  margin-left: 0;
+
+  list-style: none;
+  li {
+    width: 200px;
+    padding: 0 20px;
+  }
+}
+#links {
+  ul {
+    li {
+      border-right: 1px solid #cacaca;
+    }
+  }
+}

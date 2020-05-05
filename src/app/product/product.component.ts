@@ -54,7 +54,7 @@ export class ProductComponent implements OnInit, OnDestroy {
       // this.isProductId ? console.log(true, this.id) : console.log(false, this.id);
       if (this.isProductId) {
         this.products$ = this.afs
-          .collection<Product>('products', ref => ref.where('id', '==', this.id.toString()))
+          .collection<Product>('products', ref => ref.where('id', '==', this.id.toString()).orderBy('name'))
           .valueChanges();
       } else {
         this.router.navigate(['/shop-now']);

@@ -21,6 +21,10 @@ service cloud.firestore {
       allow write, update: if request.auth.uid != null;
       allow delete: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin;
     }
+    match /links/{document} {
+    	allow read;
+      allow write,update, delete: if get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin;
+    }
     match /users/{userId} {
       allow read;
       allow write, update, delete: if request.auth.uid == userId || get(/databases/$(database)/documents/users/$(request.auth.uid)).data.admin;

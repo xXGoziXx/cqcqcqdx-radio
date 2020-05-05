@@ -1,5 +1,31 @@
 @import '../../node_modules/foundation-sites/scss/foundation.scss';
 @include foundation-prototype-classes;
+
+.main-cover {
+  position: relative;
+  // &::before {
+  //   position: absolute;
+  //   top: 0;
+  //   left: 0;
+
+  //   width: 100%;
+  //   height: 100%;
+
+  //   content: '';
+
+  //   background-image: url('../assets/background.jpeg');
+  //   background-repeat: no-repeat;
+  //   background-size: cover;
+
+  //   filter: blur(100%);
+  // }
+  main {
+    /* This will make it stack on top of the ::before */
+    position: relative;
+
+    padding-top: 1.25rem;
+  }
+}
 footer {
   height: rem-calc(50px);
 

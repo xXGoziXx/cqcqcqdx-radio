@@ -1,25 +1,42 @@
-import { Component, OnInit, ViewChild, AfterViewChecked } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewChecked, OnDestroy } from '@angular/core';
 import { CKEditorComponent } from '@ckeditor/ckeditor5-angular';
 import * as ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
+import { AuthService } from '../../services/auth.service';
 import { AccountService } from '../../services/account.service';
 import { UploadAdapterService } from '../../services/uploadAdapter.service';
+import { Subscription } from 'rxjs';
+
 import * as $ from 'jquery';
 @Component({
   selector: 'app-update-news',
   templateUrl: './update-news.component.html',
   styleUrls: ['./update-news.component.scss']
 })
-export class UpdateNewsComponent implements OnInit, AfterViewChecked {
+export class UpdateNewsComponent implements OnInit, AfterViewChecked, OnDestroy {
   @ViewChild('editor') editorComponent: CKEditorComponent;
   Editor = ClassicEditor;
   editorData = 'Test';
   isDirty = false;
   pendingActions = [];
   adapterUploaded = false;
-  constructor(public afs: AngularFirestore, public storage: AngularFireStorage, public accountService: AccountService) {
+  news: string;
+  adminListSub: Subscription;
+
+  constructor(
+    public afs: AngularFirestore,
+    public storage: AngularFireStorage,
+    public authService: AuthService,
+    public accountService: AccountService
+  ) {
     this.restoreNews();
+    this.adminListSub = this.afs
+      .doc<any>('users/adminList')
+      .valueChanges()
+      .subscribe(adminList => {
+        this.news = adminList.news;
+      });
   }
   restoreNews = async () => {
     this.pendingActions.push('Saving changes');
@@ -94,5 +111,8 @@ export class UpdateNewsComponent implements OnInit, AfterViewChecked {
       };
       this.adapterUploaded = true;
     }
+  }
+  ngOnDestroy() {
+    this.adminListSub.unsubscribe();
   }
 }

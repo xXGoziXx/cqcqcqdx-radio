@@ -156,7 +156,7 @@ export class CategoryService implements OnDestroy {
   }
 
   constructor(private afs: AngularFirestore) {
-    this.manufacturersRef = this.afs.collection<Manufacturer>('manufacturers');
+    this.manufacturersRef = this.afs.collection<Manufacturer>('manufacturers', ref => ref.orderBy('name'));
     this.manufacturersRefSub = this.manufacturersRef.valueChanges().subscribe(docs => {
       // console.log(docs);
       this.manufacturers = docs
@@ -165,7 +165,7 @@ export class CategoryService implements OnDestroy {
           return { alt: doc.name.toLowerCase(), src: doc.images[0], text: doc.name };
         });
     });
-    this.productsRef = this.afs.collection<Product>('products');
+    this.productsRef = this.afs.collection<Product>('products', ref => ref.orderBy('name'));
     this.productsRefSub = this.productsRef.valueChanges().subscribe(docs => {
       // console.log(docs);
       this.products = docs

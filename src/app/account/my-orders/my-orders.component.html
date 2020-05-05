@@ -58,16 +58,14 @@
                     <!-- Screen readers will see "close" -->
                     <span class="show-for-sr">Close</span>
                     <!-- Visual users will see the X, but not the "Close" text -->
-                    <span aria-hidden="true" class="font-bold"><i class="fi fi-eye"></i></span>
+                    <span aria-hidden="true" class="font-bold"><i class="fi fi-eye text-accent"></i></span>
                   </a>
                 </ng-container>
               </td>
             </tr>
           </ng-container>
         </ng-container>
-        <ng-container
-          *ngIf="(accountService.orders$ | async)?.length == 0 || (accountService.allOrders[0] | async) == null"
-        >
+        <ng-container *ngIf="accountService.noOrders || (accountService.orders$ | async)?.length === 0">
           <tr>
             <td colspan="6">
               <h3 class="font-bold text-accent text-center text-uppercase">

@@ -2,23 +2,34 @@
 <div class="top-bar grid-x grid-padding-x top-nav align-top">
   <div id="logo" class="cell shrink">
     <div class="grid-x">
-      <a [routerLink]="['/']" routerLinkActive="active" class="text-hide cell small-shrink">
+      <a
+        [routerLinkActiveOptions]="{ exact: true }"
+        [routerLink]="['/']"
+        routerLinkActive="active"
+        class="text-hide cell small-shrink"
+      >
         <img src="../../assets/logo.png" alt="cqcqcqdx-logo" class="small-12 margin-top-1" />
         CQCQCQDX
       </a>
-      <a [routerLink]="['/']" routerLinkActive="active" class="cell small-shrink">
+      <a
+        [routerLinkActiveOptions]="{ exact: true }"
+        [routerLink]="['/']"
+        routerLinkActive="active"
+        class="cell small-shrink"
+      >
         <b class="logotype hide-for-large"> CQCQCQDX</b>
       </a>
     </div>
-    <br />
   </div>
   <div class="cell auto show-for-large align-self-middle">
-    <a [routerLink]="['/']" routerLinkActive="active"><b class="logotype"> CQCQCQDX </b></a>
+    <a [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/']" routerLinkActive="active"
+      ><b class="logotype"> CQCQCQDX </b></a
+    >
   </div>
   <div class="cell show-for-large large-2"></div>
   <div class="cell shrink">
     <div id="link" class="cell large-shrink show-for-large">
-      <a href="mailto:myradiogear@gmail.com">myradiogear@gmail.com</a>
+      <b><a href="mailto:myradiogear@gmail.com">myradiogear@gmail.com</a></b>
     </div>
     <div id="response" class="cell large-shrink show-for-large"><b>Response in 24 hours</b></div>
   </div>
@@ -26,14 +37,18 @@
     <div class="number cell ">
       <b><a href="tel:089 982 2017">089 982 2017</a></b>
     </div>
-    <div class="weekdays cell">Monday - Friday: <br class="show-for-medium-only" />9:00am - 5:00pm</div>
-    <div class="weekends cell">Saturday: <br class="show-for-medium-only" />9:30am - 4:00pm</div>
+    <div class="weekdays cell">
+      <b>Monday - Friday: <br class="show-for-medium-only" />9:00am - 5:00pm</b>
+    </div>
+    <div class="weekends cell">
+      <b>Saturday: <br class="show-for-medium-only" />9:30am - 4:00pm</b>
+    </div>
   </div>
   <!-- <div class="cell auto"></  div> -->
 
   <div id="shopping" class="cell small-4 medium-shrink">
     <div class="basket">
-      <b>My Basket:</b> {{ this.productService.checkoutCart.transactions[0].amount.total | currency: 'EUR' }}
+      <b>My Basket: {{ this.productService.checkoutCart.transactions[0].amount.total | currency: 'EUR' }}</b>
     </div>
     <!-- <div class="currency"><b>Currency:</b> {{ 'EUR' }}</div> -->
     <!-- <div class="wishlist"><i class="fi fi-heart"></i>&nbsp;Wishlist</div> -->
@@ -82,16 +97,21 @@
 <!-- Menu Routes -->
 <ng-template #menu>
   <li class="cell small-12 large-auto ">
-    <a [routerLink]="['/']" routerLinkActive="active"><span>Home</span></a>
+    <a [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/']" routerLinkActive="active"><span>Home</span></a>
   </li>
   <li class="cell small-12 large-auto ">
-    <a [routerLink]="['/shop-now']" routerLinkActive="active"><span>Shop Now</span></a>
+    <a [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/shop-now']" routerLinkActive="active"
+      ><span>Shop Now</span></a
+    >
   </li>
   <li class="cell small-12 large-auto ">
-    <a [routerLink]="['/used-equipment']" routerLinkActive="active"><span>Used Equipment</span></a>
+    <a [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/used-equipment']" routerLinkActive="active"
+      ><span>Used Equipment</span></a
+    >
     <ul id="dropdown" class="simple-float dropdown menu show-for-large">
       <li *ngFor="let usedCategory of categoryService.used" class="align-stretch">
         <a
+          [routerLinkActiveOptions]="{ exact: true }"
           [routerLink]="['/used-equipment', categoryService.linkUsed(usedCategory.text)]"
           routerLinkActive="active"
           class="height-100 align-center-middle"
@@ -103,7 +123,9 @@
     </ul>
   </li>
   <li class="cell small-12 large-auto">
-    <a [routerLink]="['/shop-by-manufacturer']" routerLinkActive="active"><span>Shop By Manufacturer</span></a>
+    <a [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/shop-by-manufacturer']" routerLinkActive="active"
+      ><span>Shop By Manufacturer</span></a
+    >
     <ul id="dropdown" class="simple-float dropdown menu show-for-large">
       <li *ngFor="let manufacturerCategory of categoryService.manufacturers" class="align-stretch">
         <a
@@ -111,6 +133,7 @@
             manufacturerCategory.text !== 'Castle Electronics UK  [ Service & Repairs Department ]';
             else castleElectronics
           "
+          [routerLinkActiveOptions]="{ exact: true }"
           [routerLink]="['/shop-by-manufacturer', categoryService.linkUsed(manufacturerCategory.text)]"
           routerLinkActive="active"
           class="height-100 align-center-middle"
@@ -129,18 +152,20 @@
     </ul>
   </li>
   <!-- <li class="cell small-12 large-auto">
-    <a [routerLink]="['/new-in']" routerLinkActive="active"><span>New In</span></a>
+    <a [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/new-in']" routerLinkActive="active"><span>New In</span></a>
   </li> -->
   <!-- <li class="cell small-12 large-auto">
-    <a [routerLink]="['/part-ex']" routerLinkActive="active"><span>Part Ex</span></a>
+    <a [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/part-ex']" routerLinkActive="active"><span>Part Ex</span></a>
   </li> -->
   <li class="cell small-12 large-auto">
     <a routerLinkActive="active" *ngIf="authService.user$ | async; then account; else register">Register</a>
     <ng-template #account>
-      <a [routerLink]="['/account']" routerLinkActive="active"><span>My Account</span></a>
+      <a [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/account']" routerLinkActive="active"
+        ><span>My Account</span></a
+      >
     </ng-template>
     <ng-template #register>
-      <a routerLinkActive="active" [routerLink]="['/register']">
+      <a routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/register']">
         <span>Register</span>
       </a>
     </ng-template>
@@ -148,7 +173,9 @@
   <li class="cell small-12 large-auto">
     <a *ngIf="authService.user$ | async; then authenticated; else guest"></a>
     <ng-template #guest>
-      <a [routerLink]="['/login']" routerLinkActive="active"><span>Login</span></a>
+      <a [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/login']" routerLinkActive="active"
+        ><span>Login</span></a
+      >
     </ng-template>
     <ng-template #authenticated>
       <a (click)="this.authService.signOut()">
@@ -158,7 +185,9 @@
   </li>
 
   <li class="cell small-12 large-auto">
-    <a [routerLink]="['/contact-us']" routerLinkActive="active"><span>Contact</span></a>
+    <a [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/contact-us']" routerLinkActive="active"
+      ><span>Contact</span></a
+    >
   </li>
 </ng-template>
 <!-- Basket Modal -->

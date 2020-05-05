@@ -21,12 +21,39 @@ import * as $ from 'jquery';
 export class AccountComponent implements OnInit, OnDestroy {
   tabPanels = [
     { id: 'myOrders', name: 'My Orders', collection: 'myOrders', adminOnly: false },
-    { id: 'addProduct', name: 'Add / Remove Product', collection: 'products', adminOnly: false },
-    { id: 'addManufacturer', name: 'Add / Remove Manufacturer', collection: 'manufacturer', adminOnly: true },
+    {
+      id: 'addProduct',
+      name: this.authService.currentUserDoc.admin ? 'Add / Remove Product' : 'Add Product',
+      collection: 'products',
+      adminOnly: false
+    },
+    {
+      id: 'addManufacturer',
+      name: this.authService.currentUserDoc.admin ? 'Add / Remove Manufacturer' : 'Add Manufacturer',
+      collection: 'manufacturer',
+      adminOnly: true
+    },
     { id: 'addOrder', name: 'Add Order', collection: 'addOrder', adminOnly: true },
-    { id: 'viewAllOrders', name: 'View / Remove Orders', collection: 'allOrders', adminOnly: false },
+    {
+      id: 'viewAllOrders',
+      name: this.authService.currentUserDoc.admin ? 'View / Remove Orders' : 'View Orders',
+      collection: 'allOrders',
+      adminOnly: false
+    },
     { id: 'viewAllMembers', name: 'View All Members', collection: 'allMembers', adminOnly: true },
-    { id: 'updateNews', name: 'Update News', collection: 'news', adminOnly: true }
+    {
+      id: 'updateNews',
+      name: this.authService.currentUserDoc.admin ? 'Update News / Rallies' : 'News/Rallies',
+      collection: 'news',
+      adminOnly: false
+    },
+    {
+      id: 'addLinks',
+      name: 'Add / Remove Links',
+      collection: 'links',
+      adminOnly: true
+    }
+    // { id: 'customCommands', name: 'Custom Commands', collection: 'commands', adminOnly: true }
   ].filter(tabPanel => (tabPanel.adminOnly && this.authService.currentUserDoc.admin) || !tabPanel.adminOnly);
 
   constructor(
@@ -42,130 +69,85 @@ export class AccountComponent implements OnInit, OnDestroy {
 
     try {
       // stores the users collection of order Refs
-      this.accountService.usersOrderCollection = this.authService.userRef.collection<Order>('orders');
+      this.accountService.usersOrderCollection = this.authService.userRef.collection<Order>('orders', ref =>
+        ref.orderBy('order_date')
+      );
       // stores the users collection of order Document Data asynchronously
       this.accountService.orders$ = this.accountService.usersOrderCollection.valueChanges();
 
       // gets the user IDs and stores it in an array
-      this.accountService.allUsersCollectionSnapshot = this.afs.collection<User>('users').snapshotChanges();
-      this.accountService.allUsersCollectionSnapshot$ = this.accountService.allUsersCollectionSnapshot.subscribe(
-        docs => {
-          this.accountService.allUserIds = docs
-            .filter(doc => doc.payload.doc.id !== 'adminList')
-            .map(doc => {
-              return doc.payload.doc.id;
-            });
-          // console.log(this.accountService.allUserIds);
-          // uses the ids to get all the user refs
-          this.accountService.allUserDocs = this.accountService.allUserIds.map(id =>
-            this.afs.collection<User>('users').doc<User>(id)
-          );
-          // gets all the orders from the user ord
-          this.accountService.allUsersOrderCollection = this.accountService.allUserDocs.map(userRef =>
-            userRef.collection<Order>('orders')
-          );
-          // console.log('allUserDocs', this.accountService.allUserDocs);
-          this.accountService.allOrders = this.accountService.allUsersOrderCollection.map(userOrderCollection =>
-            userOrderCollection.valueChanges().pipe(filter(orders => orders.length > 0))
-          );
-        }
-      );
+      this.accountService.allUsersCollectionValue = this.afs.collection<User>('users').valueChanges();
+      this.accountService.allUsersCollectionValue$ = this.accountService.allUsersCollectionValue.subscribe(docs => {
+        this.accountService.allUserIds = docs
+          .filter(({ uid }) => uid !== 'adminList')
+          .map(({ uid }) => {
+            return uid;
+          });
+        // console.log(this.accountService.allUserIds);
+        // uses the ids to get all the user refs
+        this.accountService.allUserDocs = this.accountService.allUserIds.map(id =>
+          this.afs
+            .collection<User>('users', ref => ref.orderBy('firstName').orderBy('lastName'))
+            .doc<User>(id)
+        );
+        // gets all the orders from the user ord
+        this.accountService.allUsersOrderCollection = this.accountService.allUserDocs.map(userRef =>
+          userRef.collection<Order>('orders', ref => ref.orderBy('order_date'))
+        );
+        // console.log('allUserDocs', this.accountService.allUserDocs);
+        this.accountService.allOrders = this.accountService.allUsersOrderCollection.map(userOrderCollection =>
+          userOrderCollection.valueChanges().pipe(filter(orders => orders.length > 0))
+        );
+        this.accountService.isEmptyObservableArray(this.accountService.allOrders);
+      });
     } catch (e) {
       console.log('No Orders');
+      this.accountService.noOrders = true;
     }
-    $(document).on('change', '#imgUpdate', event => {
-      // console.log(event);
-      switch (this.accountService.collection) {
-        case 'manufacturers':
-          const manufacturerDocIdsSub = this.afs
-            .collection<Manufacturer>('manufacturers', ref => ref.where('name', '==', event.target.name))
-            .snapshotChanges()
-            .pipe(
-              map(actions =>
-                actions.map(a => {
-                  const data = a.payload.doc.data() as Manufacturer;
-                  const id = a.payload.doc.id;
-                  // console.log({ id, ...data });
-                  return id;
-                })
-              )
-            )
-            .subscribe(ids => {
-              ids.forEach(id => {
-                this.accountService.uploadToStorage(event, id);
-              });
-              manufacturerDocIdsSub.unsubscribe();
-            });
-          break;
-        case 'products':
-          const productDocIdsSub = this.afs
-            .collection<Product>('products', ref => ref.where('name', '==', event.target.name))
-            .snapshotChanges()
-            .pipe(
-              map(actions =>
-                actions.map(a => {
-                  const data = a.payload.doc.data() as Product;
-                  const id = a.payload.doc.id;
-                  // console.log({ id, ...data });
-                  return id;
-                })
-              )
-            )
-            .subscribe(ids => {
-              ids.forEach(id => {
-                this.accountService.uploadToStorage(event, id);
-              });
-              productDocIdsSub.unsubscribe();
-            });
-          break;
+    $(() => {
+      $('#imgUpload').on('change', async event => {
+        const $input = $(event);
+        const $label = $('.inputfile-name');
+        const labelVal = $label.val();
+        console.log('imgUpload Activated: ', $label);
+        let fileName = '';
+        const imageList = (event.target as HTMLInputElement).files;
+        if (imageList.length > 0) {
+          fileName = Array.from(imageList)
+            .map(({ name }) => name)
+            .toString();
+        } else {
+          return null;
+        }
+        // console.log(fileName);
+        if (fileName) {
+          $label.val(fileName);
+        } else {
+          $label.html(labelVal.toString());
+        }
 
-        default:
-          break;
-      }
-    });
-    $(document).on('change', '#imgUpload', event => {
-      const $input = $(event);
-      const $label = $('.inputfile-name');
-      const labelVal = $label.val();
-      // console.log($input);
-      let fileName = '';
+        // Firefox bug fix
 
-      if (event.target.files && event.target.files.length > 1) {
-        fileName = (event.target.getAttribute('data-multiple-caption') || '').replace(
-          '{count}',
-          event.target.files.length
+        $(document).on('focus', $input, () => {
+          $input.addClass('has-focus');
+        });
+        $(document).on('blur', $input, () => {
+          $input.removeClass('has-focus');
+        });
+
+        const { allPercentage } = await this.accountService.uploadToStorage(event);
+
+        this.accountService.allPercentage = combineLatest(allPercentage).pipe(
+          map(percentages => {
+            let result = 0;
+            for (const percentage of percentages) {
+              result = result + percentage;
+            }
+            return result / percentages.length;
+          })
+          // tap(console.log)
         );
-      } else if (event.target.value) {
-        fileName = event.target.value.split('\\').pop();
-      }
-      // console.log(fileName);
-      if (fileName) {
-        $label.val(fileName);
-      } else {
-        $label.html(labelVal.toString());
-      }
-
-      // Firefox bug fix
-
-      $(document).on('focus', $input, () => {
-        $input.addClass('has-focus');
       });
-      $(document).on('blur', $input, () => {
-        $input.removeClass('has-focus');
-      });
-
-      const { allPercentage } = this.accountService.uploadToStorage(event);
-
-      this.accountService.allPercentage = combineLatest(allPercentage).pipe(
-        map(percentages => {
-          let result = 0;
-          for (const percentage of percentages) {
-            result = result + percentage;
-          }
-          return result / percentages.length;
-        })
-        // tap(console.log)
-      );
     });
   }
   updateCollection = collection => {
@@ -177,6 +159,6 @@ export class AccountComponent implements OnInit, OnDestroy {
   ngOnInit(): void {}
 
   ngOnDestroy() {
-    this.accountService.allUsersCollectionSnapshot$.unsubscribe();
+    this.accountService.allUsersCollectionValue$.unsubscribe();
   }
 }

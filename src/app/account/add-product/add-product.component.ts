@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AccountService } from '../../services/account.service';
+import { AuthService } from '../../services/auth.service';
 import { ProductService } from '../../services/product.service';
 import { CategoryService } from '../../services/category.service';
 
@@ -12,7 +13,8 @@ export class AddProductComponent implements OnInit {
   constructor(
     public accountService: AccountService,
     public productService: ProductService,
-    public categoryService: CategoryService
+    public categoryService: CategoryService,
+    public authService: AuthService
   ) {}
   ngOnInit(): void {}
 }

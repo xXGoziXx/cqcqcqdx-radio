@@ -39,6 +39,8 @@ import { ViewAllMembersComponent } from './account/view-all-members/view-all-mem
 
 import { AuthService } from './services/auth.service';
 import { SortByPipe } from './pipes/sort-by.pipe';
+import { CustomCommandsComponent } from './account/custom-commands/custom-commands.component';
+import { AddLinksComponent } from './account/add-links/add-links.component';
 
 @NgModule({
   declarations: [
@@ -67,7 +69,9 @@ import { SortByPipe } from './pipes/sort-by.pipe';
     ViewAllMembersComponent,
     AddOrderComponent,
     SortByPipe,
-    UpdateNewsComponent
+    UpdateNewsComponent,
+    CustomCommandsComponent,
+    AddLinksComponent
   ],
   imports: [
     AngularFireAuthModule,

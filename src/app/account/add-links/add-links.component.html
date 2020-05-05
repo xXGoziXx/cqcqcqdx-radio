@@ -1,0 +1,71 @@
+<div class="grid-y tabs-panel" id="addLinks">
+  <div class="cell small-12 large-10 form-container margin-top-1 margin-bottom-1">
+    <h5 class="text-uppercase font-bolder margin-top-1">
+      You can add a link by filling out the form below
+    </h5>
+    <form
+      class="margin-top-1"
+      [formGroup]="accountService.linkForm"
+      (ngSubmit)="accountService.addLinks(accountService.linkForm.value); accountService.linkForm.reset()"
+    >
+      <div class="grid-container-fluid">
+        <div class="grid-x grid-margin-x">
+          <div class="small-12 cell">
+            <label
+              >Link Name:
+              <input type="text" placeholder="Link Name..." formControlName="name" required />
+            </label>
+          </div>
+          <div class="small-12 cell">
+            <label
+              >Link URL:
+              <input type="text" placeholder="https://www.example.com" formControlName="url" required />
+            </label>
+          </div>
+          <div class="small-12 cell margin-top-1 margin-bottom-1">
+            <button
+              class="button shadow bordered text-uppercase"
+              type="submit"
+              [disabled]="accountService.linkForm.invalid"
+            >
+              Add Link
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+    <div class="table-scroll">
+      <table class="shadow unstriped">
+        <thead>
+          <tr class="shadow">
+            <th class="text-uppercase">Link Name</th>
+            <th class="text-uppercase">Link URL</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <ng-container *ngFor="let link of links$ | async">
+            <tr>
+              <td>{{ link.name | titlecase }}</td>
+              <td>
+                <a [href]="link.url">{{ link.url }}</a>
+              </td>
+              <td class="text-center">
+                <button
+                  class="button text-center margin-bottom-0 "
+                  (click)="accountService.removeLink(link.name)"
+                  type="button"
+                >
+                  <!-- Screen readers will see "close" -->
+                  <span class="show-for-sr">Close</span>
+                  <!-- Visual users will see the X, but not the "Close" text -->
+                  <span aria-hidden="true"><i class="fi fi-trash"></i></span>
+                </button>
+              </td>
+            </tr>
+          </ng-container>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

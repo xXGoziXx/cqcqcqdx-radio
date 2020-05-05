@@ -1,22 +1,100 @@
 <div class="grid-container fluid height-100 grid-x grid-padding-x">
-  <div class="cell small-6 align-middle margin-top-1">
+  <div class="cell small-12 medium-4 text-center margin-top-1 small-order-1" id="donate">
     <a
       href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=CW7YY6RHSCDVJ&source=url"
       target="_blank"
-      ><img
+    >
+      <img
         src="https://www.paypalobjects.com/en_US/i/btn/btn_donateCC_LG.gif"
         border="0"
         title="PayPal - The safer, easier way to pay online!"
         alt="Donate with PayPal button"
-    /></a>
+      />
+    </a>
+  </div>
+  <div class="cell small-12 medium-shrink margin-top-1 small-order-3">
+    <h5 class="font-bold">Popular Pages</h5>
+    <ul>
+      <li class="cell small-12 large-auto ">
+        <a [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/']" routerLinkActive="active"
+          ><span>Home</span></a
+        >
+      </li>
+      <li class="cell small-12 large-auto ">
+        <a [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/shop-now']" routerLinkActive="active"
+          ><span>Shop Now</span></a
+        >
+      </li>
+      <li class="cell small-12 large-auto ">
+        <a [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/used-equipment']" routerLinkActive="active"
+          ><span>Used Equipment</span></a
+        >
+      </li>
+      <li class="cell small-12 large-auto">
+        <a
+          [routerLinkActiveOptions]="{ exact: true }"
+          [routerLink]="['/shop-by-manufacturer']"
+          routerLinkActive="active"
+          ><span>Shop By Manufacturer</span></a
+        >
+      </li>
+      <!-- <li class="cell small-12 large-auto">
+    <a [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/new-in']" routerLinkActive="active"><span>New In</span></a>
+  </li> -->
+      <!-- <li class="cell small-12 large-auto">
+    <a [routerLinkActiveOptions]="{exact: true}" [routerLink]="['/part-ex']" routerLinkActive="active"><span>Part Ex</span></a>
+  </li> -->
+      <li class="cell small-12 large-auto">
+        <a routerLinkActive="active" *ngIf="authService.user$ | async; then account; else register">Register</a>
+        <ng-template #account>
+          <a [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/account']" routerLinkActive="active"
+            ><span>My Account</span></a
+          >
+        </ng-template>
+        <ng-template #register>
+          <a routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/register']">
+            <span>Register</span>
+          </a>
+        </ng-template>
+      </li>
+      <li class="cell small-12 large-auto">
+        <a *ngIf="authService.user$ | async; then authenticated; else guest"></a>
+        <ng-template #guest>
+          <a [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/login']" routerLinkActive="active"
+            ><span>Login</span></a
+          >
+        </ng-template>
+        <ng-template #authenticated>
+          <a (click)="this.authService.signOut()">
+            <span>Log Out</span>
+          </a>
+        </ng-template>
+      </li>
+
+      <li class="cell small-12 large-auto">
+        <a [routerLinkActiveOptions]="{ exact: true }" [routerLink]="['/contact-us']" routerLinkActive="active"
+          ><span>Contact</span></a
+        >
+      </li>
+      <li>
+        <a [routerLink]="['/privacy-policy']" routerLinkActive="active">Privacy Policy</a>
+      </li>
+    </ul>
+  </div>
+  <div class="cell small-12 medium-shrink margin-top-1 small-order-4" id="links">
+    <h5 class="font-bold" *ngIf="links$ | async">Useful Links</h5>
+    <ul>
+      <li *ngFor="let link of links$ | async">
+        <a [href]="link.url" class="text-center">
+          {{ link.name }}
+          <br />
+        </a>
+      </li>
+    </ul>
   </div>
 
-  <div class="cell small-6 align-center-middle margin-top-1">
-    <p class="text-right">
-      <a [routerLink]="['/privacy-policy']" routerLinkActive="active">Privacy Policy</a>
-    </p>
-  </div>
-  <div class="cell small-12 align-bottom">
+  <div class="cell small-12 align-bottom small-order-4">
+    <hr />
     <p class="text-center margin-0">
       &copy; CQCQCQDX Radio. All Rights Reserved. 2020
       {{ (date | date: 'yyyy') === '2020' ? '' : ' - ' + (date | date: 'yyyy') }}
