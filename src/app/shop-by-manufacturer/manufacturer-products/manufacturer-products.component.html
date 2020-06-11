@@ -11,7 +11,8 @@
         <div class="grid-y card height-100 bordered shadow align-center">
           <div class="cell small-auto width-100 card-section">
             <img
-              [src]="product.images[0] == '' ? '../../assets/img/No_image_available.svg' : product.images[0]"
+              [lazyLoad]="product.images[0] === '' ? '../../assets/img/No_image_available.svg' : product.images[0]"
+              [defaultImage]="defaultImage"
               [alt]="product.name"
             />
           </div>

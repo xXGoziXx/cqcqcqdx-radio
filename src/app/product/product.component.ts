@@ -27,10 +27,12 @@ export class ProductComponent implements OnInit, OnDestroy {
     cssEase: 'ease-in-out',
     slidesToShow: 1
   };
+  defaultImage = '../../assets/img/Spinner.svg';
   arrNum = num =>
     Array(num)
       .fill(0)
       .map((val, i) => i);
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,

@@ -7,5 +7,7 @@ import { AccountService } from '../../services/account.service';
   styleUrls: ['./my-orders.component.scss']
 })
 export class MyOrdersComponent {
+  defaultImage = '../../assets/img/Spinner.svg';
+
   constructor(public accountService: AccountService) {}
 }

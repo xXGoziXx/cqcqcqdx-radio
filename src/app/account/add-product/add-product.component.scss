@@ -20,3 +20,10 @@ img {
     background: rgba(0, 0, 0, 1);
   }
 }
+.has-tip {
+  display: inherit;
+
+  border: inherit;
+
+  cursor: pointer;
+}

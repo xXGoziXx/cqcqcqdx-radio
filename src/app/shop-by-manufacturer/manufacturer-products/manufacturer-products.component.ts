@@ -16,6 +16,8 @@ export class ManufacturerProductsComponent implements OnInit, OnDestroy {
   };
   products$: Observable<Product[]>;
   routeParams: any;
+  defaultImage = '../../assets/img/Spinner.svg';
+
   constructor(private route: ActivatedRoute, private afs: AngularFirestore) {}
   ngOnInit() {
     this.routeParams = this.route.paramMap.subscribe(params => {

@@ -56,7 +56,7 @@ export class AccountService {
   usersOrderCollection: AngularFirestoreCollection<Order>;
   productsRef = this.afs.collection<Product>('products', ref => ref.orderBy('name'));
   manufacturersRef = this.afs.collection<Manufacturer>('manufacturers', ref => ref.orderBy('name'));
-
+  // Creates forms for various tabs: Add Product, Add Manufacturer, Add Link, Add Order
   createForm() {
     this.productForm = this.fb.group({
       name: ['', Validators.required, ValidateDuplicateEntryProduct],
@@ -84,6 +84,7 @@ export class AccountService {
       postcode: ['', Validators.required]
     });
   }
+  // Checks if an array of observables containing arrays is fully empty
   isEmptyObservableArray = (allOrders: Observable<Order[]>[]) => {
     console.log('updated');
 
@@ -104,7 +105,7 @@ export class AccountService {
           subscribeToResult.unsubscribe();
         });
       });
-      return false;
+      return this.noOrders;
     }
   };
   addProduct = productForm => {
@@ -221,6 +222,52 @@ export class AccountService {
       .replace(/(\s{2,})/g, ' ')
       .replace(/(^\s*,\s*)*(\s+,)*(,{2,})*(\s*,\s*$)*/g, '');
     return address === result ? address : this.cleanAddress(result);
+  };
+  increaseProductStock = id => {
+    const productDocIdsSub = this.afs
+      .collection<Product>('products', ref => ref.where('id', '==', id))
+      .snapshotChanges()
+      .pipe(
+        map(actions =>
+          actions.map(a => {
+            const data = a.payload.doc.data() as Product;
+            const docId = a.payload.doc.id;
+            console.log({ docId, ...data });
+            return { docId, data };
+          })
+        )
+      )
+      .subscribe(docs => {
+        docs.forEach(({ docId, data }) => {
+          this.afs.doc<Product>('products/' + docId).update({
+            stock: data.stock + 1
+          });
+        });
+        productDocIdsSub.unsubscribe();
+      });
+  };
+  decreaseProductStock = id => {
+    const productDocIdsSub = this.afs
+      .collection<Product>('products', ref => ref.where('id', '==', id))
+      .snapshotChanges()
+      .pipe(
+        map(actions =>
+          actions.map(a => {
+            const data = a.payload.doc.data() as Product;
+            const docId = a.payload.doc.id;
+            console.log({ docId, ...data });
+            return { docId, data };
+          })
+        )
+      )
+      .subscribe(docs => {
+        docs.forEach(({ docId, data }) => {
+          this.afs.doc<Product>('products/' + docId).update({
+            stock: data.stock - 1
+          });
+        });
+        productDocIdsSub.unsubscribe();
+      });
   };
   showOrder = (ids, i) => {
     // console.log(...ids);
@@ -346,11 +393,13 @@ export class AccountService {
     console.log('userId: ', userId);
     console.log('orderId: ', orderId);
     await this.afs.doc<any>(`users/${userId}/orders/${orderId}`).delete();
+    // Stores all Orders as an array of Observable arrays
+    // (one for each User that has an order) containing orders
     this.allOrders = this.allUsersOrderCollection.map(userOrderCollection =>
       userOrderCollection.valueChanges().pipe(filter(orders => orders.length > 0))
     );
     this.isEmptyObservableArray(
-    this.allUsersOrderCollection.map(userOrderCollection =>
+      this.allUsersOrderCollection.map(userOrderCollection =>
         userOrderCollection.valueChanges().pipe(filter(orders => orders.length > 0))
       )
     );

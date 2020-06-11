@@ -33,11 +33,18 @@
             </td>
           </tr>
           <!-- Show ordered Products  -->
+          <!-- accountService.currOrderId : {{ accountService.currOrderId }} order.order_id: {{ order.order_id }} -->
           <ng-container *ngIf="accountService.currOrderId === order.order_id">
             <tr *ngFor="let products of accountService.products$" [class]="'order-' + order.order_id">
               <td colspan="2" class="width-25">
                 <ng-container *ngFor="let product of products | async">
-                  <img [src]="product.images[0]" [alt]="product.name" />
+                  <img
+                    [lazyLoad]="
+                      product.images[0] === '' ? '../../assets/img/No_image_available.svg' : product.images[0]
+                    "
+                    [defaultImage]="defaultImage"
+                    [alt]="product.name"
+                  />
                 </ng-container>
               </td>
               <td colspan="3">

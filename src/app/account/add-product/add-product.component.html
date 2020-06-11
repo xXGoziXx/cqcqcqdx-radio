@@ -13,7 +13,7 @@
           <div class="small-12 cell">
             <label
               >Name:
-              <input type="text" placeholder="Name..." formControlName="name" required/>
+              <input type="text" placeholder="Name..." formControlName="name" required />
             </label>
           </div>
           <div class="small-12 cell">
@@ -138,6 +138,7 @@
         </div>
       </div>
     </form>
+    <!-- Edit Product -->
     <div class="grid-x grid-margin-y grid-margin-x small-up-1 medium-up-2 large-up-4 align-stretch-spaced content ">
       <h5 class="text-uppercase font-bolder margin-top-1">
         You can <span *ngIf="this.authService.currentUserDoc.admin">remove a product or </span>change the product image
@@ -152,13 +153,19 @@
               [defaultImage]="accountService.defaultImage"
               [alt]="product.alt"
             />
+            <!-- Options to edit product -->
             <div class="grid-x position-absolute height-100 width-100">
+              <!-- Change Image -->
               <div
-                class="cell align-middle text-center action-buttons"
+                class="cell align-middle text-center action-buttons "
                 [ngClass]="{
-                  'small-6': this.authService.currentUserDoc.admin,
+                  'small-4': this.authService.currentUserDoc.admin,
                   'small-12': !this.authService.currentUserDoc.admin
                 }"
+                data-tooltip
+                aria-haspopup="true"
+                data-disable-hover="false"
+                title="Change product image"
               >
                 <span class="grid-x align-center-middle height-100 width-100">
                   <label for="imgUpdate" class="inputfilewrapper"
@@ -178,16 +185,48 @@
                   </label>
                 </span>
               </div>
+              <!-- Remove Product -->
               <div
                 *ngIf="this.authService.currentUserDoc.admin"
-                class="cell small-6 align-middle text-center action-buttons"
+                class="cell small-4 align-middle text-center action-buttons "
                 (click)="accountService.removeProduct(product.id)"
+                data-tooltip
+                aria-haspopup="true"
+                data-disable-hover="false"
+                title="Remove product"
               >
                 <span class="grid-x align-center-middle height-100 width-100"><i class="fi fi-trash"></i></span>
               </div>
+              <!-- Increase/Decrease Stock -->
+              <div *ngIf="this.authService.currentUserDoc.admin" class="cell small-4 align-middle ">
+                <div
+                  class="grid-x align-center-middle height-50 width-100 text-center action-buttons "
+                  (click)="accountService.increaseProductStock(product.id)"
+                  data-tooltip
+                  aria-haspopup="true"
+                  data-disable-hover="false"
+                  title="Increase number of products in stock"
+                >
+                  <span class="cell">
+                    <i class="fi fi-plus"></i>
+                  </span>
+                </div>
+                <div
+                  class="grid-x align-center-middle height-50 width-100 text-center action-buttons "
+                  (click)="accountService.decreaseProductStock(product.id)"
+                  data-tooltip
+                  aria-haspopup="true"
+                  data-disable-hover="false"
+                  title="Decrease number of products in stock"
+                >
+                  <span class="cell">
+                    <i class="fi fi-minus"></i>
+                  </span>
+                </div>
+              </div>
             </div>
           </div>
-          <a [routerLink]="['/shop-by-manufacturer', categoryService.linkUsed(product.text)]" routerLinkActive="active">
+          <a [routerLink]="['/product', product.id]" routerLinkActive="active">
             <div class="cell small-shrink width-100 card-section text">
               <p class="text-uppercase text-center align-self-middle font-bold">{{ product.text }}</p>
             </div>

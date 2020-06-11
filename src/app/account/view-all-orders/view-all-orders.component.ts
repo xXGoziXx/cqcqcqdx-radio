@@ -8,7 +8,12 @@ import { AuthService } from '../../services/auth.service';
   styleUrls: ['./view-all-orders.component.scss']
 })
 export class ViewAllOrdersComponent implements OnInit {
-  constructor(public accountService: AccountService, public authService: AuthService) {}
+  defaultImage = '../../assets/img/Spinner.svg';
 
+  constructor(public accountService: AccountService, public authService: AuthService) {}
+  toString(array) {
+    console.log(array);
+    return array.toString();
+  }
   ngOnInit(): void {}
 }
