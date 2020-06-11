@@ -4,6 +4,7 @@ import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
 declare var $: any;
+declare let gtag: Function;
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -35,6 +36,9 @@ export class AppComponent implements OnInit, OnDestroy {
     this.router$ = router.events
       .pipe(filter(event => event instanceof NavigationEnd))
       .subscribe((res: NavigationEnd) => {
+        gtag('config', 'G-4WJ82MYLW6', {
+          page_path: res.urlAfterRedirects
+        });
         this.breadcrumbs = res.urlAfterRedirects.split('/');
         this.breadcrumbs.shift();
         // if (this.breadcrumbs[0] === 'product') {

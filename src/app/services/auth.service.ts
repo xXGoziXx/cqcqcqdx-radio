@@ -9,6 +9,7 @@ import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firest
 import { Router } from '@angular/router';
 import { User } from '../interfaces/User';
 import { Subscription } from 'rxjs';
+import { GoogleAnalyticsService } from './google-analytics.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -275,7 +276,12 @@ export class AuthService implements OnDestroy {
     { abbr: 'ZM', name: 'Zambia' },
     { abbr: 'ZW', name: 'Zimbabwe' }
   ];
-  constructor(private afAuth: AngularFireAuth, private afs: AngularFirestore, private router: Router) {
+  constructor(
+    private googleAnalyticsService: GoogleAnalyticsService,
+    private afAuth: AngularFireAuth,
+    private afs: AngularFirestore,
+    private router: Router
+  ) {
     this.user$ = this.afAuth.authState.pipe(
       switchMap(user => {
         this.authUser = user;
@@ -336,6 +342,7 @@ export class AuthService implements OnDestroy {
           this.status = 'Signed In!';
 
           console.log('Signed In!');
+          this.googleAnalyticsService.eventEmitter('login', 'engagement', 'click');
         } else {
           this.signOut();
           throw {
@@ -424,6 +431,7 @@ export class AuthService implements OnDestroy {
               // console.log(userObj.user.email);
               this.error = '';
               this.status = 'Signed Up!';
+              this.googleAnalyticsService.eventEmitter('sign_up', 'engagement', 'click');
             },
             error => {
               // Error

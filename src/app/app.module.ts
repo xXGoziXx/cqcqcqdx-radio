@@ -38,6 +38,7 @@ import { MyOrdersComponent } from './account/my-orders/my-orders.component';
 import { ViewAllMembersComponent } from './account/view-all-members/view-all-members.component';
 
 import { AuthService } from './services/auth.service';
+import { GoogleAnalyticsService } from './services/google-analytics.service';
 import { SortByPipe } from './pipes/sort-by.pipe';
 import { CustomCommandsComponent } from './account/custom-commands/custom-commands.component';
 import { AddLinksComponent } from './account/add-links/add-links.component';
@@ -85,7 +86,7 @@ import { AddLinksComponent } from './account/add-links/add-links.component';
     LazyLoadImageModule,
     ReactiveFormsModule
   ],
-  providers: [AuthService, AngularFirestore, DatePipe],
+  providers: [AuthService, GoogleAnalyticsService, AngularFirestore, DatePipe],
   bootstrap: [AppComponent]
 })
 export class AppModule {}
