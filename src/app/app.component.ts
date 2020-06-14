@@ -4,7 +4,7 @@ import { filter } from 'rxjs/operators';
 import { Subscription } from 'rxjs';
 
 declare var $: any;
-declare let gtag: Function;
+declare let gtag: (config: string, id: string, options?: any) => void;
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
@@ -46,6 +46,7 @@ export class AppComponent implements OnInit, OnDestroy {
         // }
       });
   }
+
   onActivate(_: any) {
     $(() => {
       $(document).foundation();

@@ -415,7 +415,8 @@ export class AuthService implements OnDestroy {
                     lastName,
                     telephone,
                     lastLoggedIn: firebase.firestore.Timestamp.now(),
-                    createdOn: firebase.firestore.Timestamp.now()
+                    createdOn: firebase.firestore.Timestamp.now(),
+                    cart: []
                   };
                   this.afs
                     .doc<User>(`users/${userObj.user.uid}`)
@@ -488,6 +489,7 @@ export class AuthService implements OnDestroy {
       console.error(err);
     }
   }
+
   ngOnDestroy() {
     this.userSub.unsubscribe();
     this.adminSub.unsubscribe();

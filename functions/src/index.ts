@@ -298,9 +298,10 @@ export const updateStockFromOrder = functions.firestore
         currPosition++;
       }
     });
-    console.log('orderProductIds:', orderProductIds);
-    orderProductIds.forEach(async (id, index) => {
+    console.log('orderProductIds:', orderProductIds); // orderProductIds e.g. [["144"]], id = ["144"]
+    orderProductIds.forEach(async (idArray, index) => {
       // Sets the stock to the quantity bought in this order
+      const id = idArray[0];
       let stock = -orderProductIds[index].length;
       try {
         const querySnapshot: FirebaseFirestore.QuerySnapshot<FirebaseFirestore.DocumentData> = await admin
@@ -308,14 +309,17 @@ export const updateStockFromOrder = functions.firestore
           .collection('products')
           .where('id', '==', id)
           .get();
+        console.log('ID: ', id);
         console.log('Query Snapshot:', querySnapshot);
-        console.log('Query Snapshot Docs:', querySnapshot.docs[0]);
+        console.log('Query Snapshot Docs:', querySnapshot.docs);
         console.log('Document data:', querySnapshot.docs[0].data());
-        let doc: Product;
+        let doc: FirebaseFirestore.QueryDocumentSnapshot<FirebaseFirestore.DocumentData>;
+        let docData: Product;
         if (!querySnapshot.empty) {
-          doc = querySnapshot.docs[0].data() as Product;
-          console.log('Document data:', doc);
-          stock += doc.stock;
+          doc = querySnapshot.docs[0];
+          console.log('Document Ref:', doc);
+          docData = doc.data() as Product;
+          stock += docData.stock;
           admin
             .firestore()
             .doc(`products/${doc.id}`)

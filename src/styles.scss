@@ -397,3 +397,10 @@ select {
   display: none;
 }
 
+.has-tip {
+  display: inherit;
+
+  border: inherit;
+
+  cursor: pointer;
+}
