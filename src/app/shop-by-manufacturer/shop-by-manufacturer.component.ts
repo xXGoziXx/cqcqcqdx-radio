@@ -8,6 +8,7 @@ import { CategoryService } from '../services/category.service';
 })
 export class ShopByManufacturerComponent implements OnInit {
   defaultImage = '../../assets/img/Spinner.svg';
+  searchText: string;
 
   constructor(public categoryService: CategoryService) {}
 

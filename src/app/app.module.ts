@@ -42,6 +42,7 @@ import { GoogleAnalyticsService } from './services/google-analytics.service';
 import { SortByPipe } from './pipes/sort-by.pipe';
 import { CustomCommandsComponent } from './account/custom-commands/custom-commands.component';
 import { AddLinksComponent } from './account/add-links/add-links.component';
+import { Ng2SearchPipeModule } from 'ng2-search-filter';
 
 @NgModule({
   declarations: [
@@ -84,6 +85,7 @@ import { AddLinksComponent } from './account/add-links/add-links.component';
     CKEditorModule,
     FormsModule,
     LazyLoadImageModule,
+    Ng2SearchPipeModule,
     ReactiveFormsModule
   ],
   providers: [AuthService, GoogleAnalyticsService, AngularFirestore, DatePipe],

@@ -4,8 +4,19 @@
       <h2 class="text-uppercase text-center">All Manufacturers</h2>
     </div>
   </div>
+  <div class="input-group margin-vertical-2">
+    <span class="input-group-label"><i class="fi fi-magnifying-glass"></i></span>
+    <input
+      class="input-group-field"
+      type="text"
+      name="search"
+      [(ngModel)]="searchText"
+      autocomplete="off"
+      placeholder="Start searching for a manufacturer by name"
+    />
+  </div>
   <div class="grid-x grid-margin-y grid-margin-x small-up-1 medium-up-3 large-up-5 align-stretch-spaced content ">
-    <div class="cell" *ngFor="let category of categoryService.manufacturers">
+    <div class="cell" *ngFor="let category of categoryService.manufacturers | filter: searchText">
       <!-- image has padding -->
       <a *ngIf="category.text !== 'Castle Electronics UK  [ Service & Repairs Department ]';else castleElectronics" [routerLink]="['/shop-by-manufacturer', categoryService.linkUsed(category.text)]" routerLinkActive="active">
         <div class="grid-y card height-100 bordered shadow align-center">

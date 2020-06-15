@@ -13,6 +13,7 @@ export class ShopNowComponent implements OnInit {
   defaultImage = '../../assets/img/Spinner.svg';
 
   products$: Observable<Product[]>;
+  searchText: string;
   constructor(public categoryService: CategoryService, private afs: AngularFirestore) {}
 
   ngOnInit() {
