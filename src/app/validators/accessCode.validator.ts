@@ -1,6 +1,6 @@
 import { AbstractControl } from '@angular/forms';
-import firebase from '@firebase/app';
-import '@firebase/firestore';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 export async function ValidateAccessCode(control: AbstractControl) {
   let accessCode: string;
   const adminList$ = await firebase

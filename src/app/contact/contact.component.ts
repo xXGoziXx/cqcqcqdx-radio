@@ -1,10 +1,11 @@
 import { Component, OnInit, SecurityContext } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
-import firebase from '@firebase/app';
-import '@firebase/firestore';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Message } from '../interfaces/Message';
+import { Subscription } from 'rxjs';
 @Component({
   selector: 'app-contact',
   templateUrl: './contact.component.html',
@@ -12,10 +13,18 @@ import { Message } from '../interfaces/Message';
 })
 export class ContactComponent implements OnInit {
   form: FormGroup;
-  constructor(private fb: FormBuilder, private afs: AngularFirestore, private sanitizer: DomSanitizer) {
+  aboutUs: string;
+  adminListSub: Subscription;
+  constructor (private fb: FormBuilder, private afs: AngularFirestore, private sanitizer: DomSanitizer) {
     this.createForm();
+    this.adminListSub = this.afs
+      .doc<any>('users/adminList')
+      .valueChanges()
+      .subscribe(adminList => {
+        this.aboutUs = adminList?.aboutUs;
+      });
   }
-  createForm() {
+  createForm () {
     this.form = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
@@ -23,7 +32,7 @@ export class ContactComponent implements OnInit {
       message: ['', Validators.required]
     });
   }
-  onSubmit() {
+  onSubmit () {
     const { name, email, telephone, message } = this.form.value;
     const date = new Date();
     const html = `
@@ -53,5 +62,5 @@ export class ContactComponent implements OnInit {
     this.form.reset();
   }
 
-  ngOnInit() {}
+  ngOnInit () { }
 }

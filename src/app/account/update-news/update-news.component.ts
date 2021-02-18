@@ -8,7 +8,7 @@ import { AccountService } from '../../services/account.service';
 import { UploadAdapterService } from '../../services/uploadAdapter.service';
 import { Subscription } from 'rxjs';
 
-import * as $ from 'jquery';
+import $ from 'jquery';
 @Component({
   selector: 'app-update-news',
   templateUrl: './update-news.component.html',
@@ -24,7 +24,7 @@ export class UpdateNewsComponent implements OnInit, AfterViewChecked, OnDestroy 
   news: string;
   adminListSub: Subscription;
 
-  constructor(
+  constructor (
     public afs: AngularFirestore,
     public storage: AngularFireStorage,
     public authService: AuthService,
@@ -43,17 +43,17 @@ export class UpdateNewsComponent implements OnInit, AfterViewChecked, OnDestroy 
     const adminList = await this.afs.doc('users/adminList').ref.get();
     this.pendingActions.pop();
     // console.log(adminList.data().news);
-    this.editorData = adminList.data().news;
+    this.editorData = adminList.data()['news'];
   };
 
-  onReady = editor => {
+  onReady = (editor: any) => {
     // console.log('Editor: ', this.editorComponent);
     this.handleSaveButton(editor);
     this.handleBeforeunload(editor);
   };
   // Handle clicking the "Save" button by sending the data to a
   // fake HTTP server (emulated here with setTimeout()).
-  handleSaveButton = editor => {
+  handleSaveButton = (_editor: any) => {
     const saveButton = $('#save');
 
     saveButton.on('click', async evt => {
@@ -94,25 +94,25 @@ export class UpdateNewsComponent implements OnInit, AfterViewChecked, OnDestroy 
 
   // If the user tries to leave the page before the data is saved, ask
   // them whether they are sure they want to proceed.
-  handleBeforeunload = editor => {
+  handleBeforeunload = (_editor: any) => {
     window.addEventListener('beforeunload', evt => {
       if (this.pendingActions.length || this.accountService.uploadingImages || this.isDirty) {
         evt.preventDefault();
       }
     });
   };
-  ngOnInit(): void {}
-  ngAfterViewChecked() {
+  ngOnInit (): void { }
+  ngAfterViewChecked () {
     if (this.accountService.collection === 'news' && !this.adapterUploaded && this.editorComponent.editorInstance) {
       // console.log(this.editorComponent.editorInstance);
-      this.editorComponent.editorInstance.plugins.get('FileRepository').createUploadAdapter = loader => {
+      this.editorComponent.editorInstance.plugins.get('FileRepository').createUploadAdapter = (loader: any) => {
         // Configure the URL to the upload script in your back-end here!
         return new UploadAdapterService(loader, this.storage, this.accountService);
       };
       this.adapterUploaded = true;
     }
   }
-  ngOnDestroy() {
+  ngOnDestroy () {
     this.adminListSub.unsubscribe();
   }
 }

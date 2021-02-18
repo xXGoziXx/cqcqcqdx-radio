@@ -2,11 +2,10 @@ import { Injectable } from '@angular/core';
 import {
   AngularFirestoreCollection,
   AngularFirestoreDocument,
-  DocumentChangeAction,
   AngularFirestore
 } from '@angular/fire/firestore';
-import firebase from '@firebase/app';
-import '@firebase/firestore'; // If using Firebase database
+import firebase from 'firebase/app';
+import 'firebase/firestore'; // If using Firebase database
 import { Subscription, Observable } from 'rxjs';
 import { Address } from '../interfaces/Address';
 import { Order } from '../interfaces/Order';

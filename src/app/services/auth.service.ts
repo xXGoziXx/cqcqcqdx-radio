@@ -1,5 +1,5 @@
-import firebase from '@firebase/app';
-import '@firebase/firestore'; // If using Firebase database
+import firebase from 'firebase/app';
+import 'firebase/firestore'; // If using Firebase database
 import $ from 'jquery';
 import { Observable, of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
@@ -325,13 +325,13 @@ export class AuthService implements OnDestroy {
   // sends a reset password verification email
   resetPassword({ value: { email } }): Promise<void> {
     // destructs email from value from form
-    return this.afAuth.auth.sendPasswordResetEmail(email);
+    return this.afAuth.sendPasswordResetEmail(email);
   }
   // signs the user in with email and password
   signIn({ email, password }) {
     // console.log('Attempting Email: ', email);
     // console.log('Attempting Password: ', password);
-    this.afAuth.auth
+    this.afAuth
       .signInWithEmailAndPassword(email, password)
       .then(userObj => {
         if (userObj.user.emailVerified) {
@@ -357,7 +357,7 @@ export class AuthService implements OnDestroy {
   }
   // Signs the User out
   signOut() {
-    this.afAuth.auth
+    this.afAuth
       .signOut()
       .then(() => {
         this.status = 'Signed Out!';
@@ -384,7 +384,7 @@ export class AuthService implements OnDestroy {
     // console.log('Name: ', firstName, lastName);
     // console.log('Email: ', email);
     // console.log('Password: ', password);
-    this.afAuth.auth
+    this.afAuth
       .createUserWithEmailAndPassword(email, password)
       .then(userObj => {
         // Update displayName
@@ -474,7 +474,7 @@ export class AuthService implements OnDestroy {
     };
     if (password || password.trim().length !== 0) {
       try {
-        await this.afAuth.auth.currentUser.updatePassword(password);
+        await (await this.afAuth.currentUser).updatePassword(password);
         console.log('Update Successful!');
       } catch (err) {
         console.log('Error: ', err);

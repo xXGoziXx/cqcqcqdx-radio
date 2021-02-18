@@ -14,7 +14,7 @@ declare var $: any;
 export class ProductComponent implements OnInit, OnDestroy {
   id: number;
   routeParams: Subscription;
-  isProductId = !Number.isNaN(this.id);
+  isProductId: boolean;
   myInterval = 3000;
   activeSlideIndex = 0;
   quantity = 1;

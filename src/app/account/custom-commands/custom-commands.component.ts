@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import firebase from '@firebase/app';
-import '@firebase/firestore';
-import '@firebase/storage';
-import * as _ from 'lodash';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import 'firebase/storage';
+import _ from 'lodash';
 
 @Component({
   selector: 'app-custom-commands',
